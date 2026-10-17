@@ -81,11 +81,11 @@ internal data class BottomNavItem(
 )
 
 internal val bottomNavItems = listOf(
-    BottomNavItem(Screen.Dashboard, "Conducir", Icons.Default.Speed),
-    BottomNavItem(Screen.LiveMap, "Mapa", Icons.Default.Map),
-    BottomNavItem(Screen.Workshop, "Taller", Icons.Default.Build),
-    BottomNavItem(Screen.Sessions, "Viajes", Icons.Default.History),
-    BottomNavItem(Screen.Settings, "Ajustes", Icons.Default.Settings),
+    BottomNavItem(Screen.Dashboard, "Drive", Icons.Default.Speed),
+    BottomNavItem(Screen.LiveMap, "Map", Icons.Default.Map),
+    BottomNavItem(Screen.Workshop, "Workshop", Icons.Default.Build),
+    BottomNavItem(Screen.Sessions, "Trips", Icons.Default.History),
+    BottomNavItem(Screen.Settings, "Settings", Icons.Default.Settings),
 )
 
 private val bottomNavRoutes = bottomNavItems.map { it.screen.route }.toSet()

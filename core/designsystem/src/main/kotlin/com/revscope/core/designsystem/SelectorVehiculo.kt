@@ -35,7 +35,7 @@ data class VehiculoEnEncabezado(
 )
 
 fun descripcionSelectorVehiculo(vehiculo: VehiculoEnEncabezado): String =
-    "Vehículo: ${vehiculo.nombre ?: "sin vehículo"}. Adaptador: ${vehiculo.estadoEnlace}. Toca para cambiar de vehículo"
+    "Vehicle: ${vehiculo.nombre ?: "no vehicle"}. Adapter: ${vehiculo.estadoEnlace}. Tap to change vehicle"
 
 /**
  * Selector del vehículo activo para el encabezado de cada pestaña. Un nombre muy largo envuelve a
@@ -69,7 +69,7 @@ fun SelectorVehiculo(
                 modifier = Modifier.size(18.dp),
             )
             Text(
-                text = vehiculo.nombre ?: "Sin vehículo",
+                text = vehiculo.nombre ?: "No vehicle",
                 color = RevScopeColors.TextPrimary,
                 style = RevScopeType.label,
                 maxLines = 2,

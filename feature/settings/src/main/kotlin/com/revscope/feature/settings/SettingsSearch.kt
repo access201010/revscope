@@ -4,13 +4,13 @@ import java.text.Normalizer
 
 /** Agrupación temática de las cards de Ajustes — cada una es una sección colapsable en la UI. */
 internal enum class SettingsSectionId(val title: String) {
-    VEHICULO_GARAGE("Vehículo y garage"),
-    RADARES_ALERTAS("Radares y alertas"),
-    MAPA("Mapa"),
-    INTELIGENCIA_ARTIFICIAL("Inteligencia artificial"),
-    SALA_SOCIAL("Sala y social"),
-    NOTIFICACIONES_SEGUNDO_PLANO("Notificaciones y segundo plano"),
-    AVANZADO_DIAGNOSTICO("Avanzado y diagnóstico"),
+    VEHICULO_GARAGE("Vehicle & garage"),
+    RADARES_ALERTAS("Speed cameras & alerts"),
+    MAPA("Map"),
+    INTELIGENCIA_ARTIFICIAL("Artificial intelligence"),
+    SALA_SOCIAL("Social"),
+    NOTIFICACIONES_SEGUNDO_PLANO("Notifications & background"),
+    AVANZADO_DIAGNOSTICO("Advanced & diagnostics"),
 }
 
 /**

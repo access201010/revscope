@@ -115,7 +115,7 @@ fun SettingsScreen(
         topBar = {
             Column {
                 TopAppBar(
-                    title = { Text("Ajustes", color = TextPrimaryColor, fontWeight = FontWeight.SemiBold) },
+                    title = { Text("Settings", color = TextPrimaryColor, fontWeight = FontWeight.SemiBold) },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = SurfaceColor),
                 )
                 FranjaSelectorVehiculo(selector = selectorVehiculo)
@@ -135,7 +135,7 @@ fun SettingsScreen(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                label = { Text("Buscar en ajustes", fontSize = 12.sp) },
+                label = { Text("Search settings", fontSize = 12.sp) },
                 singleLine = true,
                 colors = settingsFieldColors(),
                 modifier = Modifier.fillMaxWidth(),

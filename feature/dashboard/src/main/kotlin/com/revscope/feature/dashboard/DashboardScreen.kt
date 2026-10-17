@@ -207,7 +207,7 @@ internal fun lecturasConMotivos(
     marcha: Int?,
     disponibilidad: (String, String) -> DisponibilidadPid,
 ): LecturasConducir {
-    val sinAdaptador = "Sin adaptador"
+    val sinAdaptador = "No adapter"
     val rpmVisible = rpm.takeIf { conectado }
     val velocidadVisible = velocidad.takeIf { conectado || velocidadGps }
     val temperaturaVisible = temperatura.takeIf { conectado }
@@ -245,7 +245,7 @@ private fun motivoPid(
     nombre: String,
     disponibilidad: (String, String) -> DisponibilidadPid,
 ): String {
-    if (!conectado) return "Sin adaptador"
+    if (!conectado) return "No adapter"
     return disponibilidad(pid, nombre).motivo ?: "Esperando lectura de $nombre (PID $pid)"
 }
 

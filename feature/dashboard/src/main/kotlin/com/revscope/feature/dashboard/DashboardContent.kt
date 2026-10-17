@@ -216,7 +216,7 @@ internal fun DashboardGaugesContent(estado: EstadoConducirUi, onAlternarFuenteVe
         MotivoGauge(lecturas.motivoRpm)
         if (estado.avisarSinAdaptador) {
             Text(
-                "RPM, temperatura, marcha y boost necesitan un adaptador OBD2",
+                "RPM, temperature, gear and boost require an OBD2 adapter",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.bodySmall,
                 textAlign = TextAlign.Center,
@@ -308,7 +308,7 @@ private fun GpsTripButton(isActive: Boolean, onStart: () -> Unit, onStop: () -> 
         ),
     ) {
         Text(
-            text = if (isActive) "Finalizar viaje GPS" else "Iniciar viaje GPS",
+            text = if (isActive) "End GPS trip" else "Start GPS trip",
             color = RevScopeColors.Background,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -316,10 +316,10 @@ private fun GpsTripButton(isActive: Boolean, onStart: () -> Unit, onStop: () -> 
     }
     if (confirmarFin) {
         ConfirmarAccionViajeDialog(
-            titulo = "¿Finalizar el viaje?",
-            texto = "El viaje GPS se guarda en el historial.",
-            confirmar = "Finalizar viaje",
-            descartar = "Seguir grabando",
+            titulo = "End the trip?",
+            texto = "The GPS trip will be saved to trip history.",
+            confirmar = "End trip",
+            descartar = "Keep recording",
             onConfirm = {
                 confirmarFin = false
                 onStop()
@@ -336,7 +336,7 @@ private fun OpenMapButton(onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
         colors = ButtonDefaults.buttonColors(containerColor = RevScopeColors.SurfaceHigh),
     ) {
-        Text(text = "Ver mapa", color = RevScopeColors.TextPrimary, fontWeight = FontWeight.Bold)
+        Text(text = "View map", color = RevScopeColors.TextPrimary, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -365,7 +365,7 @@ internal fun ConfigureAdapterCta(onClick: () -> Unit, modifier: Modifier = Modif
         ) {
             // Con letra al 200 % en 360 dp no cabe entero: se achica un poco antes que partirse.
             TextoAjustable(
-                texto = "Configurar adaptador",
+                texto = "Configure adapter",
                 estilo = RevScopeType.label,
                 color = RevScopeColors.Accent,
                 minimo = 10.sp,
@@ -427,7 +427,7 @@ internal fun TripScoreBar(tripScore: TripScore) {
             color = RevScopeColors.TextPrimary,
         )
         Text(
-            text = "Puntaje: ${tripScore.overall}/100",
+            text = "Score: ${tripScore.overall}/100",
             style = RevScopeType.label.conCifrasTabulares(),
             fontWeight = FontWeight.Bold,
             color = RevScopeColors.Accent,

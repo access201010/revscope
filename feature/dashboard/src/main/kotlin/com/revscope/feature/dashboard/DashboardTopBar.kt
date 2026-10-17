@@ -31,10 +31,10 @@ import com.revscope.core.designsystem.conCifrasTabulares
 import com.revscope.core.obd.connection.ConnectionState
 
 internal enum class EnlaceAdaptador(val descripcion: String) {
-    CONECTADO("Adaptador conectado"),
-    CONECTANDO("Conectando al adaptador"),
-    ERROR("Error de enlace con el adaptador"),
-    SIN_ADAPTADOR("Sin adaptador conectado"),
+    CONECTADO("Adapter connected"),
+    CONECTANDO("Connecting to adapter"),
+    ERROR("Adapter connection error"),
+    SIN_ADAPTADOR("No adapter connected"),
 }
 
 internal fun enlaceAdaptador(estado: ConnectionState): EnlaceAdaptador = when (estado) {
@@ -107,7 +107,7 @@ private fun BarraConducir(
                 Icon(Icons.Default.Flag, contentDescription = "Modo Pista", tint = RevScopeColors.TextSecondary)
             }
             IconButton(onClick = onAjustes) {
-                Icon(Icons.Default.Settings, contentDescription = "Ajustes", tint = RevScopeColors.TextSecondary)
+                Icon(Icons.Default.Settings, contentDescription = "Settings", tint = RevScopeColors.TextSecondary)
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = RevScopeColors.Surface),

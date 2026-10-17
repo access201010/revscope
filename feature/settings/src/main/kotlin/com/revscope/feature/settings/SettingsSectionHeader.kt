@@ -43,8 +43,8 @@ internal fun SettingsSectionHeader(
         modifier = Modifier
             .fillMaxWidth()
             .background(RevScopeColors.Surface, RoundedCornerShape(8.dp))
-            .clickable(onClickLabel = if (expanded) "Plegar" else "Desplegar", role = Role.Button, onClick = onToggle)
-            .semantics { stateDescription = if (expanded) "Desplegada" else "Plegada" }
+            .clickable(onClickLabel = if (expanded) "Collapse" else "Expand", role = Role.Button, onClick = onToggle)
+            .semantics { stateDescription = if (expanded) "Expanded" else "Collapsed" }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
