@@ -34,7 +34,7 @@ class VehicleViewModel @Inject constructor(
     val profiles: StateFlow<List<VehicleProfileEntity>> = profileDao.observeAll()
         .stateInSafe(viewModelScope, emptyList(), started = SharingStarted.Eagerly)
 
-    val availablePids: List<PidDefinition> = registry.allDefinitions().sortedBy { it.nameEs }
+    val availablePids: List<PidDefinition> = registry.allDefinitions().sortedBy { it.name }
 
     private val _modelosReferencia = MutableStateFlow<List<ResumenModelo>>(emptyList())
     val modelosReferencia: StateFlow<List<ResumenModelo>> = _modelosReferencia.asStateFlow()

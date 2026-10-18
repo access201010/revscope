@@ -289,7 +289,7 @@ fun VehicleProfileScreen(
                             .padding(horizontal = 10.dp, vertical = 5.dp),
                     ) {
                         Text(
-                            text = def.nameEs,
+                            text = def.name,
                             fontSize = 12.sp,
                             color = if (enabled) RevScopeColors.Background else RevScopeColors.TextSecondary,
                             fontWeight = if (enabled) FontWeight.SemiBold else FontWeight.Normal,
