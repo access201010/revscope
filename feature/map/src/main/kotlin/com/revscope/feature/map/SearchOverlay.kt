@@ -78,12 +78,12 @@ fun SearchOverlay(
         OutlinedTextField(
             value = query,
             onValueChange = onQueryChange,
-            placeholder = { Text("Buscar dirección o lugar", color = TextMuted, fontSize = 14.sp) },
+            placeholder = { Text("Search for an address or place", color = TextMuted, fontSize = 14.sp) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = TextMuted) },
             trailingIcon = {
                 if (query.isNotEmpty()) {
                     IconButton(onClick = onClear) {
-                        Icon(Icons.Default.Close, contentDescription = "Limpiar búsqueda", tint = TextMuted)
+                        Icon(Icons.Default.Close, contentDescription = "Clear search", tint = TextMuted)
                     }
                 }
             },
@@ -149,7 +149,7 @@ fun SearchOverlay(
                     modifier = Modifier.padding(14.dp),
                 )
                 else -> Text(
-                    "Sin resultados — revisa la escritura o si hay internet",
+                    "No results — check the spelling or your internet connection",
                     color = TextMuted,
                     fontSize = 13.sp,
                     modifier = Modifier.padding(14.dp),
@@ -209,7 +209,7 @@ private fun RecentRow(
             modifier = Modifier.weight(1f).padding(horizontal = 10.dp, vertical = 14.dp),
         )
         IconButton(onClick = { onRemove(place.id) }) {
-            Icon(Icons.Default.Close, contentDescription = "Quitar de recientes", tint = TextMuted)
+            Icon(Icons.Default.Close, contentDescription = "Remove from recent searches", tint = TextMuted)
         }
     }
 }

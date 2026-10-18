@@ -74,7 +74,7 @@ fun NavigationBanner(state: NavigationState, onStop: () -> Unit, modifier: Modif
                 }
             }
             IconButton(onClick = onStop) {
-                Icon(Icons.Default.Close, contentDescription = "Terminar navegación", tint = MUTED)
+                Icon(Icons.Default.Close, contentDescription = "End navigation", tint = MUTED)
             }
         }
     }
@@ -93,9 +93,9 @@ fun NavigationProgressBar(state: NavigationState, speedKmh: Int? = null, modifie
         ) {
             // weight(fill=false): con 4 celdas en 320dp el Row sin pesos mide con ancho ilimitado
             // y el Surface CLIPEA la última celda en silencio; con pesos, reparten y nada se corta.
-            speedKmh?.let { ProgressField("$it km/h", "velocidad", Modifier.weight(1f, fill = false)) }
+            speedKmh?.let { ProgressField("$it km/h", "speed", Modifier.weight(1f, fill = false)) }
             ProgressField(formatDistance(state.distanceRemainingM), "restante", Modifier.weight(1f, fill = false))
-            ProgressField(formatDuration(state.durationRemainingS), "en camino", Modifier.weight(1f, fill = false))
+            ProgressField(formatDuration(state.durationRemainingS), "remaining", Modifier.weight(1f, fill = false))
             ProgressField(arrivalClock(state.durationRemainingS), "llegada", Modifier.weight(1f, fill = false))
         }
     }
@@ -110,14 +110,14 @@ private fun ProgressField(value: String, label: String, modifier: Modifier = Mod
 }
 
 private fun headline(state: NavigationState): String = when {
-    state.arrived -> "Llegó"
+    state.arrived -> "Arrived"
     state.offRoute -> "Recalculando…"
     else -> formatDistance(state.distanceToManeuverM)
 }
 
 private fun subtitle(state: NavigationState): String? = when {
-    state.arrived -> "Llegó a su destino"
-    state.offRoute -> "Se salió de la ruta"
+    state.arrived -> "Arrived at destination"
+    state.offRoute -> "Off route"
     else -> state.maneuver?.let(::maneuverLabel)
 }
 
@@ -134,14 +134,14 @@ private fun maneuverLabel(maneuver: Maneuver): String {
     val action = when (maneuver.type) {
         "arrive" -> "Llegada"
         "roundabout", "rotary", "roundabout turn" -> "Glorieta"
-        "exit roundabout", "exit rotary" -> "Salir de la glorieta"
-        "off ramp" -> "Tomar la salida"
-        "on ramp" -> "Tomar la rampa"
+        "exit roundabout", "exit rotary" -> "Exit the roundabout"
+        "off ramp" -> "Take the exit"
+        "on ramp" -> "Take the slip road"
         "merge" -> "Incorporarse"
-        "fork" -> "Bifurcación"
-        "end of road" -> "Fin de la vía"
+        "fork" -> "Fork"
+        "end of road" -> "End of road"
         "turn" -> sideLabel(maneuver.modifier) ?: "Girar"
-        else -> "Seguir"
+        else -> "Continue"
     }
     return if (street == null) action else "$action · $street"
 }
@@ -153,7 +153,7 @@ private fun sideLabel(modifier: String?): String? = when (modifier) {
     "slight left" -> "Leve izquierda"
     "sharp right" -> "Cerrado derecha"
     "sharp left" -> "Cerrado izquierda"
-    "uturn" -> "Giro en U"
+    "uturn" -> "Make a U-turn"
     else -> null
 }
 

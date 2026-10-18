@@ -35,7 +35,7 @@ internal fun describeFeature(kind: String?, properties: Map<String, Any?>): MapF
 
 private fun describeRadar(properties: Map<String, Any?>): MapFeatureDescription {
     val limitKmh = properties.numberOrNull(FEATURE_PROP_SPEED_LIMIT_KMH)?.toInt()
-    val subtitle = if (limitKmh != null) "Fotomulta · límite $limitKmh km/h" else "Fotomulta · límite no registrado"
+    val subtitle = if (limitKmh != null) "Speed camera · limit $limitKmh km/h" else "Speed camera · limit not recorded"
     return MapFeatureDescription(title = "Radar fijo", subtitle = subtitle)
 }
 
@@ -48,18 +48,18 @@ private fun describePothole(properties: Map<String, Any?>): MapFeatureDescriptio
 
 private fun formatPotholeSubtitle(hits: Int, lastHitAtMs: Long): String {
     val date = formatHitDate(lastHitAtMs)
-    return if (hits > 1) "Reportado ${hits}× · última vez $date" else "Reportado el $date"
+    return if (hits > 1) "Reported ${hits}× · last reported $date" else "Reported on $date"
 }
 
 private fun describeDestination(properties: Map<String, Any?>): MapFeatureDescription {
     val name = properties[FEATURE_PROP_NAME] as? String
-    return MapFeatureDescription(title = name ?: "Destino", subtitle = null)
+    return MapFeatureDescription(title = name ?: "Destination", subtitle = null)
 }
 
 private fun describePeer(properties: Map<String, Any?>): MapFeatureDescription {
-    val name = properties[FEATURE_PROP_NAME] as? String ?: "Compañero de sala"
+    val name = properties[FEATURE_PROP_NAME] as? String ?: "Group member"
     val speedKmh = properties.numberOrNull(FEATURE_PROP_SPEED_KMH)?.toInt()
-    val subtitle = if (speedKmh != null) "$speedKmh km/h · en sala" else "En sala"
+    val subtitle = if (speedKmh != null) "$speedKmh km/h · in group" else "In group"
     return MapFeatureDescription(title = name, subtitle = subtitle)
 }
 

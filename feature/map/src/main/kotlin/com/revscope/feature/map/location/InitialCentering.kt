@@ -5,7 +5,7 @@ import com.revscope.core.obd.service.LiveRouteHolder.RoutePoint
 data class CenterAction(val lat: Double, val lon: Double, val zoom: Double)
 
 /**
- * Decide los centrados automáticos al abrir el mapa. Máquina de estados pura:
+ * Decide los centrados automatics al abrir el mapa. Máquina de estados pura:
  * lastKnown centra una vez (lejos), el primer fix vivo re-centra una vez (cerca),
  * y un pan del usuario cancela todo — la cámara nunca le pelea al dedo.
  */

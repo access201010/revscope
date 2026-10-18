@@ -58,10 +58,10 @@ private val ErrorColor = Color(0xFFFF4D4D)
 private const val GEMINI_API_KEY_URL = "https://aistudio.google.com/apikey"
 
 private val AiValueBullets = listOf(
-    "Chat mecánico especializado en TU vehículo",
-    "Debrief IA al final de cada viaje",
-    "Pico y placa por IA en cualquier ciudad",
-    "Explicación de códigos de falla (DTC)",
+    "AI mechanic specialised for your vehicle",
+    "AI debrief at the end of each journey",
+    "AI driving-restriction guidance",
+    "Fault-code explanations (DTC)",
 )
 
 @Composable
@@ -94,7 +94,7 @@ fun AiValueContent(
         OutlinedTextField(
             value = aiApiKey,
             onValueChange = vm::updateAiApiKey,
-            label = { Text("API key de Gemini") },
+            label = { Text("Gemini API key") },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -105,7 +105,7 @@ fun AiValueContent(
         TextButton(onClick = {
             runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(GEMINI_API_KEY_URL))) }
         }) {
-            Text("Obtener key gratis", color = AccentColor)
+            Text("Get a free API key", color = AccentColor)
         }
 
         testResult?.let { result ->
@@ -123,7 +123,7 @@ fun AiValueContent(
                 colors = ButtonDefaults.buttonColors(containerColor = SurfaceColor),
                 modifier = Modifier.weight(1f).heightIn(min = 48.dp),
             ) {
-                Text(if (aiTesting) "Probando…" else "Probar", color = TextPrimaryColor)
+                Text(if (aiTesting) "Probando…" else "Test", color = TextPrimaryColor)
             }
             Button(
                 onClick = {
@@ -133,12 +133,12 @@ fun AiValueContent(
                 colors = ButtonDefaults.buttonColors(containerColor = AccentColor),
                 modifier = Modifier.weight(1f).heightIn(min = 48.dp),
             ) {
-                Text("Guardar", color = BgColor, fontWeight = FontWeight.SemiBold)
+                Text("Save", color = BgColor, fontWeight = FontWeight.SemiBold)
             }
         }
 
         TextButton(onClick = onDone) {
-            Text("Después", color = TextMutedColor)
+            Text("Later", color = TextMutedColor)
         }
     }
 }

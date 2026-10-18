@@ -52,7 +52,7 @@ fun GearDisplay(
         Spacer(modifier = Modifier.height(4.dp))
         Icon(
             imageVector = if (isCalibrated) Icons.Default.LockOpen else Icons.Default.Lock,
-            contentDescription = if (isCalibrated) "Marchas calibradas" else "Calibrando marchas",
+            contentDescription = if (isCalibrated) "Gears calibrated" else "Calibrating gears",
             tint = if (isCalibrated) RevScopeColors.Success else RevScopeColors.TextMuted,
         )
     }

@@ -72,7 +72,7 @@ fun HealthCheckScreen(
 @Composable
 internal fun HealthCheckContent(state: HealthCheckViewModel.UiState, acciones: AccionesChequeo) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver(titulo = "Chequeo de salud", onVolver = acciones.onVolver) {
+        BarraConVolver(titulo = "Health check", onVolver = acciones.onVolver) {
             if (state is HealthCheckViewModel.UiState.Done) AccionesInforme(acciones)
         }
         LazyColumn(
@@ -80,7 +80,7 @@ internal fun HealthCheckContent(state: HealthCheckViewModel.UiState, acciones: A
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize(),
         ) {
-            item(key = "escanear") { BotonEscanear(state, acciones.onEscanear) }
+            item(key = "scan") { BotonEscanear(state, acciones.onEscanear) }
             contenidoChequeo(state, acciones.onEscanear)
         }
     }
@@ -89,10 +89,10 @@ internal fun HealthCheckContent(state: HealthCheckViewModel.UiState, acciones: A
 @Composable
 private fun AccionesInforme(acciones: AccionesChequeo) {
     IconButton(onClick = acciones.onExportarCsv) {
-        Icon(Icons.Default.Download, "Exportar CSV", tint = RevScopeColors.Accent)
+        Icon(Icons.Default.Download, "Export CSV", tint = RevScopeColors.Accent)
     }
     IconButton(onClick = acciones.onCompartir) {
-        Icon(Icons.Default.Share, "Compartir informe", tint = RevScopeColors.Accent)
+        Icon(Icons.Default.Share, "Share report", tint = RevScopeColors.Accent)
     }
 }
 
@@ -108,7 +108,7 @@ private fun BotonEscanear(state: HealthCheckViewModel.UiState, onEscanear: () ->
         ),
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
     ) {
-        Text(if (corriendo) "Escaneando…" else "Escanear ahora", style = RevScopeType.label, textAlign = TextAlign.Center)
+        Text(if (corriendo) "Scanning…" else "Scan now", style = RevScopeType.label, textAlign = TextAlign.Center)
     }
 }
 
@@ -124,8 +124,8 @@ private fun LazyListScope.contenidoChequeo(state: HealthCheckViewModel.UiState, 
 @Composable
 private fun Introduccion() {
     Text(
-        "Un toque y RevScope revisa códigos de falla, readiness para la tecnomecánica, " +
-            "mezcla, sensor O2, batería y temperatura.",
+        "One tap and RevScope checks fault codes, emissions readiness, " +
+            "fuel mixture, O2 sensor, battery and temperature.",
         color = RevScopeColors.TextSecondary,
         style = RevScopeType.body,
     )
@@ -146,8 +146,8 @@ private fun RunningIndicator(paso: String) {
 
 private fun LazyListScope.resultados(done: HealthCheckViewModel.UiState.Done) {
     item(key = "fecha") {
-        val fecha = SimpleDateFormat("d MMM yyyy, HH:mm", Locale("es")).format(Date(done.timestamp))
-        Text("Último chequeo: $fecha", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+        val fecha = SimpleDateFormat("d MMM yyyy, HH:mm", Locale.UK).format(Date(done.timestamp))
+        Text("Last check: $fecha", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
     }
     items(done.items) { item -> DiagnosisRow(item) }
     items(done.noDisponibles) { parametro -> NoDisponibleRow(parametro) }
@@ -159,7 +159,7 @@ private fun NoDisponibleRow(parametro: String) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             NivelBadge(NivelEstado.SIN_DATO)
             Text(parametro, color = RevScopeColors.TextPrimary, style = RevScopeType.label)
-            Text("No disponible en esta ECU", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+            Text("Not available on this ECU", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
         }
     }
 }

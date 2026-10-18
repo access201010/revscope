@@ -72,7 +72,7 @@ fun OdometerScreen(
         item(key = "encabezado") {
             EncabezadoOdometro(
                 puedeExportar = historial.isNotEmpty(),
-                onVolver = onNavigateBack,
+                onBack = onNavigateBack,
                 onExportar = { viewModel.exportCsv(context) },
             )
         }
@@ -83,12 +83,12 @@ fun OdometerScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = RevScopeColors.Accent, contentColor = Color.Black),
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(if (leyendoAhora) "Leyendo…" else "Leer ahora")
+                Text(if (leyendoAhora) "Reading…" else "Read now")
             }
         }
         if (!isConnected) {
             item(key = "sin_conexion") {
-                Text("Conecta el adaptador para leer el odómetro del vehículo", color = RevScopeColors.TextSecondary, fontSize = 13.sp)
+                Text("Connect the adapter to read the vehicle odometer", color = RevScopeColors.TextSecondary, fontSize = 13.sp)
             }
         }
         mensaje?.let { texto ->
@@ -104,20 +104,20 @@ fun OdometerScreen(
 }
 
 @Composable
-private fun EncabezadoOdometro(puedeExportar: Boolean, onVolver: () -> Unit, onExportar: () -> Unit) {
+private fun EncabezadoOdometro(puedeExportar: Boolean, onBack: () -> Unit, onExportar: () -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = onVolver) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = RevScopeColors.TextPrimary)
+        IconButton(onClick = onBack) {
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = RevScopeColors.TextPrimary)
         }
         Text(
-            "Verificación de kilometraje",
+            "Mileage verification",
             color = RevScopeColors.TextPrimary,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         IconButton(onClick = onExportar, enabled = puedeExportar) {
-            Icon(Icons.Default.Download, "Exportar CSV", tint = RevScopeColors.Accent)
+            Icon(Icons.Default.Download, "Export CSV", tint = RevScopeColors.Accent)
         }
     }
 }
@@ -133,7 +133,7 @@ private fun LazyListScope.odometroItems(
     }
     item(key = "ultima") { UltimaLecturaCard(ultima, lastCheck?.diagnosis) }
     item(key = "titulo_historico") {
-        Text("Histórico", color = RevScopeColors.TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+        Text("History", color = RevScopeColors.TextSecondary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
     }
     items(historial.asReversed()) { lectura -> HistorialRow(lectura) }
 }
@@ -142,7 +142,7 @@ private fun LazyListScope.odometroItems(
 private fun EmptyState() {
     Surface(shape = RoundedCornerShape(14.dp), color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Text(
-            "Aún no hay lecturas del odómetro. Conecta el adaptador y toca \"Leer ahora\".",
+            "There are no odometer readings yet. Connect the adapter and tap \"Read now\".",
             color = RevScopeColors.TextSecondary,
             fontSize = 13.sp,
             modifier = Modifier.padding(14.dp),
@@ -155,14 +155,14 @@ private fun NoSoportadoCard() {
     Surface(shape = RoundedCornerShape(14.dp), color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(14.dp)) {
             Text(
-                "Odómetro no disponible por OBD",
+                "Odometer not available via OBD",
                 color = RevScopeColors.Warning,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
             )
             Text(
-                "Tu vehículo no expone el PID estándar 01 A6 — común en motos y vehículos anteriores a 2015. " +
-                    "Usa el escáner Mode 22 (Taller → Escáner avanzado) para buscar el DID propietario del fabricante.",
+                "Your vehicle does not expose the standard PID 01 A6 — common on motorcycles and vehicles manufactured before 2015. " +
+                    "Use the Mode 22 scanner (Workshop → Advanced scanner) to look for the manufacturer's proprietary DID.",
                 color = RevScopeColors.TextSecondary,
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 4.dp),
@@ -176,7 +176,7 @@ private fun UltimaLecturaCard(ultima: OdometerVerifier.Reading, diagnosis: Diagn
     val fecha = formatFecha(ultima.epochMs)
     Surface(shape = RoundedCornerShape(14.dp), color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(14.dp)) {
-            Text("Última lectura ECU", color = RevScopeColors.TextSecondary, fontSize = 12.sp)
+            Text("Latest ECU reading", color = RevScopeColors.TextSecondary, fontSize = 12.sp)
             Text(
                 "${ultima.km.roundToLong()} km",
                 color = RevScopeColors.TextPrimary,
@@ -215,4 +215,4 @@ private fun HistorialRow(lectura: OdometerVerifier.Reading) {
 }
 
 private fun formatFecha(epochMs: Long): String =
-    SimpleDateFormat("d MMM yyyy, HH:mm", Locale("es")).format(Date(epochMs))
+    SimpleDateFormat("d MMM yyyy, HH:mm", Locale.UK).format(Date(epochMs))

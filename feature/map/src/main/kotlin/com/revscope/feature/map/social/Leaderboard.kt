@@ -127,7 +127,7 @@ object RaceCountdown {
     private const val VISIBLE_BEFORE_MS = 5_000L
     private const val VISIBLE_AFTER_MS = 2_000L
 
-    /** null = ocultar overlay. 0 = mostrar "¡YA!". 1..5 = segundos restantes para largar. */
+    /** null = ocultar overlay. 0 = mostrar "NOW!". 1..5 = segundos restantes para largar. */
     fun secondsToShow(startAtMs: Long, nowMs: Long): Int? {
         val remainingMs = startAtMs - nowMs
         if (remainingMs > VISIBLE_BEFORE_MS || remainingMs <= -VISIBLE_AFTER_MS) return null
@@ -234,13 +234,13 @@ private fun RaceControlRow(
     ) {
         when {
             race == null -> TextButton(onClick = onStartRace) {
-                Text("🏁 Largar carrera", color = AccentYellow, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text("🏁 Start race", color = AccentYellow, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
             race.startedBy == selfRiderName -> TextButton(onClick = onStopRace) {
-                Text("Detener carrera", color = DangerRed, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text("Stop race", color = DangerRed, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
             else -> Text(
-                "Carrera en curso · largada por ${race.startedBy}",
+                "Race in progress · started by ${race.startedBy}",
                 color = TextMuted,
                 fontSize = 11.sp,
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -270,7 +270,7 @@ private fun LeaderboardRow(position: Int, entry: RankingCalc.Entry, raceMode: Bo
             modifier = Modifier.weight(1f),
         )
         Text(
-            if (entry.arrived) "Llegó ✓" else "${formatRemaining(entry.remainingM)} · ${formatEta(entry.etaMin)}",
+            if (entry.arrived) "Arrived ✓" else "${formatRemaining(entry.remainingM)} · ${formatEta(entry.etaMin)}",
             color = TextMuted,
             fontSize = 11.sp,
         )
@@ -291,7 +291,7 @@ private fun positionBadge(position: Int): String = when (position) {
 fun RaceCountdownOverlay(secondsToShow: Int, modifier: Modifier = Modifier) {
     Surface(color = Color(0xCC0A0A0F), shape = RoundedCornerShape(16.dp), modifier = modifier) {
         Text(
-            if (secondsToShow > 0) "$secondsToShow" else "¡YA!",
+            if (secondsToShow > 0) "$secondsToShow" else "NOW!",
             color = AccentYellow,
             fontSize = 56.sp,
             fontWeight = FontWeight.Black,

@@ -15,7 +15,7 @@ internal enum class TilesFailureAction { DELETE_LOCAL, DEGRADE_REMOTE, IGNORE }
  * así que su fallo es más probable justo en ese momento. Si la descarga completa MIENTRAS el
  * request remoto sigue en vuelo, la composición ya avanzó a tier LOCAL antes de que el fallo
  * (tardío) del tier REMOTE llegue — clasificarlo por el tier "actual" lo atribuye a LOCAL, borra
- * el `.pmtiles` recién descargado y muestra un banner de "mapa dañado" falso. Viola el contrato
+ * el `.pmtiles` recién descargado y muestra un banner de "damaged map" falso. Viola el contrato
  * documentado: el tier REMOTE nunca borra nada, porque nunca descargó nada.
  *
  * Esta función es deliberadamente ciega a cualquier estado "actual": solo mira [failedTier], el

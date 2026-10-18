@@ -118,10 +118,10 @@ fun O2WaveScreen(
     Column(Modifier.fillMaxSize().statusBarsPadding().verticalScroll(rememberScrollState()).padding(16.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = TextColor)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = TextColor)
             }
             Text(
-                "Onda del sensor O2",
+                "O2 sensor waveform",
                 color = TextColor,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
@@ -131,11 +131,11 @@ fun O2WaveScreen(
                 onClick = { viewModel.exportWindow(context) },
                 enabled = samples.size >= 2,
             ) {
-                Icon(Icons.Default.Download, contentDescription = "Exportar CSV", tint = AccentColor)
+                Icon(Icons.Default.Download, contentDescription = "Export CSV", tint = AccentColor)
             }
         }
         Text(
-            "Últimos 60 s de voltaje del sensor — motor encendido y en marcha mínima estable.",
+            "Last 60 seconds of sensor voltage — engine running at a stable idle.",
             color = TextMutedColor,
             fontSize = 13.sp,
             modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
@@ -148,14 +148,14 @@ fun O2WaveScreen(
 
         if (samples.size < 2) {
             Text(
-                "Esperando datos del sensor O2 ${SENSOR_LABELS[selectedPid] ?: selectedPid}… (requiere conexión y motor encendido)",
+                "Waiting for O2 sensor ${SENSOR_LABELS[selectedPid] ?: selectedPid} data… (requires a connection and the engine running)",
                 color = TextMutedColor,
                 fontSize = 13.sp,
             )
         } else {
             O2Chart(modelProducer)
             Text(
-                "Umbral de conmutación: 0.45V · pobre <0.2V · rica >0.8V",
+                "Switching threshold: 0.45V · lean <0.2V · rich >0.8V",
                 color = TextMutedColor,
                 fontSize = 11.sp,
                 modifier = Modifier.padding(top = 4.dp),
@@ -163,7 +163,7 @@ fun O2WaveScreen(
 
             val crossings = viewModel.crossingsPerMinute()
             Text(
-                "Cruces por 0.45V: %.0f/min (sensor sano: >$HEALTHY_CROSSINGS_PER_MIN/min)".format(crossings),
+                "0.45V crossings: %.0f/min (healthy sensor: >$HEALTHY_CROSSINGS_PER_MIN/min)".format(crossings),
                 color = TextColor,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
@@ -190,7 +190,7 @@ private fun O2Chart(modelProducer: CartesianChartModelProducer) {
             ),
             bottomAxis = HorizontalAxis.rememberBottom(
                 valueFormatter = SecondsAxisFormatter,
-                title = "segundos",
+                title = "seconds",
             ),
         ),
         modelProducer = modelProducer,

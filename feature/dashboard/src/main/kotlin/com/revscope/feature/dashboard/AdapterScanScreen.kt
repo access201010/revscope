@@ -286,7 +286,7 @@ private fun DisconnectedContent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    "Adaptadores BLE",
+                    "BLE adapters",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = RevScopeColors.TextSecondary,
@@ -308,7 +308,7 @@ private fun DisconnectedContent(
                 }
             }
             Text(
-                "Los adaptadores BLE (Vgate 4.0, VLink…) no aparecen en emparejados — búscalos aquí.",
+                "BLE adapters (Vgate 4.0, VLink…) do not appear under paired devices — find them here.",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.bodySmall,
             )
@@ -316,7 +316,7 @@ private fun DisconnectedContent(
         if (bleDevices.isEmpty() && !bleScanning) {
             item {
                 Text(
-                    "Sin resultados aún.",
+                    "No results yet.",
                     color = RevScopeColors.TextSecondary,
                     style = RevScopeType.bodySmall,
                 )
@@ -432,7 +432,7 @@ private fun ConnectedContent(
         Spacer(Modifier.height(4.dp))
         Text(deviceName, color = RevScopeColors.TextPrimary, fontSize = 14.sp)
         Text(
-            if (estadoViaje is EstadoViaje.Grabando) "Grabando viaje" else "Sin viaje · lecturas en vivo",
+            if (estadoViaje is EstadoViaje.Grabando) "Recording journey" else "No journey · live data",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.bodySmall,
         )
@@ -442,7 +442,7 @@ private fun ConnectedContent(
                 estado = estadoViaje,
                 onFinalizar = onFinalizarViaje,
                 onIniciar = onIniciarViaje,
-                onDesconectar = onDisconnect,
+                onDisconnect = onDisconnect,
             )
         }
     }

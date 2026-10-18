@@ -1,0 +1,25 @@
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/DashboardViewModel.kt:98:     * usuario eligió "sin adaptador" en el wizard O nunca vinculó uno — inferencia por
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/gauges/GearDisplay.kt:55:            contentDescription = if (isCalibrated) "Marchas calibradas" else "Calibrando marchas",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TrackModeScreen.kt:182:                    "Esperando señal GPS… (conecta el adaptador y muévete un poco)",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TrackModeScreen.kt:216:                    else "cruza la línea para iniciar la vuelta 1",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TrackModeScreen.kt:293:                    Text("Quitar línea y reiniciar", color = RevScopeColors.TextPrimary)
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:94:                text = if (grabando) "● Grabando viaje" else "● Conectado · sin viaje",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:117:        Text("Iniciar viaje", color = RevScopeColors.Background, fontWeight = FontWeight.Bold)
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:133:            SecondaryButton("Finalizar viaje (seguir conectado)", RevScopeColors.Accent) { confirmarFinalizacion = true }
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:136:            SecondaryButton("Iniciar viaje", RevScopeColors.Accent, onIniciar)
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:138:        SecondaryButton("Desconectar adaptador", RevScopeColors.Danger) {
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:144:            titulo = "¿Finalizar el viaje?",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:145:            texto = "Se guarda el viaje y el adaptador sigue conectado: puedes leer códigos de falla " +
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:146:                "o iniciar otro viaje sin reconectar.",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:147:            confirmar = "Finalizar viaje",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:148:            descartar = "Cancelar",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:158:            titulo = "¿Desconectar el adaptador?",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:159:            texto = "También se cierra el viaje en curso; queda guardado en el historial.",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:160:            confirmar = "Desconectar",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/TripControls.kt:161:            descartar = "Cancelar",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/DashboardScreen.kt:129:        // "Viaje sin adaptador": only offered while there's no live/incoming BT link, so it
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/DashboardScreen.kt:231:            motivoPid(conectado, "05", "la temperatura del motor", disponibilidad),
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/DashboardScreen.kt:237:            if (conectado) "La marcha necesita RPM y velocidad" else sinAdaptador,
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/AdapterScanScreen.kt:289:                    "Adaptadores BLE",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/AdapterScanScreen.kt:311:                "Los adaptadores BLE (Vgate 4.0, VLink…) no aparecen en emparejados — búscalos aquí.",
+feature/dashboard/src/main/kotlin/com/revscope/feature/dashboard/AdapterScanScreen.kt:435:            if (estadoViaje is EstadoViaje.Grabando) "Grabando viaje" else "Sin viaje · lecturas en vivo",

@@ -108,7 +108,7 @@ class LiveMapViewModel @Inject constructor(
             origin = LatLon(origin.lat, origin.lon),
             destination = LatLon(destination.lat, destination.lon),
         )
-        if (!started) _navigationError.value = "No se pudo iniciar la navegación"
+        if (!started) _navigationError.value = "Navigation could not be started"
     }
 
     /** Adaptador conectado sin viaje: se abre un viaje OBD; sin adaptador, uno GPS. */
@@ -121,11 +121,11 @@ class LiveMapViewModel @Inject constructor(
         // startGpsSession() marca isGpsSessionActive de forma SÍNCRONA (antes de su
         // scope.launch interno) pero currentSessionId recién queda seteado async, tras
         // el insert suspend en Room — comprobar solo currentSessionId acá daría un falso
-        // "no arrancó" en el camino feliz (primer viaje, sin sesión previa). isGpsSessionActive
+        // "did not start" en el camino feliz (primer viaje, sin sesión previa). isGpsSessionActive
         // sí distingue ese caso de un no-op real (OBD Connecting/Connected — ver
         // ObdSessionManager.startGpsSession), que es cuando la nav arrancaría muda.
         if (sessionManager.currentSessionId.value == null && !sessionManager.isGpsSessionActive.value) {
-            _navigationError.value = "Esperando el GPS — reintentá en unos segundos"
+            _navigationError.value = "Waiting for GPS — try again in a few seconds"
             return false
         }
         return true
@@ -270,7 +270,7 @@ class LiveMapViewModel @Inject constructor(
         }
     }
 
-    /** null = sin overlay. 0 = "¡YA!". 1..5 = segundos restantes para la largada. flatMapLatest
+    /** null = sin overlay. 0 = "NOW!". 1..5 = segundos restantes para la largada. flatMapLatest
      * sobre roomState: sin carrera no hay reloj corriendo. El inner flow además se completa solo
      * — vía RaceCountdown.isFinished — apenas se pasa la ventana de visibilidad, así que tampoco
      * queda tiqueando cada 250 ms el resto de una carrera larga que nadie detuvo todavía; el
@@ -284,7 +284,7 @@ class LiveMapViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
-    // Estado de ESTA sesión de UI para "Llegaste, posición N" (no de RoomClient/RankingCalc,
+    // Estado de ESTA sesión de UI para "You arrived, position N" (no de RoomClient/RankingCalc,
     // que son puros) — el reductor en sí (RaceArrival.step) es puro y testeado; acá solo vive
     // el último estado devuelto, igual de simple que milAnnouncedThisSession en AlertsEngine.
     private var raceArrivalState = RaceArrival.State()
@@ -314,7 +314,7 @@ class LiveMapViewModel @Inject constructor(
         raceArrivalState = nextState
         if (!shouldAnnounce) return
         val position = arrivalLedgerState.finishers[self?.name]?.order ?: return
-        navigationVoice.say("Llegaste, posición $position")
+        navigationVoice.say("You arrived, position $position")
     }
 
     private val _roomBusy = MutableStateFlow(false)
@@ -446,7 +446,7 @@ class LiveMapViewModel @Inject constructor(
      * sola, vía [localMapFileExists]) y se avisa para que el usuario re-descargue en Ajustes. */
     fun onOfflineMapLoadFailed() {
         mapDownloadService.delete()
-        _offlineMapCorruptedMessage.value = "Mapa offline dañado — re-descargalo en Ajustes"
+        _offlineMapCorruptedMessage.value = "Offline map is damaged — download it again in Settings"
     }
 
     fun clearOfflineMapCorruptedMessage() {

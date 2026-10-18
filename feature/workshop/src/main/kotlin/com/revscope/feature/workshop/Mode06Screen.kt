@@ -58,10 +58,10 @@ fun Mode06Screen(
     Column(Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = RevScopeColors.TextPrimary)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = RevScopeColors.TextPrimary)
             }
             Text(
-                "Resultados a bordo (Mode 06)",
+                "On-board test results (Mode 06)",
                 color = RevScopeColors.TextPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -71,11 +71,11 @@ fun Mode06Screen(
                 onClick = { viewModel.exportResults(context) },
                 enabled = !doneState?.groups.isNullOrEmpty(),
             ) {
-                Icon(Icons.Default.Download, contentDescription = "Exportar CSV", tint = RevScopeColors.Accent)
+                Icon(Icons.Default.Download, contentDescription = "Export CSV", tint = RevScopeColors.Accent)
             }
         }
         Text(
-            "Los valores dependen del fabricante — útil para comparar antes/después de una reparación.",
+            "Values are manufacturer-specific — useful for comparing before and after a repair.",
             color = RevScopeColors.TextSecondary,
             fontSize = 13.sp,
             modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
@@ -83,7 +83,7 @@ fun Mode06Screen(
 
         if (!isConnected) {
             Text(
-                "Conecta el adaptador para leer los resultados de las pruebas a bordo.",
+                "Connect the adapter to read the on-board test results.",
                 color = RevScopeColors.Danger,
                 fontSize = 13.sp,
             )
@@ -97,7 +97,7 @@ fun Mode06Screen(
 @Composable
 private fun Mode06Body(state: Mode06ViewModel.UiState, onRetry: () -> Unit) {
     when (state) {
-        Mode06ViewModel.UiState.Idle -> Text("Preparando…", color = RevScopeColors.TextSecondary, fontSize = 13.sp)
+        Mode06ViewModel.UiState.Idle -> Text("Preparing…", color = RevScopeColors.TextSecondary, fontSize = 13.sp)
         is Mode06ViewModel.UiState.Scanning -> ScanningProgress(state)
         is Mode06ViewModel.UiState.Done -> ResultsList(state.groups, state.incomplete, onRetry)
         is Mode06ViewModel.UiState.Error -> ErrorState(state.message, onReintentar = onRetry)
@@ -114,7 +114,7 @@ private fun ScanningProgress(state: Mode06ViewModel.UiState.Scanning) {
         trackColor = RevScopeColors.Surface,
     )
     Text(
-        "Leyendo pruebas a bordo (${state.current}/${state.total})…",
+        "Reading on-board tests (${state.current}/${state.total})…",
         color = RevScopeColors.TextSecondary,
         fontSize = 12.sp,
         modifier = Modifier.padding(top = 4.dp).semantics { liveRegion = LiveRegionMode.Polite },
@@ -126,7 +126,7 @@ private fun ResultsList(groups: List<Mode06ViewModel.MidGroup>, incomplete: Bool
     Column {
         if (incomplete) IncompleteScanBanner()
         if (groups.isEmpty()) {
-            ErrorState("El vehículo no devolvió resultados Mode 06 legibles.", onReintentar = onRetry)
+            ErrorState("The vehicle returned no readable Mode 06 results.", onReintentar = onRetry)
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 items(groups, key = { it.mid }) { group -> MidGroupCard(group) }
@@ -143,7 +143,7 @@ private fun IncompleteScanBanner() {
         modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
     ) {
         Text(
-            "Escaneo incompleto — se perdió el enlace; repite el escaneo",
+            "Scan incomplete — connection lost; run the scan again",
             color = RevScopeColors.Danger,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
@@ -177,7 +177,7 @@ private fun TestResultRow(result: Mode06Parser.TestResult) {
     ) {
         Icon(
             if (result.pass) Icons.Default.CheckCircle else Icons.Default.Cancel,
-            contentDescription = if (result.pass) "Dentro de límites" else "Fuera de límites",
+            contentDescription = if (result.pass) "Within limits" else "Outside limits",
             tint = if (result.pass) RevScopeColors.Success else RevScopeColors.Danger,
             modifier = Modifier.padding(end = 10.dp),
         )
@@ -194,7 +194,7 @@ private fun TestResultRow(result: Mode06Parser.TestResult) {
                 fontWeight = FontWeight.Medium,
             )
             Text(
-                "límite %.2f–%.2f %s · raw %d (%d–%d)".format(
+                "limit %.2f–%.2f %s · raw %d (%d–%d)".format(
                     result.min, result.max, result.unit,
                     result.rawValue, result.rawMin, result.rawMax,
                 ),

@@ -83,14 +83,14 @@ class TrackModeViewModel @Inject constructor(
 
     fun uploadBestLap() {
         val best = engine.bestLapForUpload() ?: run {
-            _ghostAction.value = GhostAction.Message("Aún no tienes una vuelta para subir")
+            _ghostAction.value = GhostAction.Message("You don't have a lap to upload yet")
             return
         }
         viewModelScope.launch {
             _ghostAction.value = GhostAction.Working
             val id = ghostClient.upload(best.finishLat, best.finishLon, best.timeMs, best.points)
             _ghostAction.value = GhostAction.Message(
-                if (id != null) "Fantasma subido ✓" else "No se pudo subir (¿servidor configurado?)"
+                if (id != null) "Fantasma subido ✓" else "Upload failed (is the server configured?)"
             )
         }
     }
@@ -179,7 +179,7 @@ fun TrackModeScreen(
         ) {
             if (!state.hasGpsFix) {
                 Text(
-                    "Esperando señal GPS… (conecta el adaptador y muévete un poco)",
+                    "Waiting for GPS signal… (connect the adapter and move a short distance)",
                     color = RevScopeColors.TextSecondary,
                     fontSize = 13.sp,
                 )
@@ -188,8 +188,8 @@ fun TrackModeScreen(
 
             if (!state.finishLineSet) {
                 Text(
-                    "Rueda despacio SOBRE la línea de meta y pulsa el botón — " +
-                        "la línea queda perpendicular a tu dirección (30 m de ancho).",
+                    "Drive slowly OVER the finish line and press the button — " +
+                        "the line will be set perpendicular to your direction of travel (30 m wide).",
                     color = RevScopeColors.TextSecondary,
                     fontSize = 13.sp,
                 )
@@ -199,7 +199,7 @@ fun TrackModeScreen(
                     enabled = state.hasGpsFix,
                     colors = ButtonDefaults.buttonColors(containerColor = RevScopeColors.Accent),
                 ) {
-                    Text("🏁 Marcar línea de meta aquí", color = RevScopeColors.Background, fontWeight = FontWeight.Bold)
+                    Text("🏁 Set finish line here", color = RevScopeColors.Background, fontWeight = FontWeight.Bold)
                 }
             } else {
                 // Current lap clock
@@ -213,7 +213,7 @@ fun TrackModeScreen(
                 )
                 Text(
                     if (state.lapInProgress) "vuelta ${state.laps.size + 1} en curso"
-                    else "cruza la línea para iniciar la vuelta 1",
+                    else "cross the line to start lap 1",
                     color = RevScopeColors.TextSecondary,
                     fontSize = 13.sp,
                 )
@@ -290,7 +290,7 @@ fun TrackModeScreen(
                     onClick = { vm.engine.clear() },
                     colors = ButtonDefaults.buttonColors(containerColor = RevScopeColors.SurfaceHigh),
                 ) {
-                    Text("Quitar línea y reiniciar", color = RevScopeColors.TextPrimary)
+                    Text("Remove line and restart", color = RevScopeColors.TextPrimary)
                 }
             }
         }

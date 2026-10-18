@@ -187,6 +187,6 @@ class MechanicChatViewModel @Inject constructor(
     private companion object {
         const val MAX_TOKENS = 800
         const val RECENT_TRIPS_LIMIT = 3
-        const val ERROR_MESSAGE = "No se pudo consultar — revisa tu proveedor de IA en Ajustes"
+        const val ERROR_MESSAGE = "The request failed — check your AI provider in Settings"
     }
 }

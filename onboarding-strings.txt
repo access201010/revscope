@@ -1,0 +1,42 @@
+141:                Text("Atrás", color = TextMutedColor)
+148:                    Text("Saltar", color = TextMutedColor)
+158:                    if (step == OnboardingViewModel.TOTAL_STEPS - 1) "Empezar" else "Siguiente",
+190:        Text("Bienvenido a RevScope", color = TextPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+192:            "Necesitamos estos permisos para que la app funcione bien. " +
+193:                "Puedes cambiarlos luego en Ajustes del sistema.",
+202:            title = "Ubicación",
+203:            rationale = "Para grabar tus rutas y avisarte de radares.",
+210:            title = "Notificaciones",
+211:            rationale = "Para el resumen de viaje y de pico y placa.",
+218:            title = "Bluetooth",
+219:            rationale = "Para conectar el adaptador OBD2.",
+229:    var type by rememberSaveable { mutableStateOf("CAR") }
+235:        Text("Tu vehículo", color = TextPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+237:            "Crealo ahora y la app se adapta: gauges, marchas y alertas según sea moto o carro.",
+245:            label = { Text("Nombre") },
+252:            VehicleTypeChip("Auto", active = type == "CAR", onClick = { type = "CAR" })
+253:            VehicleTypeChip("Moto", active = type == "MOTORCYCLE", onClick = { type = "MOTORCYCLE" })
+259:            label = { Text("Placa (opcional)") },
+274:                Text("Creado", color = BgColor, fontWeight = FontWeight.SemiBold)
+276:                Text("Crear", color = BgColor, fontWeight = FontWeight.SemiBold)
+311:        Text("¿Tenés adaptador OBD2?", color = TextPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+313:            "Un adaptador Bluetooth OBD2 te da datos en vivo del motor: RPM, velocidad, temperatura y más.",
+319:            title = "Sí, configurarlo ahora",
+320:            subtitle = "Te llevamos directo a buscar tu adaptador.",
+329:            title = "Sí, pero después",
+330:            subtitle = "Seguimos con el resto del wizard, lo configurás luego desde Ajustes.",
+338:            title = "No tengo — usar solo GPS",
+339:            subtitle = "RevScope funciona igual con datos de GPS.",
+356:                Text("Continuar", color = BgColor, fontWeight = FontWeight.SemiBold)
+392:        "Mapa con radares automáticos",
+393:        "Viajes GPS con telemetría de movimiento",
+394:        "Detección de caída",
+395:        "Pico y placa",
+396:        "Historial y reportes",
+419:        Text("¿Querés la capa de inteligencia?", color = TextPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+421:            "Con una API key gratis de Gemini activás el mecánico IA, el debrief de viaje, " +
+422:                "pico y placa por IA y la explicación de códigos de falla.",
+447:        Text("Listo", color = TextPrimaryColor, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+450:            "Podés cambiar todo esto después en Ajustes.",
+491:                Text("Permitir", color = BgColor)
+501:        contentDescription = if (granted) "Concedido" else "No concedido",

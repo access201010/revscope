@@ -167,7 +167,7 @@ fun DashboardScreen(
             onConfigurarAdaptador = onNavigateToAdapterScan,
             onFinalizarViaje = connectionVm::finalizarViaje,
             onIniciarViaje = connectionVm::iniciarViaje,
-            onDesconectar = connectionVm::disconnect,
+            onDisconnect = connectionVm::disconnect,
             onAlternarFuenteVelocidad = { dashboardVm.setSpeedSourceGps(!dashboardVm.speedSourceGps.value) },
         )
     }
@@ -223,18 +223,18 @@ internal fun lecturasConMotivos(
         motivoVelocidad = velocidadVisible.motivoSiFalta(
             when {
                 !conectado && !velocidadGps -> sinAdaptador
-                velocidadGps -> "Sin señal de velocidad del GPS"
+                velocidadGps -> "No GPS speed signal"
                 else -> motivoPid(true, "0D", "la velocidad", disponibilidad)
             },
         ),
         motivoTemperatura = temperaturaVisible.motivoSiFalta(
-            motivoPid(conectado, "05", "la temperatura del motor", disponibilidad),
+            motivoPid(conectado, "05", "engine temperature", disponibilidad),
         ),
         motivoBoost = boostVisible.motivoSiFalta(
-            if (conectado) "El boost necesita MAP y presión barométrica" else sinAdaptador,
+            if (conectado) "Boost requires MAP and barometric pressure" else sinAdaptador,
         ),
         motivoMarcha = marchaVisible.motivoSiFalta(
-            if (conectado) "La marcha necesita RPM y velocidad" else sinAdaptador,
+            if (conectado) "Gear detection requires RPM and speed" else sinAdaptador,
         ),
     )
 }

@@ -58,7 +58,7 @@ fun SpeedComparisonScreen(
         velocidadGps = gpsSpeed,
         promedioPorcentaje = averageDeltaPercent,
         onReiniciar = viewModel::resetAverage,
-        onVolver = onNavigateBack,
+        onBack = onNavigateBack,
     )
 }
 
@@ -69,7 +69,7 @@ internal fun SpeedComparisonContent(
     velocidadGps: Double?,
     promedioPorcentaje: Double?,
     onReiniciar: () -> Unit,
-    onVolver: () -> Unit,
+    onBack: () -> Unit,
 ) {
     Column(
         Modifier
@@ -80,11 +80,11 @@ internal fun SpeedComparisonContent(
             .padding(16.dp),
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onVolver) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = TextColor)
+            IconButton(onClick = onBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = TextColor)
             }
             Text(
-                "Comparar velocímetros",
+                "Compare speedometers",
                 color = TextColor,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -93,9 +93,9 @@ internal fun SpeedComparisonContent(
         }
 
         when {
-            !conectado -> EmptyState("Conecta el adaptador para comparar velocímetros")
+            !conectado -> EmptyState("Connect the adapter to compare speed readings")
             velocidadGps == null -> EmptyState(
-                "Esperando señal GPS — asegúrate de tener buena vista del cielo y de estar en movimiento",
+                "Waiting for GPS signal — make sure you have a clear view of the sky and are moving",
             )
             else -> ComparisonContent(
                 obdSpeed = velocidadObd ?: 0.0,
@@ -143,8 +143,8 @@ private fun ComparisonContent(
 
     Spacer(Modifier.height(16.dp))
     Text(
-        "El velocímetro suele marcar más que la velocidad real GPS. " +
-            "Mide en vía recta a velocidad constante.",
+        "The vehicle speedometer usually reads higher than the actual GPS speed. " +
+            "Measure on a straight road at a constant speed.",
         color = TextMutedColor,
         fontSize = 12.sp,
     )
@@ -171,7 +171,7 @@ private fun SpeedColumn(label: String, speed: Double, modifier: Modifier = Modif
 private fun DeltaCard(deltaAbs: Double, deltaPercent: Double?) {
     Surface(shape = RoundedCornerShape(14.dp), color = SurfaceColor, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
-            Text("Diferencia", color = TextMutedColor, fontSize = 12.sp)
+            Text("Difference", color = TextMutedColor, fontSize = 12.sp)
             Text(
                 "%+.1f km/h".format(deltaAbs),
                 color = TextColor,
@@ -180,7 +180,7 @@ private fun DeltaCard(deltaAbs: Double, deltaPercent: Double?) {
                 modifier = Modifier.padding(top = 2.dp),
             )
             Text(
-                deltaPercent?.let { "%+.1f%%".format(it) } ?: "-- (acelera a más de 10 km/h)",
+                deltaPercent?.let { "%+.1f%%".format(it) } ?: "-- (increase speed above 10 km/h)",
                 color = if ((deltaPercent ?: 0.0) > 0) WarnColor else TextMutedColor,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 2.dp),
@@ -193,7 +193,7 @@ private fun DeltaCard(deltaAbs: Double, deltaPercent: Double?) {
 private fun AverageCard(averageDeltaPercent: Double?, onReset: () -> Unit) {
     Surface(shape = RoundedCornerShape(14.dp), color = SurfaceColor, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
-            Text("Promedio acumulado de esta sesión", color = TextMutedColor, fontSize = 12.sp)
+            Text("Average for this session", color = TextMutedColor, fontSize = 12.sp)
             Text(
                 averageDeltaPercent?.let { "%+.1f%%".format(it) } ?: "--",
                 color = AccentColor,
@@ -203,7 +203,7 @@ private fun AverageCard(averageDeltaPercent: Double?, onReset: () -> Unit) {
             )
             Spacer(Modifier.height(10.dp))
             OutlinedButton(onClick = onReset, modifier = Modifier.fillMaxWidth()) {
-                Text("Reiniciar promedio")
+                Text("Reset average")
             }
         }
     }

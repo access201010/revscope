@@ -38,7 +38,7 @@ object PhotonGeocoder {
             }
         }
         return runCatching { PhotonParser.parse(httpGet(url)) }
-            .onFailure { Timber.w(it, "PhotonGeocoder: búsqueda fallida") }
+            .onFailure { Timber.w(it, "PhotonGeocoder: search failed") }
             .getOrDefault(emptyList())
     }
 

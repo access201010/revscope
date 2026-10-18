@@ -305,11 +305,11 @@ fun LiveMapScreen(
     var promoLatched by remember { mutableStateOf(false) }
     val promoEligible = tilesTier == TilesTier.REMOTE && !remoteMapBannerShown && !remoteBannerLocallyDismissed
     val showRemoteMapPromo = !remoteBannerLocallyDismissed && (promoEligible || promoLatched)
-    // X4: CTA "Descargar" del banner de promo abre este confirm inline (mismo contenido que
+    // X4: CTA "Download" del banner de promo abre este confirm inline (mismo contenido que
     // OfflineMapSection en feature/settings) en vez de navegar a Ajustes.
     var showMapDownloadConfirm by remember { mutableStateOf(false) }
     val downloadingMapState = mapDownloadState as? MapDownloadState.Downloading
-    // Snackbar "Mapa offline listo" al completar (mismo patrón que OfflineMapSection): detecta
+    // Snackbar "Offline map ready" al completar (mismo patrón que OfflineMapSection): detecta
     // la transición Downloading → Idle(exists) en vez de reaccionar a cualquier Idle, para no
     // disparar en el arranque de pantalla con un mapa ya descargado de antes.
     val snackbarHostState = remember { SnackbarHostState() }
@@ -317,13 +317,13 @@ fun LiveMapScreen(
     LaunchedEffect(mapDownloadState) {
         val current = mapDownloadState
         if (wasDownloadingMap && current is MapDownloadState.Idle && current.exists) {
-            snackbarHostState.showSnackbar("Mapa offline listo")
+            snackbarHostState.showSnackbar("Offline map ready")
         }
         // Sin esto, una descarga que falla (caída de celular en moto — el caso que el confirm
         // de datos móviles habilita) hacía desaparecer el banner de progreso sin una palabra,
         // con la promo ya consumida y sin vía de retry visible en el mapa.
         if (wasDownloadingMap && current is MapDownloadState.Error) {
-            snackbarHostState.showSnackbar("Descarga del mapa falló: ${current.message} — reintentá desde Ajustes")
+            snackbarHostState.showSnackbar("Map download failed: ${current.message} — try again from Settings")
         }
         wasDownloadingMap = current is MapDownloadState.Downloading
     }
@@ -442,7 +442,7 @@ fun LiveMapScreen(
         val navIdle = navigation == null || navigation?.arrived == true
 
         // X3: chip "Recentrar" — nav activa (no idle) y el usuario paneó (follow apagado). No
-        // usar navigation?.arrived directo: !navIdle ya expresa exactamente "hay nav Y no llegó".
+        // usar navigation?.arrived directo: !navIdle ya expresa exactamente "navigation active AND not arrived".
         // Con una MapFeatureCard abierta el slot inferior crece más alto que la barra de stats
         // (88dp podía rozarla) y el usuario está mirando la tarjeta — el chip espera a que cierre.
         val showRecenterChip = !navIdle && !followEnabled && tappedFeature == null
@@ -566,7 +566,7 @@ fun LiveMapScreen(
             modifier = Modifier.align(Alignment.TopStart).padding(8.dp),
         )
 
-        // navigation == null y no navIdle: con «Llegó» el NavigationBanner sigue arriba al centro.
+        // navigation == null y no navIdle: con «Arrived» el NavigationBanner sigue arriba al centro.
         if (navigation == null) {
             Box(Modifier.align(Alignment.TopCenter).padding(top = TOPE_SELECTOR, start = 12.dp, end = 12.dp)) {
                 selectorVehiculo()
@@ -581,7 +581,7 @@ fun LiveMapScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        "Ubicación desactivada",
+                        "Location disabled",
                         color = Color(0xFFF0F0F8),
                         fontSize = 13.sp,
                         modifier = Modifier.weight(1f, fill = false).padding(start = 14.dp, top = 8.dp, bottom = 8.dp),
@@ -600,7 +600,7 @@ fun LiveMapScreen(
         }
 
         // Gated en navigation == null, NO navIdle (re-keyeado en la ola final — regresión de
-        // "arrived"): con arrived=true, navIdle ya es true pero el NavigationBanner de "Llegó"
+        // "arrived"): con arrived=true, navIdle ya es true pero el NavigationBanner de "Arrived"
         // y la NavigationProgressBar (ver navLive != null más abajo) SIGUEN de pie hasta que el
         // usuario cierra la navegación — con navIdle esta barra reaparecía encima de ese banner.
         // El selector de vehículo usa la misma condición (fix W2, regla 1).
@@ -624,7 +624,7 @@ fun LiveMapScreen(
         // stats de abajo (NavigationProgressBar) sigue de pie mientras navigation no sea null
         // — arrived incluido, ella ahora recibe la velocidad siempre que se muestra (ver
         // navLive != null más abajo) — con navIdle este badge reaparecía superpuesto a ella
-        // durante "Llegó" (fix W2, regla 2).
+        // durante "Arrived" (fix W2, regla 2).
         if (navigation == null) {
             SpeedOverlay(viewModel.speedKmh, Modifier.align(Alignment.BottomStart).padding(16.dp))
         }
@@ -633,7 +633,7 @@ fun LiveMapScreen(
         // y su borde superior queda a ~80dp del fondo (24dp de margen propio + ~56dp de alto
         // real, mismo cálculo que ya se usaba para leaderboardTopPadding más abajo) — la columna
         // de FABs necesita ese mismo margen inferior mientras ESA BARRA siga de pie, que es
-        // navigation != null (arrived incluido, "Llegó" no la retira), no !navIdle (re-keyeado
+        // navigation != null (arrived incluido, "Arrived" no la retira), no !navIdle (re-keyeado
         // en la ola final: con arrived, navIdle volvía a 16dp fijos con la barra fillMaxWidth
         // todavía encima de los FABs, comiéndose sus taps — regresión nueva de un fix anterior).
         val fabColumnBottomPadding = if (navigation != null) 84.dp else 16.dp
@@ -647,8 +647,8 @@ fun LiveMapScreen(
             ) {
                 Icon(
                     if (nightMode == "auto") Icons.Default.BrightnessAuto else Icons.Default.DarkMode,
-                    contentDescription = "Mapa nocturno: " + when (nightMode) {
-                        "auto" -> "automático"
+                    contentDescription = "Night map: " + when (nightMode) {
+                        "auto" -> "automatic"
                         "on" -> "encendido"
                         else -> "apagado"
                     },
@@ -677,7 +677,7 @@ fun LiveMapScreen(
             ) {
                 Icon(
                     Icons.Default.MyLocation,
-                    contentDescription = "Seguir mi posición",
+                    contentDescription = "Follow my location",
                     tint = if (followEnabled) Color(0xFF0A0A0F) else Color(0xFFF0F0F8),
                 )
             }
@@ -688,7 +688,7 @@ fun LiveMapScreen(
             ) {
                 Icon(
                     Icons.Default.Group,
-                    contentDescription = "Rodada en grupo",
+                    contentDescription = "Group drive",
                     tint = if (roomCode != null) Color(0xFF0A0A0F) else Color(0xFFF0F0F8),
                 )
             }
@@ -707,7 +707,7 @@ fun LiveMapScreen(
                 },
                 containerColor = Color(0xFF1C1C28),
             ) {
-                Icon(Icons.Default.Navigation, contentDescription = "Abrir en Maps", tint = Color(0xFFF0F0F8))
+                Icon(Icons.Default.Navigation, contentDescription = "Open in Maps", tint = Color(0xFFF0F0F8))
             }
         }
 
@@ -778,7 +778,7 @@ fun LiveMapScreen(
                 state = navLive,
                 // Siempre que la barra se muestra (navLive != null), arrived incluido — ya no
                 // hay un SpeedOverlay standalone compitiendo por ese espacio (re-keyeado arriba
-                // a navigation == null), así que mostrar la velocidad acá durante "Llegó" está
+                // a navigation == null), así que mostrar la velocidad acá durante "Arrived" está
                 // bien (antes se suprimía con navIdle, dejando la celda vacía sin necesidad).
                 speedKmh = speedKmh,
                 modifier = Modifier.align(Alignment.BottomCenter).padding(horizontal = 12.dp, vertical = 24.dp),
@@ -821,7 +821,7 @@ fun LiveMapScreen(
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
                 ) {
                     Text(
-                        "\uD83C\uDFCD\uFE0F Sala $roomCode \u00b7 ${peers.size} en l\u00ednea",
+                        "\uD83C\uDFCD\uFE0F Group $roomCode \u00b7 ${peers.size} online",
                         color = Color(0xFFE8FF00),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
@@ -910,15 +910,15 @@ private fun GroupRideDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = Color(0xFF12121A),
-        title = { Text("Rodada en grupo", color = Color(0xFFF0F0F8), fontWeight = FontWeight.Bold) },
+        title = { Text("Group drive", color = Color(0xFFF0F0F8), fontWeight = FontWeight.Bold) },
         text = {
             Column {
                 if (activeCode != null) {
-                    Text("Est\u00e1s en la sala $activeCode. Comparte el c\u00f3digo con tu parche.", color = Color(0xFF6B7089), fontSize = 13.sp)
+                    Text("You're in group $activeCode. Share the code with your group.", color = Color(0xFF6B7089), fontSize = 13.sp)
                     if (legacyServer) {
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            "El servidor necesita actualizarse para las funciones sociales (destino compartido, carreras).",
+                            "The server needs to be updated for social features (shared destinations and races).",
                             color = Color(0xFFFF5252),
                             fontSize = 12.sp,
                         )
@@ -926,30 +926,30 @@ private fun GroupRideDialog(
                     Spacer(Modifier.height(12.dp))
                     GhostModeToggle(enabled = ghostEnabled, onToggle = onToggleGhost)
                 } else {
-                    Text("Crea una sala y comparte el c\u00f3digo, o \u00fanete a la de un parcero. Ver\u00e1s sus posiciones en el mapa en vivo.", color = Color(0xFF6B7089), fontSize = 13.sp)
+                    Text("Create a group and share the code, or join another group. You'll see their locations on the live map.", color = Color(0xFF6B7089), fontSize = 13.sp)
                     Spacer(Modifier.height(12.dp))
                     OutlinedTextField(
                         value = codeInput,
                         onValueChange = { codeInput = it.uppercase().take(6) },
-                        label = { Text("C\u00f3digo de sala", fontSize = 12.sp) },
+                        label = { Text("Group code", fontSize = 12.sp) },
                         singleLine = true,
                     )
-                    Text("Requiere un servidor configurado en Ajustes.", color = Color(0xFF6B7089), fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
+                    Text("Requires a server configured in Settings.", color = Color(0xFF6B7089), fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
                 }
             }
         },
         confirmButton = {
             if (activeCode != null) {
-                TextButton(onClick = onLeave) { Text("Salir de la sala", color = Color(0xFFFF5252)) }
+                TextButton(onClick = onLeave) { Text("Leave group", color = Color(0xFFFF5252)) }
             } else {
-                TextButton(onClick = onCreate, enabled = !busy) { Text(if (busy) "Creando\u2026" else "Crear sala", color = Color(0xFFE8FF00)) }
+                TextButton(onClick = onCreate, enabled = !busy) { Text(if (busy) "Creating\u2026" else "Create group", color = Color(0xFFE8FF00)) }
             }
         },
         dismissButton = {
             if (activeCode == null && codeInput.length == 6) {
-                TextButton(onClick = { onJoin(codeInput) }) { Text("Unirse", color = Color(0xFFE8FF00)) }
+                TextButton(onClick = { onJoin(codeInput) }) { Text("Join", color = Color(0xFFE8FF00)) }
             } else {
-                TextButton(onClick = onDismiss) { Text("Cerrar", color = Color(0xFF6B7089)) }
+                TextButton(onClick = onDismiss) { Text("Close", color = Color(0xFF6B7089)) }
             }
         },
     )
@@ -966,7 +966,7 @@ private fun GhostModeToggle(enabled: Boolean, onToggle: (Boolean) -> Unit) {
         Column(modifier = Modifier.weight(1f)) {
             Text("Modo fantasma", color = Color(0xFFF0F0F8), fontSize = 13.sp, fontWeight = FontWeight.Bold)
             Text(
-                "Ves a la sala, pero tu posición no se comparte.",
+                "You can see the group, but your location is not being shared.",
                 color = Color(0xFF6B7089),
                 fontSize = 11.sp,
             )
@@ -1005,9 +1005,9 @@ private fun RouteInfoChip(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     when {
-                        routing -> "Calculando ruta…"
+                        routing -> "Calculating route…"
                         plannedRoute != null -> formatRouteSummary(plannedRoute)
-                        else -> "Sin ruta — ¿hay internet?"
+                        else -> "No route — is there an internet connection?"
                     },
                     color = Color(0xFFE8FF00),
                     fontSize = 14.sp,
@@ -1016,16 +1016,16 @@ private fun RouteInfoChip(
                 )
                 if (plannedRoute != null) {
                     TextButton(onClick = onStart) {
-                        Text("Navegar", color = Color(0xFFE8FF00), fontWeight = FontWeight.Black)
+                        Text("Navigate", color = Color(0xFFE8FF00), fontWeight = FontWeight.Black)
                     }
                 }
                 if (canShare) {
                     IconButton(onClick = onShare) {
-                        Icon(Icons.Default.Share, contentDescription = "Compartir con la sala", tint = Color(0xFFE8FF00))
+                        Icon(Icons.Default.Share, contentDescription = "Share with group", tint = Color(0xFFE8FF00))
                     }
                 }
                 IconButton(onClick = onClear) {
-                    Icon(Icons.Default.Close, contentDescription = "Quitar destino", tint = Color(0xFF6B7089))
+                    Icon(Icons.Default.Close, contentDescription = "Remove destination", tint = Color(0xFF6B7089))
                 }
             }
             if (routeAlternatives.size > 1) {
@@ -1151,7 +1151,7 @@ internal fun ErrorBanner(message: String, onDismiss: () -> Unit, modifier: Modif
                 modifier = Modifier.weight(1f, fill = false).padding(start = 14.dp, top = 8.dp, bottom = 8.dp),
             )
             IconButton(onClick = onDismiss) {
-                Icon(Icons.Default.Close, contentDescription = "Cerrar aviso", tint = AttributionColor)
+                Icon(Icons.Default.Close, contentDescription = "Close notice", tint = AttributionColor)
             }
         }
     }
@@ -1196,8 +1196,8 @@ internal fun ApproachingCameraBanner(
             Spacer(Modifier.width(8.dp))
             Text(
                 buildString {
-                    append("Radar en ${target.distanceM} m")
-                    target.maxSpeedKmh?.let { append("  ·  límite $it") }
+                    append("Speed camera in ${target.distanceM} m")
+                    target.maxSpeedKmh?.let { append("  ·  limit $it") }
                 },
                 color = Color.White,
                 fontSize = 15.sp,
@@ -1223,16 +1223,16 @@ internal fun RemoteMapPromoBanner(onDownload: () -> Unit, onDismiss: () -> Unit,
     ) {
         Column(modifier = Modifier.padding(start = 14.dp, end = 4.dp, top = 8.dp, bottom = 4.dp)) {
             Text(
-                "Mapa premium activo por internet — descargalo para usarlo sin datos",
+                "Premium map active online — download it for offline use",
                 color = Color(0xFFF0F0F8),
                 fontSize = 12.sp,
             )
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 TextButton(onClick = onDownload) {
-                    Text("Descargar", color = Color(0xFFE8FF00), fontWeight = FontWeight.Black)
+                    Text("Download", color = Color(0xFFE8FF00), fontWeight = FontWeight.Black)
                 }
                 IconButton(onClick = onDismiss) {
-                    Icon(Icons.Default.Close, contentDescription = "Cerrar aviso", tint = AttributionColor)
+                    Icon(Icons.Default.Close, contentDescription = "Close notice", tint = AttributionColor)
                 }
             }
         }
@@ -1255,7 +1255,7 @@ internal fun MapDownloadProgressBanner(
         modifier = modifier.widthIn(max = 280.dp),
     ) {
         Column(modifier = Modifier.padding(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 4.dp)) {
-            Text("Descargando mapa offline… $percent%", color = Color(0xFFF0F0F8), fontSize = 12.sp)
+            Text("Downloading offline map… $percent%", color = Color(0xFFF0F0F8), fontSize = 12.sp)
             Spacer(Modifier.height(6.dp))
             LinearProgressIndicator(
                 progress = { state.progress },
@@ -1265,14 +1265,14 @@ internal fun MapDownloadProgressBanner(
             )
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
                 TextButton(onClick = onCancel) {
-                    Text("Cancelar", color = Color(0xFFE8FF00), fontWeight = FontWeight.Black)
+                    Text("Cancel", color = Color(0xFFE8FF00), fontWeight = FontWeight.Black)
                 }
             }
         }
     }
 }
 
-/** X4: confirm inline del CTA "Descargar" del banner de promo — mismo contenido/decisión que
+/** X4: confirm inline del CTA "Download" del banner de promo — mismo contenido/decisión que
  * DownloadConfirmDialog en feature/settings/OfflineMapSection.kt, pero DUPLICADO acá a
  * propósito en vez de extraído a un módulo común: feature/settings y feature/map son módulos
  * hermanos sin dependencia entre sí, y core/maps (el único módulo común a ambos) ni siquiera
@@ -1293,7 +1293,7 @@ private fun MapDownloadConfirmDialog(
         containerColor = Color(0xFF12121A),
         title = {
             Text(
-                if (isOnWifi) "Descargar mapa offline" else "Sin WiFi",
+                if (isOnWifi) "Download offline map" else "No Wi-Fi",
                 color = Color(0xFFF0F0F8),
                 fontWeight = FontWeight.Bold,
             )
@@ -1304,7 +1304,7 @@ private fun MapDownloadConfirmDialog(
                     if (isOnWifi) {
                         "Se descargará el mapa offline de Colombia (~913 MB)."
                     } else {
-                        "Sin WiFi — ¿usar datos móviles? (~913 MB)"
+                        "No Wi-Fi — use mobile data? (~913 MB)"
                     },
                     color = Color(0xFF6B7089),
                     fontSize = 13.sp,
@@ -1316,11 +1316,11 @@ private fun MapDownloadConfirmDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(!isOnWifi) }) {
-                Text(if (isOnWifi) "Descargar" else "Usar datos móviles", color = Color(0xFFE8FF00))
+                Text(if (isOnWifi) "Download" else "Use mobile data", color = Color(0xFFE8FF00))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancelar", color = Color(0xFF6B7089)) }
+            TextButton(onClick = onDismiss) { Text("Cancel", color = Color(0xFF6B7089)) }
         },
     )
 }

@@ -20,13 +20,13 @@ private const val LONG_TRIM_B1_PID = "07"
 private val LIVE_PID_LABELS = linkedMapOf(
     RPM_PID to "RPM",
     COOLANT_TEMP_PID to "Temp",
-    VOLTAGE_PID to "Voltaje",
-    SHORT_TRIM_B1_PID to "Trim corto B1",
-    LONG_TRIM_B1_PID to "Trim largo B1",
+    VOLTAGE_PID to "Voltage",
+    SHORT_TRIM_B1_PID to "Short-term trim B1",
+    LONG_TRIM_B1_PID to "Long-term trim B1",
 )
 
 /**
- * Pure formatting logic for the "Mecánico IA" chat — turns already-fetched vehicle data into
+ * Pure formatting logic for the "AI Mechanic" chat — turns already-fetched vehicle data into
  * the compact context block embedded in the system prompt, and folds the in-memory
  * conversation history into a single transcript for [com.revscope.core.intelligence.provider.AiRequest.user]
  * (the shared [com.revscope.core.intelligence.provider.AiProvider] interface has no multi-turn
@@ -53,50 +53,50 @@ object MechanicChatContextBuilder {
     data class ChatTurn(val question: String, val answer: String)
 
     fun buildSystemPrompt(context: VehicleContext): String = buildString {
-        append("Eres un mecánico experto y directo especializado en ${tipoVehiculoTexto(context.profileType)}. ")
-        append("Responde en español, corto y práctico (máx 6 frases salvo que pidan detalle). ")
-        append("Si el problema es serio o de seguridad, dilo sin rodeos y recomienda taller.")
-        append("\n\nDatos actuales del vehículo del usuario:\n")
+        append("You are an expert, practical mechanic specialising in ${tipoVehiculoTexto(context.profileType)}. ")
+        append("Respond in British English, concisely and practically (maximum 6 sentences unless the user asks for detail). ")
+        append("If the problem is serious or safety-related, say so clearly and recommend professional inspection or repair.")
+        append("\n\nCurrent vehicle data:\n")
         append(buildContextBlock(context))
     }
 
     fun buildUserMessage(history: List<ChatTurn>, newQuestion: String): String = buildString {
         history.takeLast(MAX_HISTORY_TURNS).forEach { turn ->
-            appendLine("Usuario: ${turn.question}")
-            appendLine("Mecánico: ${turn.answer}")
+            appendLine("User: ${turn.question}")
+            appendLine("Mechanic: ${turn.answer}")
         }
-        append("Usuario: $newQuestion")
+        append("User: $newQuestion")
     }
 
     private fun buildContextBlock(context: VehicleContext): String = buildString {
-        appendLine("Perfil: ${perfilTexto(context)}")
-        appendLine("Conexión: ${conexionTexto(context)}")
-        appendLine("Último chequeo: ${chequeoTexto(context.ultimoChequeo)}")
-        appendLine("Últimos viajes: ${viajesTexto(context.ultimosViajes)}")
-        append("Mantenimiento: ${context.mantenimientoProximo ?: "sin configurar"}")
+        appendLine("Profile: ${perfilTexto(context)}")
+        appendLine("Connection: ${conexionTexto(context)}")
+        appendLine("Last health check: ${chequeoTexto(context.ultimoChequeo)}")
+        appendLine("Recent journeys: ${viajesTexto(context.ultimosViajes)}")
+        append("Maintenance: ${context.mantenimientoProximo ?: "not configured"}")
     }
 
     private fun tipoVehiculoTexto(profileType: String?): String = when (profileType) {
-        TYPE_MOTORCYCLE -> "motos"
-        null -> "vehículos"
-        else -> "carros"
+        TYPE_MOTORCYCLE -> "motorcycles"
+        null -> "vehicles"
+        else -> "cars"
     }
 
     private fun perfilTexto(context: VehicleContext): String {
-        val nombre = context.profileName ?: return "sin configurar"
+        val nombre = context.profileName ?: return "not configured"
         val tipo = tipoVehiculoTexto(context.profileType)
-        val combustible = context.fuelType ?: "desconocido"
-        val odometro = context.odometroKm?.let { String.format(Locale.US, "%,.0f km", it) } ?: "sin datos"
-        return "$nombre ($tipo), combustible $combustible, odómetro app: $odometro"
+        val combustible = context.fuelType ?: "unknown"
+        val odometro = context.odometroKm?.let { String.format(Locale.US, "%,.0f km", it) } ?: "no data"
+        return "$nombre ($tipo), fuel $combustible, app odometer: $odometro"
     }
 
     private fun conexionTexto(context: VehicleContext): String {
-        if (!context.conectado) return "desconectado"
+        if (!context.conectado) return "disconnected"
         val lecturas = LIVE_PID_LABELS.mapNotNull { (pid, label) ->
             context.lecturas[pid]?.let { "$label ${formatValor(it)} ${it.unit}" }
         }
-        if (lecturas.isEmpty()) return "conectado — sin lecturas aún"
-        return "conectado — ${lecturas.joinToString(", ")}"
+        if (lecturas.isEmpty()) return "connected — no readings yet"
+        return "connected — ${lecturas.joinToString(", ")}"
     }
 
     private fun formatValor(reading: ObdReading): String =
@@ -107,14 +107,14 @@ object MechanicChatContextBuilder {
         }
 
     private fun chequeoTexto(items: List<ChequeoItem>): String {
-        if (items.isEmpty()) return "sin datos"
+        if (items.isEmpty()) return "no data"
         return items.joinToString("; ") { "${it.titulo} (${it.nivel.name})" }
     }
 
     private fun viajesTexto(viajes: List<ViajeResumen>): String {
-        if (viajes.isEmpty()) return "sin datos"
+        if (viajes.isEmpty()) return "no data"
         return viajes.joinToString("; ") { viaje ->
-            val eco = viaje.ecoScore?.toString() ?: "sin dato"
+            val eco = viaje.ecoScore?.toString() ?: "no data"
             val distancia = String.format(Locale.US, "%.0f", viaje.distanceKm)
             "${fechaCorta(viaje.startedAtEpochMs)} — $distancia km, eco $eco"
         }

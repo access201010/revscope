@@ -18,9 +18,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 private const val NO_SOPORTADO_MENSAJE =
-    "Tu vehículo no expone el odómetro por OBD (PID 01 A6) — usa el escáner Mode 22 " +
-        "para buscar el DID del fabricante"
-private const val LECTURA_FALLIDA_MENSAJE = "No se pudo leer el odómetro — intenta de nuevo"
+    "Your vehicle does not expose the odometer via OBD (PID 01 A6) — use the Mode 22 scanner " +
+        "to look for the manufacturer's DID"
+private const val LECTURA_FALLIDA_MENSAJE = "The odometer could not be read — try again"
 
 @HiltViewModel
 class OdometerViewModel @Inject constructor(
@@ -52,7 +52,7 @@ class OdometerViewModel @Inject constructor(
     fun leerAhora() {
         if (_leyendoAhora.value) return
         if (sessionManager.connectionState.value !is ConnectionState.Connected) {
-            _mensaje.value = "Conecta el adaptador primero"
+            _mensaje.value = "Connect the adapter first"
             return
         }
         viewModelScope.launch {
@@ -63,7 +63,7 @@ class OdometerViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                Timber.w(e, "OdometerViewModel: lectura falló")
+                Timber.w(e, "OdometerViewModel: reading failed")
                 _mensaje.value = LECTURA_FALLIDA_MENSAJE
             } finally {
                 _leyendoAhora.value = false

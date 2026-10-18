@@ -108,7 +108,7 @@ internal data class AccionesConducir(
     val onConfigurarAdaptador: () -> Unit = {},
     val onFinalizarViaje: () -> Unit = {},
     val onIniciarViaje: () -> Unit = {},
-    val onDesconectar: () -> Unit = {},
+    val onDisconnect: () -> Unit = {},
     val onAlternarFuenteVelocidad: () -> Unit = {},
 )
 
@@ -191,7 +191,7 @@ private fun AccionesDeViaje(estado: EstadoConducirUi, acciones: AccionesConducir
             aviso = estado.avisoViaje,
             onFinalizar = acciones.onFinalizarViaje,
             onIniciar = acciones.onIniciarViaje,
-            onDesconectar = acciones.onDesconectar,
+            onDisconnect = acciones.onDisconnect,
         )
     }
 }
@@ -353,7 +353,7 @@ internal fun ConfigureAdapterCta(onClick: () -> Unit, modifier: Modifier = Modif
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
             Icon(Icons.Default.Bluetooth, contentDescription = null, tint = RevScopeColors.Accent)
             Text(
-                "RPM, temperatura, marcha y boost necesitan un adaptador OBD2.",
+                "RPM, temperature, gear and boost require an OBD2 adapter.",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.body,
                 modifier = Modifier.weight(1f),
@@ -393,9 +393,9 @@ internal fun UpdateBanner(version: String, onDownload: () -> Unit, onDismiss: ()
     ) {
         Row(verticalAlignment = Alignment.Top) {
             Column(modifier = Modifier.weight(1f).padding(top = 10.dp)) {
-                Text("Nueva versión $version disponible", color = RevScopeColors.Accent, style = RevScopeType.label)
+                Text("New version $version available", color = RevScopeColors.Accent, style = RevScopeType.label)
                 Text(
-                    "Descárgala para actualizar",
+                    "Download it to update",
                     color = RevScopeColors.TextSecondary,
                     style = RevScopeType.bodySmall,
                 )
@@ -444,7 +444,7 @@ private fun SpeedSourceChip(useGps: Boolean, onToggle: () -> Unit) {
         onClick = onToggle,
         modifier = Modifier.semantics {
             contentDescription = "Fuente de la velocidad"
-            stateDescription = if (useGps) "GPS del teléfono" else "ECU por OBD"
+            stateDescription = if (useGps) "Tablet GPS" else "ECU por OBD"
         },
     )
 }

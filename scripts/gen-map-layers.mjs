@@ -22,7 +22,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const PACKAGE_NAME = "@protomaps/basemaps";
 const PACKAGE_VERSION = "5.7.2";
-const LANGUAGE = "es";
+const LANGUAGE = "en";
 const TILES_SOURCE_NAME = "protomaps";
 const THEMES = ["light", "dark"];
 

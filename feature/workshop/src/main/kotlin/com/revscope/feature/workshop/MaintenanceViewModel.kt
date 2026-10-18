@@ -154,14 +154,14 @@ class MaintenanceViewModel @Inject constructor(
 
     private fun defaultItemDefinitions(type: String): List<Pair<String, Double>> {
         val base = listOf(
-            "Aceite" to DEFAULT_ACEITE_KM,
-            "Llantas (revisión)" to DEFAULT_LLANTAS_KM,
-            "Batería (revisión)" to DEFAULT_BATERIA_KM,
+            "Oil" to DEFAULT_ACEITE_KM,
+            "Tyres (inspection)" to DEFAULT_LLANTAS_KM,
+            "Battery (inspection)" to DEFAULT_BATERIA_KM,
         )
         if (type != TYPE_MOTORCYCLE) return base
         return base + listOf(
-            "Kit de arrastre" to DEFAULT_KIT_ARRASTRE_KM,
-            "Refrigerante" to DEFAULT_REFRIGERANTE_KM,
+            "Chain and sprocket kit" to DEFAULT_KIT_ARRASTRE_KM,
+            "Coolant" to DEFAULT_REFRIGERANTE_KM,
         )
     }
 
@@ -221,7 +221,7 @@ class MaintenanceViewModel @Inject constructor(
                 if (kilometrajeIngresado < suma) {
                     _saveResult.value = SaveResult(
                         false,
-                        "El kilometraje no puede ser menor que la distancia ya registrada (${suma.roundToLong()} km)",
+                        "The mileage cannot be lower than the distance already recorded (${suma.roundToLong()} km)",
                     )
                     return@launch
                 }

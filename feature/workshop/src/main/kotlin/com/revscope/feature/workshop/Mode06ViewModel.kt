@@ -50,14 +50,14 @@ class Mode06ViewModel @Inject constructor(
     fun runScan() {
         if (_state.value is UiState.Scanning) return
         if (sessionManager.connectionState.value !is ConnectionState.Connected) {
-            _state.value = UiState.Error("Conecta el adaptador primero")
+            _state.value = UiState.Error("Connect the adapter first")
             return
         }
         viewModelScope.launch {
             try {
                 val mids = fetchSupportedMids()
                 if (mids.isEmpty()) {
-                    _state.value = UiState.Error("El vehículo no reporta resultados Mode 06 soportados")
+                    _state.value = UiState.Error("The vehicle does not report supported Mode 06 results")
                     return@launch
                 }
                 val result = fetchGroups(mids)
@@ -66,7 +66,7 @@ class Mode06ViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 Timber.e(e, "Mode06: scan failed")
-                _state.value = UiState.Error("Falló la lectura: ${e.message}")
+                _state.value = UiState.Error("Reading failed: ${e.message}")
             }
         }
     }

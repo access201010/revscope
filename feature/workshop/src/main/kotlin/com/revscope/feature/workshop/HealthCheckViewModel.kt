@@ -67,29 +67,29 @@ class HealthCheckViewModel @Inject constructor(
     fun runHealthCheck() {
         if (_state.value is UiState.Running) return
         if (sessionManager.connectionState.value !is ConnectionState.Connected) {
-            _state.value = UiState.Error("Conecta el adaptador primero")
+            _state.value = UiState.Error("Connect the adapter first")
             return
         }
         viewModelScope.launch {
             try {
                 val items = mutableListOf<DiagnosticRules.Diagnosis>()
 
-                _state.value = UiState.Running("Leyendo códigos de falla…")
+                _state.value = UiState.Running("Reading fault codes…")
                 val dtcScan = readAllDtcs()
                 items += buildDtcDiagnosis(dtcScan)
 
-                _state.value = UiState.Running("Consultando monitores de readiness…")
+                _state.value = UiState.Running("Checking emissions readiness monitors…")
                 val readiness = readReadiness()
                 items += DiagnosticosChequeo.readiness(registry.estadoSoporte(DiagnosticosChequeo.READINESS_PID), readiness)
 
-                _state.value = UiState.Running("Muestreando mezcla y sensores ($SAMPLE_SECONDS s)…")
+                _state.value = UiState.Running("Sampling fuel mixture and sensors ($SAMPLE_SECONDS s)…")
                 val mezcla = sampleMixture()
                 items += mezcla.diagnosticos
 
-                _state.value = UiState.Running("Verificando odómetro…")
+                _state.value = UiState.Running("Checking odometer…")
                 items += odometerDiagnoses()
 
-                _state.value = UiState.Running("Analizando tendencia de batería…")
+                _state.value = UiState.Running("Analysing battery trend…")
                 batteryTrendDiagnosis()?.let { items += it }
 
                 val now = System.currentTimeMillis()
@@ -101,7 +101,7 @@ class HealthCheckViewModel @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 Timber.e(e, "HealthCheck failed")
-                _state.value = UiState.Error("Falló el chequeo: ${e.message}")
+                _state.value = UiState.Error("Health check failed: ${e.message}")
             }
         }
     }
@@ -112,7 +112,7 @@ class HealthCheckViewModel @Inject constructor(
             val uri = withContext(Dispatchers.IO) {
                 HealthReportCard.render(
                     context, done.items, done.dtcCodes,
-                    sessionManager.activeProfile.value?.name ?: "Mi vehículo", done.timestamp,
+                    sessionManager.activeProfile.value?.name ?: "My vehicle", done.timestamp,
                 )
             } ?: return@launch
             val intent = Intent(Intent.ACTION_SEND).apply {
@@ -120,7 +120,7 @@ class HealthCheckViewModel @Inject constructor(
                 putExtra(Intent.EXTRA_STREAM, uri)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(Intent.createChooser(intent, "Compartir informe"))
+            context.startActivity(Intent.createChooser(intent, "Share report"))
         }
     }
 
@@ -148,13 +148,13 @@ class HealthCheckViewModel @Inject constructor(
         return when (result.verdict) {
             com.revscope.core.obd.workshop.BatteryTrendAnalyzer.Verdict.SIN_DATOS -> null
             com.revscope.core.obd.workshop.BatteryTrendAnalyzer.Verdict.OK -> DiagnosticRules.Diagnosis(
-                DiagnosticRules.Nivel.OK, "Batería (tendencia)", "Carga estable entre viajes", result.detalle,
+                DiagnosticRules.Nivel.OK, "Battery (trend)", "Stable charging between journeys", result.detalle,
             )
             com.revscope.core.obd.workshop.BatteryTrendAnalyzer.Verdict.DEGRADANDO -> DiagnosticRules.Diagnosis(
-                DiagnosticRules.Nivel.ATENCION, "Batería (tendencia)", "Voltaje de carga en descenso", result.detalle,
+                DiagnosticRules.Nivel.ATENCION, "Battery (trend)", "Charging voltage declining", result.detalle,
             )
             com.revscope.core.obd.workshop.BatteryTrendAnalyzer.Verdict.CARGA_DEBIL -> DiagnosticRules.Diagnosis(
-                DiagnosticRules.Nivel.ATENCION, "Batería (tendencia)", "Carga débil sostenida", result.detalle,
+                DiagnosticRules.Nivel.ATENCION, "Battery (trend)", "Persistently weak charging", result.detalle,
             )
         }
     }
@@ -170,24 +170,24 @@ class HealthCheckViewModel @Inject constructor(
 
     private fun buildDtcDiagnosis(scan: DtcScanResult): DiagnosticRules.Diagnosis = when {
         scan.readFailed -> DiagnosticRules.Diagnosis(
-            DiagnosticRules.Nivel.ATENCION, "DTC", "Lectura de códigos incompleta", detalleLecturaFallida(scan.scan),
+            DiagnosticRules.Nivel.ATENCION, "DTC", "Incomplete fault-code reading", detalleLecturaFallida(scan.scan),
         )
         scan.codes.isEmpty() -> diagnosticoSinCodigos(scan.scan)
         else -> DiagnosticRules.Diagnosis(
             DiagnosticRules.Nivel.FALLA, "DTC",
-            "${scan.codes.size} códigos: ${scan.codes.joinToString()}",
-            "Ábrelos en Códigos de falla para explicación con IA",
+            "${scan.codes.size} codes: ${scan.codes.joinToString()}",
+            "Open them in Fault codes for an AI explanation",
         )
     }
 
     private fun detalleLecturaFallida(scan: DtcScan?): String =
         if (scan != null && !scan.enlacePerdido) AvisoLecturaDtc.ACTIVOS_SIN_RESPUESTA
-        else "Se perdió el enlace durante el escaneo — repite el chequeo"
+        else "Connection lost during the scan — run the check again"
 
     private fun diagnosticoSinCodigos(scan: DtcScan?): DiagnosticRules.Diagnosis {
         val parcial = scan?.takeIf { it.serviciosFallidos.isNotEmpty() }
-        val titulo = parcial?.let(AvisoLecturaDtc::sinCodigos) ?: "Sin códigos de falla"
-        val detalle = scan?.let(AvisoLecturaDtc::de) ?: "Memoria de fallas limpia"
+        val titulo = parcial?.let(AvisoLecturaDtc::sinCodigos) ?: "No fault codes"
+        val detalle = scan?.let(AvisoLecturaDtc::de) ?: "Fault memory clear"
         return DiagnosticRules.Diagnosis(DiagnosticRules.Nivel.OK, "DTC", titulo, detalle)
     }
 
@@ -222,8 +222,8 @@ class HealthCheckViewModel @Inject constructor(
     }
 
     private fun odometerLecturaNoDisponibleDiagnosis(): DiagnosticRules.Diagnosis = DiagnosticRules.Diagnosis(
-        DiagnosticRules.Nivel.ATENCION, "Odómetro", "Lectura no disponible",
-        "No se pudo leer el odómetro — repite el chequeo",
+        DiagnosticRules.Nivel.ATENCION, "Odometer", "Reading unavailable",
+        "The odometer could not be read — run the check again",
     )
 
     private suspend fun collectO2Samples(): List<Double> {
@@ -243,8 +243,8 @@ class HealthCheckViewModel @Inject constructor(
         val scan = sessionManager.leerDtcCompleto("ui:chequeo", DtcLectura(freezeFrame = false)).getOrNull()
             ?: return DtcScanResult(emptyList(), readFailed = true, scan = null)
         val codes = scan.activos.map { it.code } +
-            scan.pendientes.map { "${it.code} (pendiente)" } +
-            scan.permanentes.map { "${it.code} (permanente)" }
+            scan.pendientes.map { "${it.code} (pending)" } +
+            scan.permanentes.map { "${it.code} (permanent)" }
         return DtcScanResult(codes, readFailed = scan.enlacePerdido || !scan.activosConfirmados, scan = scan)
     }
 
@@ -283,12 +283,12 @@ internal object DiagnosticosChequeo {
     private const val RPM_PID = "0C"
     private const val COOLANT_TEMP_PID = "05"
     private val PARAMETROS = linkedMapOf(
-        READINESS_PID to "Monitores de readiness",
-        COOLANT_TEMP_PID to "Temperatura del motor",
-        SHORT_TRIM_B1_PID to "Ajuste corto de combustible B1",
-        LONG_TRIM_B1_PID to "Ajuste largo de combustible B1",
-        LONG_TRIM_B2_PID to "Ajuste largo de combustible B2",
-        RPM_PID to "RPM del motor",
+        READINESS_PID to "Emissions readiness monitors",
+        COOLANT_TEMP_PID to "Engine temperature",
+        SHORT_TRIM_B1_PID to "Short-term fuel trim B1",
+        LONG_TRIM_B1_PID to "Long-term fuel trim B1",
+        LONG_TRIM_B2_PID to "Long-term fuel trim B2",
+        RPM_PID to "Engine RPM",
         O2_SENSOR_B1S1_PID to "Sensor O2 B1S1",
     )
 
@@ -346,7 +346,7 @@ internal object DiagnosticosChequeo {
     private fun readinessNoDisponible() = DiagnosticRules.Diagnosis(
         DiagnosticRules.Nivel.ATENCION,
         "Readiness",
-        "Readiness no disponible",
-        "Se perdió el enlace durante el escaneo — repite el chequeo",
+        "Readiness unavailable",
+        "Connection lost during the scan — run the check again",
     )
 }

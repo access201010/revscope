@@ -55,21 +55,21 @@ private data class MixtureRow(
 )
 
 private val ROWS = listOf(
-    MixtureRow("06", "Fuel trim corto B1"),
-    MixtureRow("07", "Fuel trim largo B1", { v, _ -> DiagnosticRules.evaluarFuelTrimLargo(v) }),
-    MixtureRow("08", "Fuel trim corto B2"),
-    MixtureRow("09", "Fuel trim largo B2", { v, _ -> DiagnosticRules.evaluarFuelTrimLargo(v) }),
+    MixtureRow("06", "Short-term fuel trim B1"),
+    MixtureRow("07", "Long-term fuel trim B1", { v, _ -> DiagnosticRules.evaluarFuelTrimLargo(v) }),
+    MixtureRow("08", "Short-term fuel trim B2"),
+    MixtureRow("09", "Long-term fuel trim B2", { v, _ -> DiagnosticRules.evaluarFuelTrimLargo(v) }),
     MixtureRow("14", "Sensor O2 B1S1"),
     MixtureRow("15", "Sensor O2 B1S2"),
     MixtureRow("18", "Sensor O2 B2S1"),
     MixtureRow("19", "Sensor O2 B2S2"),
-    MixtureRow("44", "Lambda comandado"),
-    MixtureRow("10", "Flujo de aire (MAF)"),
-    MixtureRow("0B", "Presión múltiple (MAP)"),
-    MixtureRow("0A", "Presión de combustible"),
-    MixtureRow("0E", "Avance de encendido"),
-    MixtureRow("2E", "Purga EVAP"),
-    MixtureRow("3C", "Temp catalizador"),
+    MixtureRow("44", "Commanded lambda"),
+    MixtureRow("10", "Air flow (MAF)"),
+    MixtureRow("0B", "Manifold pressure (MAP)"),
+    MixtureRow("0A", "Fuel pressure"),
+    MixtureRow("0E", "Ignition timing"),
+    MixtureRow("2E", "EVAP purge"),
+    MixtureRow("3C", "Catalyst temperature"),
 )
 
 /** PIDs this screen displays — used by the ViewModel to filter out unrelated dashboard traffic. */
@@ -117,10 +117,10 @@ internal fun LiveMixtureContent(
     Column(Modifier.fillMaxSize().statusBarsPadding().padding(16.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onNavigateBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = TextColor)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = TextColor)
             }
             Text(
-                "Mezcla y combustión",
+                "Fuel mixture and combustion",
                 color = TextColor,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
@@ -130,11 +130,11 @@ internal fun LiveMixtureContent(
                 onClick = onExport,
                 enabled = exportables.isNotEmpty(),
             ) {
-                Icon(Icons.Default.Download, contentDescription = "Exportar CSV", tint = AccentColor)
+                Icon(Icons.Default.Download, contentDescription = "Export CSV", tint = AccentColor)
             }
         }
         Text(
-            "Los valores se interpretan en tiempo real. Motor encendido para ver la mezcla trabajar.",
+            "Values are interpreted in real time. Start the engine to monitor the fuel mixture.",
             color = RevScopeColors.TextSecondary,
             fontSize = 13.sp,
             modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
@@ -163,7 +163,7 @@ private fun MixtureRowCard(
             if (reading == null) {
                 Text(row.label, color = TextColor, style = RevScopeType.label)
                 Text(
-                    if (disponibilidadPid.estado == EstadoSoporte.NoSoportado) "No disponible en esta ECU" else "Esperando lectura…",
+                    if (disponibilidadPid.estado == EstadoSoporte.NoSoportado) "Not available on this ECU" else "Waiting for reading…",
                     color = RevScopeColors.TextSecondary,
                     style = RevScopeType.bodySmall,
                 )

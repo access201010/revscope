@@ -38,7 +38,7 @@ internal fun MapFeatureCard(description: MapFeatureDescription, onDismiss: () ->
                 }
             }
             IconButton(onClick = onDismiss) {
-                Icon(Icons.Default.Close, contentDescription = "Cerrar descripción", tint = Color(0xFF6B7089))
+                Icon(Icons.Default.Close, contentDescription = "Close description", tint = Color(0xFF6B7089))
             }
         }
     }

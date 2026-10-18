@@ -47,7 +47,7 @@ internal fun ObdTripControls(
     aviso: String?,
     onFinalizar: () -> Unit,
     onIniciar: () -> Unit,
-    onDesconectar: () -> Unit,
+    onDisconnect: () -> Unit,
     expandidoInicial: Boolean = false,
 ) {
     var expandido by remember { mutableStateOf(expandidoInicial) }
@@ -69,7 +69,7 @@ internal fun ObdTripControls(
         }
         if (expandido) {
             Spacer(Modifier.height(8.dp))
-            TripActions(estado = estado, onFinalizar = onFinalizar, onIniciar = onIniciar, onDesconectar = onDesconectar)
+            TripActions(estado = estado, onFinalizar = onFinalizar, onIniciar = onIniciar, onDisconnect = onDisconnect)
         }
     }
 }
@@ -91,7 +91,7 @@ private fun TripStatePill(estado: EstadoViaje, expandido: Boolean, onClick: () -
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
             Text(
-                text = if (grabando) "● Grabando viaje" else "● Conectado · sin viaje",
+                text = if (grabando) "● Recording journey" else "● Connected · no journey",
                 color = if (grabando) RevScopeColors.Danger else RevScopeColors.Success,
                 style = RevScopeType.bodySmall,
                 fontWeight = FontWeight.Bold,
@@ -114,7 +114,7 @@ private fun IniciarViajeButton(onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
         colors = ButtonDefaults.buttonColors(containerColor = RevScopeColors.Accent),
     ) {
-        Text("Iniciar viaje", color = RevScopeColors.Background, fontWeight = FontWeight.Bold)
+        Text("Start journey", color = RevScopeColors.Background, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -124,28 +124,28 @@ internal fun TripActions(
     estado: EstadoViaje,
     onFinalizar: () -> Unit,
     onIniciar: () -> Unit,
-    onDesconectar: () -> Unit,
+    onDisconnect: () -> Unit,
 ) {
     var confirmarFinalizacion by remember { mutableStateOf(false) }
     var confirmarDesconexion by remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         if (estado is EstadoViaje.Grabando) {
-            SecondaryButton("Finalizar viaje (seguir conectado)", RevScopeColors.Accent) { confirmarFinalizacion = true }
+            SecondaryButton("End journey (stay connected)", RevScopeColors.Accent) { confirmarFinalizacion = true }
         }
         if (estado == EstadoViaje.EnlaceSinViaje) {
-            SecondaryButton("Iniciar viaje", RevScopeColors.Accent, onIniciar)
+            SecondaryButton("Start journey", RevScopeColors.Accent, onIniciar)
         }
-        SecondaryButton("Desconectar adaptador", RevScopeColors.Danger) {
-            if (estado is EstadoViaje.Grabando) confirmarDesconexion = true else onDesconectar()
+        SecondaryButton("Disconnect adapter", RevScopeColors.Danger) {
+            if (estado is EstadoViaje.Grabando) confirmarDesconexion = true else onDisconnect()
         }
     }
     if (confirmarFinalizacion) {
         ConfirmarAccionViajeDialog(
-            titulo = "¿Finalizar el viaje?",
-            texto = "Se guarda el viaje y el adaptador sigue conectado: puedes leer códigos de falla " +
-                "o iniciar otro viaje sin reconectar.",
-            confirmar = "Finalizar viaje",
-            descartar = "Cancelar",
+            titulo = "End the journey?",
+            texto = "The journey will be saved and the adapter will remain connected. You can read fault codes " +
+                "or start another journey without reconnecting.",
+            confirmar = "End journey",
+            descartar = "Cancel",
             onConfirm = {
                 confirmarFinalizacion = false
                 onFinalizar()
@@ -155,13 +155,13 @@ internal fun TripActions(
     }
     if (confirmarDesconexion) {
         ConfirmarAccionViajeDialog(
-            titulo = "¿Desconectar el adaptador?",
-            texto = "También se cierra el viaje en curso; queda guardado en el historial.",
-            confirmar = "Desconectar",
-            descartar = "Cancelar",
+            titulo = "Disconnect the adapter?",
+            texto = "The current journey will also end and will be saved in your history.",
+            confirmar = "Disconnect",
+            descartar = "Cancel",
             onConfirm = {
                 confirmarDesconexion = false
-                onDesconectar()
+                onDisconnect()
             },
             onDismiss = { confirmarDesconexion = false },
         )

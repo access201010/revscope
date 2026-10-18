@@ -62,8 +62,8 @@ object HealthReportCard {
 
     private fun drawHeader(canvas: Canvas, vehicleName: String, timestamp: Long) {
         canvas.drawText("REVSCOPE", MARGIN, 130f, paint(ACCENT, 60f, bold = true))
-        canvas.drawText("Chequeo de salud", MARGIN, 180f, paint(TEXT, 38f, bold = true))
-        val date = SimpleDateFormat("dd MMM yyyy · HH:mm", Locale("es")).format(Date(timestamp))
+        canvas.drawText("Health check", MARGIN, 180f, paint(TEXT, 38f, bold = true))
+        val date = SimpleDateFormat("dd MMM yyyy · HH:mm", Locale.UK).format(Date(timestamp))
         canvas.drawText("$vehicleName · $date", MARGIN, 225f, paint(MUTED, 32f))
     }
 
@@ -75,7 +75,7 @@ object HealthReportCard {
         val ok = items.count { it.nivel == DiagnosticRules.Nivel.OK }
         val atencion = items.count { it.nivel == DiagnosticRules.Nivel.ATENCION }
         val fallas = items.count { it.nivel == DiagnosticRules.Nivel.FALLA }
-        return "$ok OK · $atencion atención · $fallas fallas"
+        return "$ok OK · $atencion attention · $fallas faults"
     }
 
     private fun drawItems(canvas: Canvas, items: List<DiagnosticRules.Diagnosis>) {
@@ -94,7 +94,7 @@ object HealthReportCard {
         if (items.size > MAX_ITEM_ROWS) {
             val rowY = ITEMS_TOP + displayCount * ROW_HEIGHT
             val restantes = items.size - displayCount
-            canvas.drawText("… y $restantes más", MARGIN + 38f, rowY + 26f, paint(MUTED, 30f))
+            canvas.drawText("… and $restantes more", MARGIN + 38f, rowY + 26f, paint(MUTED, 30f))
         }
     }
 

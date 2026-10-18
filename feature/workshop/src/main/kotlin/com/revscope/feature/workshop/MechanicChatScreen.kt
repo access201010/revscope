@@ -88,10 +88,10 @@ private fun ChatTopBar(onNavigateBack: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(onClick = onNavigateBack) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = TextColor)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = TextColor)
         }
         Text(
-            "Mecánico IA",
+            "AI Mechanic",
             color = TextColor,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
@@ -115,7 +115,7 @@ private fun NoProviderState(onNavigateToSettings: () -> Unit, onOpenAiValue: () 
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            "Para hablar con el Mecánico IA, configura un proveedor en Ajustes → Inteligencia artificial.",
+            "To use the AI Mechanic, configure an AI provider in Settings → Artificial intelligence.",
             color = TextMutedColor,
             fontSize = 14.sp,
         )
@@ -124,10 +124,10 @@ private fun NoProviderState(onNavigateToSettings: () -> Unit, onOpenAiValue: () 
             onClick = onNavigateToSettings,
             colors = ButtonDefaults.buttonColors(containerColor = AccentColor, contentColor = Color.Black),
         ) {
-            Text("Ir a Ajustes", fontWeight = FontWeight.Bold)
+            Text("Go to Settings", fontWeight = FontWeight.Bold)
         }
         TextButton(onClick = onOpenAiValue) {
-            Text("Configurar IA", color = AccentColor)
+            Text("Configure AI", color = AccentColor)
         }
     }
 }
@@ -162,7 +162,7 @@ private fun ChatContent(state: MechanicChatUiState, onSend: (String) -> Unit) {
 private fun EmptyChatHint(modifier: Modifier = Modifier) {
     Box(modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) {
         Text(
-            "Preguntale al mecánico sobre tu vehículo — ya tiene tus datos actuales a mano.",
+            "Ask the mechanic about your vehicle — it already has your current vehicle data.",
             color = TextMutedColor,
             fontSize = 13.sp,
         )
@@ -208,7 +208,7 @@ private fun ThinkingBubble() {
                 .padding(horizontal = 14.dp, vertical = 10.dp),
         ) {
             CircularProgressIndicator(modifier = Modifier.size(14.dp), strokeWidth = 2.dp, color = AccentColor)
-            Text("Pensando…", color = TextMutedColor, fontSize = 12.sp)
+            Text("Thinking…", color = TextMutedColor, fontSize = 12.sp)
         }
     }
 }
@@ -225,7 +225,7 @@ private fun MessageInput(enabled: Boolean, onSend: (String) -> Unit) {
             value = text,
             onValueChange = { text = it },
             enabled = enabled,
-            placeholder = { Text("Escribe tu pregunta…", color = TextMutedColor) },
+            placeholder = { Text("Type your question…", color = TextMutedColor) },
             modifier = Modifier.weight(1f),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             colors = OutlinedTextFieldDefaults.colors(
@@ -243,7 +243,7 @@ private fun MessageInput(enabled: Boolean, onSend: (String) -> Unit) {
                 text = ""
             },
         ) {
-            Icon(Icons.AutoMirrored.Filled.Send, "Enviar", tint = if (enabled && text.isNotBlank()) AccentColor else TextMutedColor)
+            Icon(Icons.AutoMirrored.Filled.Send, "Send", tint = if (enabled && text.isNotBlank()) AccentColor else TextMutedColor)
         }
     }
 }
