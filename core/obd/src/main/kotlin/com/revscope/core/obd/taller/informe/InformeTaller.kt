@@ -110,7 +110,7 @@ class ArmadorInformeTaller @Inject constructor() {
             generadoEn = generadoEn,
             titulo = sesion.titulo,
             vehiculo = vehiculo.nombre,
-            codigo = analisis.codigos.joinToString().ifBlank { "Sin códigos registrados" },
+            codigo = analisis.codigos.joinToString().ifBlank { "No fault codes recorded" },
             sintomas = sintomas(sesion),
             comoSeMidio = comoSeMidio(ordenados, conocimiento),
             conclusion = conclusion(ordenados, mediciones),
@@ -134,23 +134,23 @@ class ArmadorInformeTaller @Inject constructor() {
         (sesion.sintomas.sortedBy { it.ordinal }.map { it.etiqueta } + sesion.sintomasTexto.trim().takeIf { it.isNotEmpty() })
             .filterNotNull()
             .joinToString(" · ")
-            .ifBlank { "Sin síntomas anotados" }
+            .ifBlank { "No symptoms recorded" }
 
     private fun comoSeMidio(eventos: List<EventoTaller>, conocimiento: ConocimientoModelo?): String = buildList {
-        add("Adaptador OBD2")
+        add("OBD-II adapter")
         conocimiento?.notasProtocolo?.takeIf(String::isNotBlank)?.let(::add)
         if (eventos.any { it.tipo == TipoEvento.PRUEBA_GUIADA }) add("RevScope")
-        if (eventos.any { it.tipo == TipoEvento.MEDICION_MULTIMETRO }) add("Multímetro")
+        if (eventos.any { it.tipo == TipoEvento.MEDICION_MULTIMETRO }) add("Multimeter")
     }.joinToString(" · ")
 
     private fun conclusion(eventos: List<EventoTaller>, mediciones: List<MedicionInforme>): ConclusionInforme {
         val peor = eventos.map(EventoTaller::veredicto).maxByOrNull(::peso) ?: Veredicto.INFO
         val frase = eventos.lastOrNull { it.veredicto == peor }?.resumen?.takeIf(String::isNotBlank)
             ?: when (peor) {
-                Veredicto.FALLA -> "Hay hallazgos compatibles con una falla; confirma antes de reemplazar piezas."
-                Veredicto.ATENCION -> "Hay mediciones que conviene confirmar."
-                Veredicto.OK -> "Las comprobaciones registradas quedaron dentro de referencia."
-                Veredicto.INFO -> "Aún no hay suficientes mediciones para una conclusión."
+                Veredicto.FALLA -> "Findings are consistent with a fault; confirm before replacing parts."
+                Veredicto.ATENCION -> "Some readings should be checked again."
+                Veredicto.OK -> "Recorded checks were within range."
+                Veredicto.INFO -> "There are not yet enough readings for a conclusion."
             }
         val cables = mediciones.map { CableInforme(it.cable, valor(it.valor, it.unidad), veredictoMedicion(it.estado)) }
         return ConclusionInforme(peor, frase, cables)
@@ -169,15 +169,15 @@ class ArmadorInformeTaller @Inject constructor() {
         val sensor = payload.optString("titulo", evento.titulo)
         return payload.optJSONArray("lecturas").objetos().mapNotNull { lectura ->
             val valor = lectura.optDouble("valor").takeUnless(Double::isNaN) ?: return@mapNotNull null
-            val referencia = lectura.optString("referencia", "Sin referencia")
+            val referencia = lectura.optString("referencia", "No reference")
             val (min, max) = limites(referencia)
             MedicionInforme(
                 sensor = sensor,
                 cable = listOfNotNull(
-                    lectura.optString("funcion").textoTitulo(),
+                    lectura.optString("funcion").etiquetaCable(),
                     lectura.optString("color").takeIf(String::isNotBlank)?.let { "($it)" },
                 ).joinToString(" "),
-                condicion = lectura.optString("condicion").textoTitulo(),
+                condicion = lectura.optString("condicion").etiquetaCondicion(),
                 valor = valor,
                 unidad = lectura.optString("unidad", payload.optString("unidad")),
                 estado = lectura.optString("estado", "SIN_REFERENCIA"),
@@ -227,11 +227,11 @@ class ArmadorInformeTaller @Inject constructor() {
     private fun tramo(segmento: JSONObject): TramoGrafica? {
         val inicio = segmento.numeroONulo("inicio_ms") ?: return null
         val fin = segmento.numeroONulo("fin_ms") ?: return null
-        return TramoGrafica(inicio, fin, segmento.optString("clave").textoTitulo())
+        return TramoGrafica(inicio, fin, segmento.optString("clave").etiquetaPaso())
     }
 
     private fun pasoPrueba(paso: JSONObject) = PasoPruebaInforme(
-        nombre = paso.optString("clave").textoTitulo(),
+        nombre = paso.optString("clave").etiquetaPaso(),
         porcentaje = paso.numeroONulo("mediaPct"),
         voltios = paso.numeroONulo("mediaV"),
     )
@@ -253,7 +253,7 @@ class ArmadorInformeTaller @Inject constructor() {
 
     private fun eventoInforme(evento: EventoTaller) = EventoInforme(
         evento.instante,
-        evento.tipo.name.textoTitulo(),
+        evento.tipo.name.etiquetaEvento(),
         evento.titulo,
         evento.resumen,
         evento.veredicto,
@@ -280,7 +280,7 @@ class ArmadorInformeTaller @Inject constructor() {
         pruebas: List<PruebaInforme>,
     ): List<String> = buildList {
         conocimiento?.notas?.filter { it.tipo == TipoNota.PENDIENTE }?.forEach { add(it.texto) }
-        if (pasosGuia.isNotEmpty()) add("Quedan ${pasosGuia.size} pasos de la guía sin marcar.")
+        if (pasosGuia.isNotEmpty()) add("${pasosGuia.size} guide steps remain unchecked.")
         val ejecutadas = pruebas.map { it.titulo.lowercase() }
         analisis.sugeridas.filterNot { sugerida -> ejecutadas.any { it.contains(sugerida.accion.etiqueta.substringAfter(": ").lowercase()) } }
             .forEach { add("${it.accion.etiqueta} ${it.motivo}") }
@@ -311,7 +311,56 @@ class ArmadorInformeTaller @Inject constructor() {
 
     private fun String.aVeredicto(porDefecto: Veredicto) = Veredicto.entries.firstOrNull { it.name == this } ?: porDefecto
 
-    private fun String.textoTitulo(): String = lowercase().replace('_', ' ').replaceFirstChar { it.titlecase() }
+    private fun String.etiquetaEvento(): String = when (this) {
+        "NOTA" -> "Note"
+        "SINTOMAS" -> "Symptoms"
+        "DTC_LECTURA" -> "Fault codes read"
+        "DTC_BORRADO" -> "Fault codes cleared"
+        "CHEQUEO" -> "Health check"
+        "PRUEBA_GUIADA" -> "Guided test"
+        "CAPTURA" -> "Quick capture"
+        "MEDICION_MULTIMETRO" -> "Multimeter reading"
+        "INSTANTANEA_SENSORES" -> "Sensor snapshot"
+        else -> this
+    }
+
+    private fun String.etiquetaCable(): String = when (this) {
+        "REF_5V" -> "5 V reference"
+        "MASA" -> "Earth"
+        "SENAL" -> "Signal"
+        "ALIMENTACION_12V" -> "12 V supply"
+        "CALEFACTOR" -> "Heater"
+        "OTRO" -> "Other"
+        else -> this
+    }
+
+    private fun String.etiquetaCondicion(): String = when (this) {
+        "CERRADO" -> "Throttle closed"
+        "MEDIO" -> "Half throttle"
+        "FONDO" -> "Full throttle"
+        "CONTACTO" -> "Ignition on"
+        "DESCONECTADO" -> "Unplugged"
+        "ARRANQUE" -> "Starting"
+        "CARGA" -> "Charging"
+        else -> this
+    }
+
+    private fun String.etiquetaPaso(): String = when (this) {
+        "CERRADO_1" -> "Throttle closed"
+        "MEDIO" -> "Half throttle"
+        "A_FONDO" -> "Full throttle"
+        "CERRADO_2" -> "Throttle closed again"
+        "BARRIDO_LENTO" -> "Slow sweep"
+        "MINIMO" -> "Idle"
+        "RETORNO_1" -> "Throttle return 1"
+        "RETORNO_2" -> "Throttle return 2"
+        "RETORNO_3" -> "Throttle return 3"
+        "CONTACTO" -> "Ignition on"
+        "ARRANQUE" -> "Starting"
+        "CALENTAMIENTO" -> "Warm-up"
+        "RPM_ALTAS" -> "Higher revs"
+        else -> this
+    }
 
     private fun json(texto: String): JSONObject? = runCatching { JSONObject(texto) }.getOrNull()
 

@@ -63,7 +63,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-private val dateFormat = SimpleDateFormat("dd MMM yyyy  HH:mm", Locale("es"))
+private val dateFormat = SimpleDateFormat("dd MMM yyyy  HH:mm", Locale.UK)
 
 data class HistorialUi(
     val sesiones: List<SessionEntity>,
@@ -120,7 +120,7 @@ internal fun SessionHistoryContent(
             .background(RevScopeColors.Background),
     ) {
         TopAppBar(
-            title = { Text("Historial", color = RevScopeColors.TextPrimary, fontWeight = FontWeight.SemiBold) },
+            title = { Text("Trip history", color = RevScopeColors.TextPrimary, fontWeight = FontWeight.SemiBold) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = RevScopeColors.Surface),
         )
         FranjaSelectorVehiculo(selector = selectorVehiculo)
@@ -154,14 +154,14 @@ internal fun SessionHistoryContent(
 @Composable
 private fun HistorialVacio(filtro: Long?, acciones: AccionesHistorial) {
     val accion = if (filtro == null) {
-        AccionEstado("Iniciar un viaje", acciones.onIniciarViaje)
+        AccionEstado("Start a trip", acciones.onIniciarViaje)
     } else {
-        AccionEstado("Ver todos los viajes") { acciones.onFiltrar(null) }
+        AccionEstado("Show all trips") { acciones.onFiltrar(null) }
     }
     val mensaje = if (filtro == null) {
-        "Todavía no hay viajes guardados. Conecta el adaptador o inicia un viaje GPS desde Conducir."
+        "No trips saved yet. Connect the adapter or start a GPS trip from Drive."
     } else {
-        "No hay viajes con este filtro."
+        "No trips match this filter."
     }
     Box(Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
         EmptyState(mensaje = mensaje, accion = accion, icono = Icons.Default.Route)
@@ -181,7 +181,7 @@ private fun ListaSesiones(
         if (historial.candidatoComparar != null) {
             item(key = "compare_hint") {
                 Text(
-                    "Viaje A elegido: toca «Comparar» en otro viaje para verlos lado a lado",
+                    "Trip A selected: tap Compare on another trip to view them side by side",
                     color = RevScopeColors.Accent,
                     style = RevScopeType.bodySmall,
                     fontWeight = FontWeight.SemiBold,
@@ -203,17 +203,17 @@ private fun ListaSesiones(
 @Composable
 internal fun ConfirmarBorrarViajeDialog(sesion: SessionEntity, onConfirmar: () -> Unit, onCancelar: () -> Unit) {
     ConfirmarDestructivoDialog(
-        titulo = "¿Borrar el viaje?",
+        titulo = "Delete this trip?",
         mensaje = descripcionViaje(sesion),
-        avisos = listOf("Se borran también su telemetría, la ruta GPS y las vueltas. No se puede deshacer."),
-        textoConfirmar = "Borrar viaje",
+        avisos = listOf("Its telemetry, GPS route and laps will also be deleted. This cannot be undone."),
+        textoConfirmar = "Delete trip",
         onConfirmar = onConfirmar,
         onCancelar = onCancelar,
     )
 }
 
 internal fun descripcionViaje(sesion: SessionEntity): String =
-    "Viaje del ${dateFormat.format(Date(sesion.startedAt))} · ${"%.1f".format(sesion.distanceKm)} km"
+    "Trip from ${dateFormat.format(Date(sesion.startedAt))} · ${"%.1f".format(Locale.UK, sesion.distanceKm)} km"
 
 @Composable
 internal fun SessionItem(
@@ -258,10 +258,10 @@ internal fun SessionItem(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                StatChip(label = "Duración", value = "%dm %ds".format(durationMin, durationSec))
+                StatChip(label = "Duration", value = "%dm %ds".format(durationMin, durationSec))
                 StatChip(label = "Max RPM", value = session.maxRpm.toString())
-                StatChip(label = "Max km/h", value = session.maxSpeed.toString())
-                StatChip(label = "km", value = "%.1f".format(session.distanceKm))
+                StatChip(label = "Max speed", value = "${session.maxSpeed} km/h")
+                StatChip(label = "Distance", value = "%.1f km".format(Locale.UK, session.distanceKm))
             }
         }
         Spacer(Modifier.width(8.dp))
@@ -271,12 +271,12 @@ internal fun SessionItem(
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.CompareArrows,
-                contentDescription = if (isCompareCandidate) "Quitar de la comparación" else "Comparar este viaje",
+                contentDescription = if (isCompareCandidate) "Remove from comparison" else "Compare this trip",
                 tint = if (isCompareCandidate) RevScopeColors.Accent else RevScopeColors.TextSecondary,
             )
         }
         IconButton(onClick = onDelete) {
-            Icon(Icons.Default.Delete, contentDescription = "Borrar viaje", tint = RevScopeColors.Danger)
+            Icon(Icons.Default.Delete, contentDescription = "Delete trip", tint = RevScopeColors.Danger)
         }
     }
 }
@@ -303,7 +303,7 @@ private fun VehicleFilterRow(
     ) {
         item(key = "filter_all") {
             VehicleFilterChip(
-                label = "Todos",
+                label = "All",
                 icon = null,
                 selected = selected == null,
                 onClick = { onSelect(null) },
@@ -319,7 +319,7 @@ private fun VehicleFilterRow(
         }
         item(key = "filter_none") {
             VehicleFilterChip(
-                label = "Sin vehículo",
+                label = "No vehicle",
                 icon = null,
                 selected = selected == SessionViewModel.NO_VEHICLE_FILTER,
                 onClick = { onSelect(SessionViewModel.NO_VEHICLE_FILTER) },

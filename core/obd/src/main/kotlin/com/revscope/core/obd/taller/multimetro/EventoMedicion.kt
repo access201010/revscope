@@ -36,7 +36,7 @@ object EventoMedicion {
         EstadoCelda.SIN_REFERENCIA -> Veredicto.INFO
     }
 
-    private fun titulo(plantilla: PlantillaCableado) = "Multímetro · ${plantilla.titulo}"
+    private fun titulo(plantilla: PlantillaCableado) = "Multimeter · ${plantilla.titulo}"
 
     private fun base(plantilla: PlantillaCableado, celdas: List<EvaluacionCelda>): JSONObject = JSONObject()
         .put("plantilla", plantilla.sensor.name)
@@ -52,10 +52,10 @@ object TextoCelda {
         "${FormatoTaller.numero(valor, if (unidad == "V") 2 else 1)} $unidad"
 
     fun estado(estado: EstadoCelda): String = when (estado) {
-        EstadoCelda.DENTRO -> "dentro"
-        EstadoCelda.BAJO -> "bajo"
-        EstadoCelda.ALTO -> "alto"
-        EstadoCelda.SIN_REFERENCIA -> "sin referencia"
+        EstadoCelda.DENTRO -> "within range"
+        EstadoCelda.BAJO -> "low"
+        EstadoCelda.ALTO -> "high"
+        EstadoCelda.SIN_REFERENCIA -> "no reference"
     }
 
     fun cable(plantilla: PlantillaCableado, funcion: FuncionCable): String {

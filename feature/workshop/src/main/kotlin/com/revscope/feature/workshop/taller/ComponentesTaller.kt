@@ -45,9 +45,9 @@ internal fun Veredicto.nivel(): NivelEstado = when (this) {
 
 internal fun Veredicto.texto(): String = when (this) {
     Veredicto.OK -> "OK"
-    Veredicto.ATENCION -> "Atención"
-    Veredicto.FALLA -> "Falla"
-    Veredicto.INFO -> "Registro"
+    Veredicto.ATENCION -> "Attention"
+    Veredicto.FALLA -> "Fault"
+    Veredicto.INFO -> "Record"
 }
 
 internal fun TipoEvento.icono(): ImageVector = when (this) {

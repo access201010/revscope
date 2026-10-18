@@ -104,7 +104,7 @@ fun SesionTallerContent(estado: SesionTallerEstado, acciones: AccionesSesion) {
 @Composable
 private fun CargandoSesion(onVolver: () -> Unit) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver(titulo = "Sesión de taller", onVolver = onVolver)
+        BarraConVolver(titulo = "Workshop session", onVolver = onVolver)
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(color = RevScopeColors.Accent)
         }
@@ -115,12 +115,12 @@ private fun CargandoSesion(onVolver: () -> Unit) {
 private fun MenuSesion(estado: SesionTallerEstado, acciones: AccionesSesion) {
     Box {
         IconButton(onClick = { acciones.onMenu(true) }) {
-            Icon(Icons.Filled.MoreVert, contentDescription = "Más opciones de la sesión", tint = RevScopeColors.TextPrimary)
+            Icon(Icons.Filled.MoreVert, contentDescription = "More session options", tint = RevScopeColors.TextPrimary)
         }
         DropdownMenu(expanded = estado.ui.menu, onDismissRequest = { acciones.onMenu(false) }) {
-            acciones.onGenerarInforme?.let { OpcionMenu("Generar informe", it) }
-            if (estado.abierta) OpcionMenu("Cerrar sesión", acciones.onPedirCierre)
-            OpcionMenu("Eliminar sesión", acciones.onPedirEliminacion, peligrosa = true)
+            acciones.onGenerarInforme?.let { OpcionMenu("Generate report", it) }
+            if (estado.abierta) OpcionMenu("Close session", acciones.onPedirCierre)
+            OpcionMenu("Delete session", acciones.onPedirEliminacion, peligrosa = true)
         }
     }
 }
@@ -140,7 +140,7 @@ private fun TarjetaResumen(estado: SesionTallerEstado) {
     TarjetaTaller {
         EstadoSesionFila(estado.abierta, estado.estadoTexto)
         if (estado.sintomas.isNotEmpty()) {
-            TituloBloque("Síntomas")
+            TituloBloque("Symptoms")
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 estado.sintomas.forEach { PastillaTexto(it) }
             }
@@ -149,13 +149,13 @@ private fun TarjetaResumen(estado: SesionTallerEstado) {
             Text("«${estado.sintomasTexto}»", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
         }
         if (estado.notas.isNotBlank()) {
-            TituloBloque("Notas")
+            TituloBloque("Notes")
             Text(estado.notas, color = RevScopeColors.TextPrimary, style = RevScopeType.body)
         }
-        estado.odometro?.let { FilaEtiquetaValor("Odómetro al abrir", it) }
-        TituloBloque("Códigos actuales")
+        estado.odometro?.let { FilaEtiquetaValor("Odometer when opened", it) }
+        TituloBloque("Current fault codes")
         if (estado.codigos.isEmpty()) {
-            Text("Sin códigos leídos en esta sesión.", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+            Text("No fault codes have been read in this session.", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
         } else {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 estado.codigos.forEach { PastillaCodigo(it) }
@@ -196,9 +196,9 @@ private fun TarjetaComparar(estado: SesionTallerEstado, acciones: AccionesSesion
 
 @Composable
 private fun SinBase() {
-    Text("Comparación", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
+    Text("Comparison", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
     Text(
-        "Esta sesión no tiene un chequeo de salud anterior como base, así que no hay con qué comparar.",
+        "This session has no previous health check to use as a baseline, so there is nothing to compare it with.",
         color = RevScopeColors.TextSecondary,
         style = RevScopeType.body,
     )
@@ -206,15 +206,15 @@ private fun SinBase() {
 
 @Composable
 private fun SinChequeoAhora(fechaBase: String, estado: SesionTallerEstado, onChequeo: () -> Unit) {
-    Text("Comparación con el chequeo del $fechaBase", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
+    Text("Comparison with the health check from $fechaBase", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
     Text(
-        "Corre un chequeo de salud en esta sesión para ver qué cambió desde entonces.",
+        "Run a health check in this session to see what has changed since then.",
         color = RevScopeColors.TextSecondary,
         style = RevScopeType.body,
     )
     if (estado.agregar == DisponibilidadAgregar.Disponible) {
         OutlinedButton(onClick = onChequeo, modifier = Modifier.heightIn(min = 48.dp)) {
-            Text("Correr chequeo ahora", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+            Text("Run health check now", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
         }
     }
 }
@@ -226,11 +226,11 @@ private fun FilasComparacion(comparacion: TarjetaComparacion.Filas, expandida: B
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 48.dp)
-            .clickable(onClickLabel = if (expandida) "Ocultar la comparación" else "Mostrar la comparación", onClick = onAlternar)
-            .semantics { stateDescription = if (expandida) "Desplegada" else "Plegada" },
+            .clickable(onClickLabel = if (expandida) "Hide comparison" else "Show comparison", onClick = onAlternar)
+            .semantics { stateDescription = if (expandida) "Expanded" else "Collapsed" },
     ) {
         Text(
-            "Comparación con el chequeo del ${comparacion.fechaBase}",
+            "Comparison with the health check from ${comparacion.fechaBase}",
             color = RevScopeColors.TextPrimary,
             style = RevScopeType.title,
             modifier = Modifier.weight(1f),
@@ -240,7 +240,7 @@ private fun FilasComparacion(comparacion: TarjetaComparacion.Filas, expandida: B
     if (!expandida) return
     comparacion.filas.forEach { FilaComparada(it) }
     Text(
-        "Una base es un solo chequeo: las diferencias piden atención, no confirman una falla.",
+        "A baseline is a single check: differences warrant attention but do not confirm a fault.",
         color = RevScopeColors.TextSecondary,
         style = RevScopeType.bodySmall,
     )
@@ -255,12 +255,12 @@ private fun FilaComparada(fila: FilaComparacion) {
                 if (fila.veredicto != Veredicto.INFO) NivelBadge(fila.veredicto.nivel(), texto = fila.veredicto.texto())
             }
             Text(
-                "Base: ${fila.base} · Ahora: ${fila.ahora}",
+                "Baseline: ${fila.base} · Now: ${fila.ahora}",
                 color = RevScopeColors.TextPrimary,
                 style = RevScopeType.body.conCifrasTabulares(),
             )
             Text(fila.cambio, color = RevScopeColors.TextSecondary, style = RevScopeType.body)
-            fila.referencia?.let { Text("Umbral $it", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall) }
+            fila.referencia?.let { Text("Threshold $it", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall) }
         }
     }
 }
@@ -268,10 +268,10 @@ private fun FilaComparada(fila: FilaComparacion) {
 @Composable
 private fun TarjetaSugeridas(sugeridas: List<PruebaSugeridaUi>) {
     TarjetaTaller {
-        Text("Pruebas sugeridas", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
+        Text("Suggested tests", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
         if (sugeridas.isEmpty()) {
             Text(
-                "Todavía no hay sugerencias: lee los códigos o anota síntomas.",
+                "No suggestions yet. Read the fault codes or add symptoms.",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.body,
             )
@@ -286,7 +286,7 @@ private fun TarjetaSugeridas(sugeridas: List<PruebaSugeridaUi>) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Icon(Icons.Filled.Info, contentDescription = null, tint = RevScopeColors.TextSecondary, modifier = Modifier.size(16.dp).padding(top = 2.dp))
             Text(
-                "Orientativas: salen de los códigos y los síntomas, no son un diagnóstico.",
+                "These are suggestions based on fault codes and symptoms, not a diagnosis.",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.bodySmall,
             )
@@ -296,11 +296,11 @@ private fun TarjetaSugeridas(sugeridas: List<PruebaSugeridaUi>) {
 
 private fun LazyListScope.lineaDeTiempo(estado: SesionTallerEstado, onAlternar: (Long) -> Unit) {
     item(key = "linea-titulo") {
-        EncabezadoSeccion("Línea de tiempo · ${if (estado.eventos.size == 1) "1 evento" else "${estado.eventos.size} eventos"}")
+        EncabezadoSeccion("Timeline · ${if (estado.eventos.size == 1) "1 event" else "${estado.eventos.size} events"}")
     }
     if (estado.eventos.isEmpty()) {
         item(key = "linea-vacia") {
-            EmptyState("Todavía no hay nada anotado. Lee los códigos, corre un chequeo o agrega una nota para empezar.")
+            EmptyState("Nothing has been logged yet. Read the fault codes, run a check or add a note to get started.")
         }
         return
     }
@@ -319,8 +319,8 @@ private fun BarraInferiorSesion(agregar: DisponibilidadAgregar, onAgregar: () ->
     Surface(color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.navigationBarsPadding().padding(16.dp)) {
             when (agregar) {
-                DisponibilidadAgregar.Disponible -> BotonPrincipalTaller("Agregar a la sesión", onClick = onAgregar)
-                DisponibilidadAgregar.SesionCerrada -> AvisoBarra("Sesión cerrada: se puede consultar pero ya no recibe lecturas.")
+                DisponibilidadAgregar.Disponible -> BotonPrincipalTaller("Add to session", onClick = onAgregar)
+                DisponibilidadAgregar.SesionCerrada -> AvisoBarra("Session closed: it can be viewed but no longer accepts readings.")
                 is DisponibilidadAgregar.OtroVehiculo -> AvisoBarra(agregar.mensaje)
             }
         }

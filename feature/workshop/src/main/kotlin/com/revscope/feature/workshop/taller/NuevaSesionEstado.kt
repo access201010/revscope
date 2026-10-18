@@ -29,7 +29,7 @@ data class NuevaSesionEstado(
 
 internal object OdometroTexto {
 
-    const val ERROR = "Escribe los kilómetros solo con números, por ejemplo 12345"
+    const val ERROR = "Enter the mileage using numbers only, for example 12345"
     private const val MAXIMO_KM = 2_000_000.0
 
     fun leer(texto: String): Result<Double?> {
@@ -51,10 +51,10 @@ internal object OpcionesChequeoBase {
         val metricas = chequeo.metricas
         return when {
             metricas == null || !metricas.dtcsLeidos -> hallazgos(chequeo.items.size)
-            metricas.dtcs.isEmpty() -> "Sin códigos"
-            else -> "Códigos: ${metricas.dtcs.joinToString()}"
+            metricas.dtcs.isEmpty() -> "No fault codes"
+            else -> "Fault codes: ${metricas.dtcs.joinToString()}"
         }
     }
 
-    private fun hallazgos(n: Int): String = if (n == 1) "1 hallazgo" else "$n hallazgos"
+    private fun hallazgos(n: Int): String = if (n == 1) "1 finding" else "$n findings"
 }

@@ -4,9 +4,9 @@ import com.revscope.core.obd.taller.FormatoTaller
 import kotlin.math.pow
 
 enum class OrigenBarometrica(val nombre: String, val nota: String, val enFrase: String) {
-    ECU("PID 33 de la ECU", "resolución del PID", "el PID 33 de la ECU"),
-    TELEFONO("Barómetro del teléfono", "típico", "el barómetro del teléfono"),
-    ALTITUD_GPS("Presión estimada por la altitud GPS", "por clima y altitud GPS", "la presión estimada por la altitud GPS"),
+    ECU("ECU PID 33", "PID resolution", "ECU PID 33"),
+    TELEFONO("Phone barometer", "typical", "the phone barometer"),
+    ALTITUD_GPS("Pressure estimated from GPS altitude", "weather and GPS altitude", "pressure estimated from GPS altitude"),
 }
 
 data class ReferenciaBarometrica(val kPa: Double, val origen: OrigenBarometrica, val incertidumbreKpa: Double) {

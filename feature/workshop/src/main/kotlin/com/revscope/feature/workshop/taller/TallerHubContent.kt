@@ -71,16 +71,16 @@ fun TallerHubContent(
                     pids = estado.capacidades.pidsAnunciados,
                     pidsPorRango = estado.capacidades.pidsPorRango,
                     tasaEsperada = estado.capacidades.tasaMedidaHz?.let {
-                        "Medida: %.1f Hz por PID · %s".format(it, estado.capacidades.tasaEsperada)
+                        "Measured: %.1f Hz per PID · %s".format(it, estado.capacidades.tasaEsperada)
                     } ?: estado.capacidades.tasaEsperada,
                     explicacion = estado.capacidades.explicacion,
                 )
             }
         }
-        item(key = "rapidas-titulo") { EncabezadoSeccion("Herramientas rápidas") }
+        item(key = "rapidas-titulo") { EncabezadoSeccion("Quick tools") }
         item(key = "rapidas") { RejillaHerramientas(HerramientasTaller.rapidas(acciones), conectado) }
         sesionesAnteriores(estado, acciones)
-        item(key = "mas-titulo") { EncabezadoSeccion("Más herramientas") }
+        item(key = "mas-titulo") { EncabezadoSeccion("More tools") }
         HerramientasTaller.mas(acciones).forEach { grupo ->
             item(key = "grupo-${grupo.titulo}") { SubtituloGrupo(grupo.titulo) }
             items(grupo.herramientas, key = { "mas-${it.titulo}" }) { FilaHerramienta(it, conectado) }
@@ -92,7 +92,7 @@ fun TallerHubContent(
 private fun EncabezadoHub(selectorVehiculo: @Composable () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            "Taller",
+            "Workshop",
             color = RevScopeColors.TextPrimary,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -109,23 +109,23 @@ private fun aspecto(adaptador: EstadoAdaptador): AspectoAdaptador = when (adapta
         AspectoAdaptador(
             Icons.Filled.BluetoothConnected,
             RevScopeColors.Success,
-            "Adaptador conectado · ${adaptador.dispositivo}",
+            "Adapter connected · ${adaptador.dispositivo}",
             false,
         )
     EstadoAdaptador.Conectando ->
-        AspectoAdaptador(Icons.Filled.BluetoothSearching, RevScopeColors.Warning, "Conectando con el adaptador…", false)
+        AspectoAdaptador(Icons.Filled.BluetoothSearching, RevScopeColors.Warning, "Connecting to adapter…", false)
     EstadoAdaptador.Desconectado ->
         AspectoAdaptador(
             Icons.Filled.BluetoothDisabled,
             RevScopeColors.TextSecondary,
-            "Sin adaptador: las herramientas marcadas lo requieren",
+            "No adapter: marked tools require one",
             true,
         )
     is EstadoAdaptador.ConError ->
         AspectoAdaptador(
             Icons.Filled.ErrorOutline,
             RevScopeColors.Danger,
-            "Error del adaptador: ${adaptador.mensaje}",
+            "Adapter error: ${adaptador.mensaje}",
             true,
         )
 }
@@ -138,7 +138,7 @@ private fun LineaAdaptador(adaptador: EstadoAdaptador, onConectar: () -> Unit) {
         Text(a.texto, color = RevScopeColors.TextPrimary, style = RevScopeType.body, modifier = Modifier.weight(1f))
         if (a.conectar) {
             TextButton(onClick = onConectar, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Conectar", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+                Text("Connect", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
             }
         }
     }
@@ -162,10 +162,10 @@ private fun TarjetaPrincipal(estado: TallerHubEstado, acciones: AccionesHub) {
 @Composable
 private fun TarjetaContinuar(sesion: TarjetaSesionAbierta, acciones: AccionesHub) {
     TarjetaTaller {
-        Text("SESIÓN ABIERTA", color = RevScopeColors.Accent, style = RevScopeType.label)
+        Text("OPEN SESSION", color = RevScopeColors.Accent, style = RevScopeType.label)
         Text(sesion.titulo, color = RevScopeColors.TextPrimary, style = RevScopeType.title)
         Text(
-            "Desde el ${sesion.desde} · ${eventosTexto(sesion.eventos)}",
+            "Since ${sesion.desde} · ${eventosTexto(sesion.eventos)}",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
@@ -175,13 +175,13 @@ private fun TarjetaContinuar(sesion: TarjetaSesionAbierta, acciones: AccionesHub
             }
         }
         sesion.ultimoEvento?.let {
-            Text("Último: $it", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
+            Text("Latest: $it", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
         }
-        BotonPrincipalTaller("Continuar sesión", onClick = { acciones.onAbrirSesion(sesion.id) })
+        BotonPrincipalTaller("Continue session", onClick = { acciones.onAbrirSesion(sesion.id) })
     }
 }
 
-private fun eventosTexto(n: Int): String = if (n == 1) "1 evento" else "$n eventos"
+private fun eventosTexto(n: Int): String = if (n == 1) "1 event" else "$n events"
 
 @Composable
 private fun TarjetaIniciar(esMoto: Boolean, onIniciar: () -> Unit) {
@@ -189,32 +189,32 @@ private fun TarjetaIniciar(esMoto: Boolean, onIniciar: () -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Filled.MedicalServices, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(28.dp))
             Text(
-                if (esMoto) "¿Qué le pasa a la moto?" else "¿Qué le pasa al vehículo?",
+                if (esMoto) "What’s wrong with the motorbike?" else "What’s wrong with the vehicle?",
                 color = RevScopeColors.TextPrimary,
                 style = RevScopeType.title,
                 modifier = Modifier.weight(1f),
             )
         }
         Text(
-            "Anota los síntomas y abre una sesión: cada lectura de códigos, captura y chequeo queda en una línea de " +
-                "tiempo con hora, lista para comparar y para el informe.",
+            "Note the symptoms and start a session: every code reading, snapshot and check is added to a " +
+                "timestamped timeline, ready to compare and include in the report.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
-        BotonPrincipalTaller("Iniciar diagnóstico", onClick = onIniciar)
+        BotonPrincipalTaller("Start diagnosis", onClick = onIniciar)
     }
 }
 
 @Composable
 private fun TarjetaSinVehiculo(onElegir: () -> Unit) {
     TarjetaTaller {
-        Text("Elige el vehículo que vas a revisar", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
+        Text("Choose the vehicle you’re inspecting", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
         Text(
-            "Las sesiones de diagnóstico se guardan por vehículo.",
+            "Diagnostic sessions are saved by vehicle.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
-        BotonPrincipalTaller("Elegir vehículo", onClick = onElegir)
+        BotonPrincipalTaller("Choose vehicle", onClick = onElegir)
     }
 }
 
@@ -267,17 +267,17 @@ private fun AvisoRequiereAdaptador() {
             tint = RevScopeColors.Warning,
             modifier = Modifier.size(with(LocalDensity.current) { 14.sp.toDp() }),
         )
-        Text("Requiere adaptador", color = RevScopeColors.Warning, style = RevScopeType.bodySmall)
+        Text("Requires adapter", color = RevScopeColors.Warning, style = RevScopeType.bodySmall)
     }
 }
 
 private fun LazyListScope.sesionesAnteriores(estado: TallerHubEstado, acciones: AccionesHub) {
     if (estado.vehiculo == null) return
-    item(key = "anteriores-titulo") { EncabezadoSeccion("Sesiones anteriores") }
+    item(key = "anteriores-titulo") { EncabezadoSeccion("Previous sessions") }
     if (estado.anteriores.isEmpty()) {
         item(key = "anteriores-vacio") {
             Text(
-                "Todavía no hay sesiones cerradas de este vehículo.",
+                "There are no closed sessions for this vehicle yet.",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.body,
             )
@@ -289,7 +289,7 @@ private fun LazyListScope.sesionesAnteriores(estado: TallerHubEstado, acciones: 
         item(key = "anteriores-todas") {
             TextButton(onClick = acciones.onVerTodas, modifier = Modifier.heightIn(min = 48.dp)) {
                 Text(
-                    if (estado.verTodas) "Ver menos" else "Ver todas (${estado.anteriores.size})",
+                    if (estado.verTodas) "Show fewer" else "Show all (${estado.anteriores.size})",
                     color = RevScopeColors.TextPrimary,
                     style = RevScopeType.label,
                 )

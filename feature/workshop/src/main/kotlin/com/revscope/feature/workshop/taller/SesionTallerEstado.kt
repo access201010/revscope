@@ -109,7 +109,7 @@ internal object EstadoPantallaSesion {
     fun disponibilidad(sesion: SesionTaller, activo: VehiculoTaller?): DisponibilidadAgregar = when {
         !sesion.abierta -> DisponibilidadAgregar.SesionCerrada
         activo?.id != sesion.vehiculoId -> DisponibilidadAgregar.OtroVehiculo(
-            "Esta sesión es de otro vehículo. Elígelo como vehículo activo para agregarle lecturas.",
+            "This session belongs to another vehicle. Make it the active vehicle to add readings.",
         )
         else -> DisponibilidadAgregar.Disponible
     }
@@ -120,8 +120,8 @@ internal object EstadoPantallaSesion {
     }
 
     private fun estadoTexto(sesion: SesionTaller, zona: ZoneId): String {
-        val cierre = sesion.cierre ?: return "Abierta desde las ${FechasTaller.hora(sesion.inicio, zona)}"
-        return "Cerrada el ${FechasTaller.fechaHora(cierre, zona)}"
+        val cierre = sesion.cierre ?: return "Open since ${FechasTaller.hora(sesion.inicio, zona)}"
+        return "Closed ${FechasTaller.fechaHora(cierre, zona)}"
     }
 
     private fun comparacion(analisis: AnalisisSesion, zona: ZoneId): TarjetaComparacion {
@@ -149,9 +149,9 @@ internal object EstadoPantallaSesion {
     }
 
     private fun detalle(evento: EventoTaller, zona: ZoneId): List<String> = listOfNotNull(
-        "Hora exacta: ${FechasTaller.fecha(evento.instante, zona)}, ${FechasTaller.horaExacta(evento.instante, zona)}",
-        if (evento.origen == OrigenEvento.MCP) "Anotado desde el PC (MCP)" else "Anotado por la app",
-        evento.adjunto?.let { "Archivo guardado en la sesión: ${File(it).name}" },
+        "Exact time: ${FechasTaller.fecha(evento.instante, zona)}, ${FechasTaller.horaExacta(evento.instante, zona)}",
+        if (evento.origen == OrigenEvento.MCP) "Logged from desktop (MCP)" else "Logged in the app",
+        evento.adjunto?.let { "File saved in session: ${File(it).name}" },
     )
 }
 

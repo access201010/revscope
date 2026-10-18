@@ -26,7 +26,7 @@ object CalibracionVoltaje {
     fun texto(d: DesfaseVoltaje): String = if (d.calibrado) {
         "${FormatoTaller.conSigno(d.voltios, 2)} V · ${d.origen}"
     } else {
-        "Sin calibrar: AT RV mide con ±0,1-0,2 V (típico)"
+        "Not calibrated: AT RV has a typical error of ±0.1–0.2 V"
     }
 
     private val VOLTAJE_PLAUSIBLE = 6.0..18.0

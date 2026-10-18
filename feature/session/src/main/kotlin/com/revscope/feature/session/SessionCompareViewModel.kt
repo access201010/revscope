@@ -66,13 +66,13 @@ class SessionCompareViewModel @Inject constructor(
                     val showLean = isMotorcycleForSession(a.session) || isMotorcycleForSession(b.session)
                     UiState.Ready(a, b, showLean)
                 } else {
-                    UiState.Error("Sesión no encontrada")
+                    UiState.Error("Trip not found")
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 Timber.e(e, "SessionCompare: load failed")
-                _state.value = UiState.Error("Error cargando la comparación")
+                _state.value = UiState.Error("Could not load the comparison")
             }
         }
     }

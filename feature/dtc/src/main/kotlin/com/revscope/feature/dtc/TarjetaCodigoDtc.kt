@@ -101,7 +101,7 @@ private fun UrgenciaFila(urgencia: UrgenciaDtc) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
         Icon(icono, contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
         Text(
-            "Urgencia: ${urgencia.etiqueta}",
+            "Urgency: ${urgencia.etiqueta}",
             color = color,
             style = RevScopeType.label,
             modifier = Modifier.weight(1f),
@@ -119,7 +119,7 @@ private fun estiloUrgencia(urgencia: UrgenciaDtc): Pair<ImageVector, Color> = wh
 private fun GuiaPlegable(guia: GuiaDtc, estado: EstadoTarjetaDtc, acciones: AccionesDtc) {
     val total = guia.verificaciones.size
     val hechos = PasosGuia.contarMarcados(estado.pasosMarcados, guia.codigo, total)
-    EncabezadoGuia(abierta = estado.guiaAbierta, progreso = "$hechos de $total verificaciones hechas") {
+    EncabezadoGuia(abierta = estado.guiaAbierta, progreso = "$hechos of $total checks completed") {
         acciones.onAlternarGuia(guia.codigo)
     }
     if (estado.guiaAbierta) CuerpoGuia(guia, estado, acciones)
@@ -127,7 +127,7 @@ private fun GuiaPlegable(guia: GuiaDtc, estado: EstadoTarjetaDtc, acciones: Acci
 
 @Composable
 private fun EncabezadoGuia(abierta: Boolean, progreso: String, onAlternar: () -> Unit) {
-    val descripcionEstado = if (abierta) "Desplegada" else "Plegada"
+    val descripcionEstado = if (abierta) "Expanded" else "Collapsed"
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -139,7 +139,7 @@ private fun EncabezadoGuia(abierta: Boolean, progreso: String, onAlternar: () ->
     ) {
         Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(20.dp))
         Column(Modifier.weight(1f)) {
-            Text("Guía de diagnóstico", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+            Text("Diagnostic guide", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
             Text(progreso, color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
         }
         Icon(
@@ -154,8 +154,8 @@ private fun EncabezadoGuia(abierta: Boolean, progreso: String, onAlternar: () ->
 private fun CuerpoGuia(guia: GuiaDtc, estado: EstadoTarjetaDtc, acciones: AccionesDtc) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         AvisoOrientacion()
-        ListaNumerada("Causas probables, de la más a la menos común", guia.causas)
-        TituloSeccion("Verificaciones en orden")
+        ListaNumerada("Probable causes, most to least common", guia.causas)
+        TituloSeccion("Checks in order")
         guia.verificaciones.forEachIndexed { indice, verificacion ->
             val numero = indice + 1
             PasoVerificacion(
@@ -169,10 +169,10 @@ private fun CuerpoGuia(guia: GuiaDtc, estado: EstadoTarjetaDtc, acciones: Accion
                 acciones = acciones,
             )
         }
-        if (guia.notasMoto.isNotEmpty()) ListaNumerada("Notas para moto", guia.notasMoto, numerada = false)
+        if (guia.notasMoto.isNotEmpty()) ListaNumerada("Motorbike notes", guia.notasMoto, numerada = false)
         if (guia.relacionados.isNotEmpty()) {
             Text(
-                "Códigos relacionados: ${guia.relacionados.joinToString(" · ")}",
+                "Related codes: ${guia.relacionados.joinToString(" · ")}",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.bodySmall,
             )
@@ -191,7 +191,7 @@ private fun AvisoOrientacion() {
     ) {
         Icon(Icons.Filled.Info, contentDescription = null, tint = RevScopeColors.TextSecondary, modifier = Modifier.size(18.dp))
         Text(
-            "$AVISO_ORIENTACION_GENERAL. El título es la descripción genérica de SAE J2012.",
+            "$AVISO_ORIENTACION_GENERAL. The title is the generic SAE J2012 description.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.bodySmall,
             modifier = Modifier.weight(1f),
@@ -241,15 +241,15 @@ private fun ExplicacionIaSeccion(item: DtcCodeUi, acciones: AccionesDtc) {
         ExplicacionIa.NoPedida -> BotonExplicarIa { acciones.onExplicarIa(item.codigo) }
         ExplicacionIa.Cargando -> CargandoExplicacion()
         ExplicacionIa.NoDisponible -> Column {
-            Text("La explicación con IA no está disponible ahora.", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
-            BotonExplicarIa(texto = "Reintentar explicación con IA") { acciones.onExplicarIa(item.codigo) }
+            Text("AI explanation is not available right now.", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+            BotonExplicarIa(texto = "Retry AI explanation") { acciones.onExplicarIa(item.codigo) }
         }
         is ExplicacionIa.Lista -> ExplicacionLista(explicacion, acciones.onOpenAiValue)
     }
 }
 
 @Composable
-private fun BotonExplicarIa(texto: String = "Explicar con IA", onClick: () -> Unit) {
+private fun BotonExplicarIa(texto: String = "Explain with AI", onClick: () -> Unit) {
     TextButton(onClick = onClick, modifier = Modifier.heightIn(min = 48.dp)) {
         Icon(Icons.Filled.AutoAwesome, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(18.dp))
         Text(texto, color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 8.dp))
@@ -264,21 +264,21 @@ private fun CargandoExplicacion() {
         modifier = Modifier.heightIn(min = 48.dp),
     ) {
         CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = RevScopeColors.Accent)
-        Text("Consultando la explicación con IA…", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+        Text("Getting AI explanation…", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
     }
 }
 
 @Composable
 private fun ExplicacionLista(explicacion: ExplicacionIa.Lista, onOpenAiValue: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Explicación con IA", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+        Text("AI explanation", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
         Text(explicacion.texto, color = RevScopeColors.TextPrimary, style = RevScopeType.body)
         if (explicacion.faltaConfigurar) {
             TextButton(onClick = onOpenAiValue, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Configurar IA", color = RevScopeColors.Accent, style = RevScopeType.label)
+                Text("Set up AI", color = RevScopeColors.Accent, style = RevScopeType.label)
             }
         }
     }
 }
 
-const val AVISO_ORIENTACION_GENERAL = "Orientación general, no es el procedimiento del fabricante"
+const val AVISO_ORIENTACION_GENERAL = "General guidance, not the manufacturer's procedure"

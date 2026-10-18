@@ -65,10 +65,10 @@ class ConocimientoModeloViewModel @Inject constructor(
             runCatching { repositorio.guardarCableado(modelo.clave, actualizado) }
                 .onSuccess { guardado ->
                     if (guardado) {
-                        local.update { it.copy(dialogoCable = null, mensaje = "Cableado guardado") }
+                        local.update { it.copy(dialogoCable = null, mensaje = "Wiring saved") }
                         cargar(vehiculoActual, conservarMensaje = true)
                     } else {
-                        local.update { it.copy(mensaje = "No se pudo guardar el cableado") }
+                        local.update { it.copy(mensaje = "Could not save wiring") }
                     }
                 }
                 .onFailure(::falloGuardado)
@@ -78,7 +78,7 @@ class ConocimientoModeloViewModel @Inject constructor(
     fun mensajeMostrado() = local.update { it.copy(mensaje = null) }
 
     fun referenciaCopiada(referencia: String) =
-        local.update { it.copy(mensaje = "Referencia $referencia copiada") }
+        local.update { it.copy(mensaje = "Part number $referencia copied") }
 
     private suspend fun cargar(vehiculo: VehiculoTaller?, conservarMensaje: Boolean = false) {
         val version = ++versionCarga
@@ -98,14 +98,14 @@ class ConocimientoModeloViewModel @Inject constructor(
         } catch (e: Exception) {
             if (version != versionCarga) return
             Timber.w(e, "Conocimiento del modelo: no se pudo cargar")
-            local.value = local.value.copy(cargando = false, error = "No se pudo cargar el conocimiento del modelo")
+            local.value = local.value.copy(cargando = false, error = "Could not load model information")
         }
     }
 
     private fun falloGuardado(error: Throwable) {
         if (error is CancellationException) throw error
         Timber.w(error, "Conocimiento del modelo: no se pudo guardar el cableado")
-        local.update { it.copy(mensaje = "No se pudo guardar el cableado") }
+        local.update { it.copy(mensaje = "Could not save wiring") }
     }
 
     private fun CableadoSensor.conColor(funcion: FuncionCable, color: String?) = copy(

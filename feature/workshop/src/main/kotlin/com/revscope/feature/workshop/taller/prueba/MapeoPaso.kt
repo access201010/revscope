@@ -44,7 +44,7 @@ internal object MapeoPaso {
         return base(e).copy(
             vivo = serie.lastOrNull()?.let { valorVivo(pid, it.second, vref) },
             grafica = grafica(pid, serie, vref, objetivo),
-            tituloGrafica = "Últimos 10 s, en voltios",
+            tituloGrafica = "Last 10 s, in volts",
             leyendaGrafica = objetivo.map { it.descripcion },
         )
     }
@@ -55,7 +55,7 @@ internal object MapeoPaso {
         return base(e).copy(
             vivo = serie.lastOrNull()?.let { MapeoMagnitud.valorVivo(pid, it.second) },
             grafica = MapeoMagnitud.grafica(pid, serie, VENTANA_MS, banda),
-            tituloGrafica = "Últimos 10 s, en ${MapeoMagnitud.de(pid).unidad.ifEmpty { "unidades del PID" }}",
+            tituloGrafica = "Last 10 s, in ${MapeoMagnitud.de(pid).unidad.ifEmpty { "PID units" }}",
             leyendaGrafica = listOfNotNull(banda?.let(MapeoMagnitud::leyenda)),
         )
     }
@@ -90,7 +90,7 @@ internal object MapeoPaso {
     }
 
     private fun valorVivo(pid: String, porcentaje: Double, vref: ReferenciaVoltaje) = ValorVivoUi(
-        etiqueta = "TPS · PID $pid · con ${FormatoPosicion.voltios(vref.voltios)} de referencia",
+        etiqueta = "TPS · PID $pid · ${FormatoPosicion.voltios(vref.voltios)} reference",
         principal = FormatoPosicion.porcentaje(porcentaje),
         secundario = FormatoPosicion.voltios(vref.aVoltios(porcentaje)),
     )
@@ -110,9 +110,9 @@ internal object MapeoPaso {
 
     private fun descripcion(pid: String, valoresV: List<Double>, bandas: List<BandaEnEscala>): String {
         val objetivo = bandas.joinToString("; ") { it.descripcion }.let { if (it.isEmpty()) "" else ". Banda: $it" }
-        if (valoresV.isEmpty()) return "PID $pid en los últimos 10 s: esperando muestras$objetivo"
+        if (valoresV.isEmpty()) return "PID $pid, last 10 s: waiting for readings$objetivo"
         val min = FormatoPosicion.voltios(valoresV.min())
         val max = FormatoPosicion.voltios(valoresV.max())
-        return "PID $pid en los últimos 10 s: de $min a $max, ${Tendencia.de(valoresV, ESTABLE_MAX_V)}$objetivo"
+        return "PID $pid, last 10 s: $min to $max, ${Tendencia.de(valoresV, ESTABLE_MAX_V)}$objetivo"
     }
 }

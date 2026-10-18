@@ -38,7 +38,7 @@ data class BandaEnEscala(
 
 object BandasPosicion {
 
-    private val NOMBRES_TPS = linkedMapOf(ClavesBanda.TPS_CERRADO_V to "Cerrado", ClavesBanda.TPS_FONDO_V to "A fondo")
+    private val NOMBRES_TPS = linkedMapOf(ClavesBanda.TPS_CERRADO_V to "Closed", ClavesBanda.TPS_FONDO_V to "Full throttle")
 
     // Solo se sombrean las bandas con los dos límites: una abierta no tiene franja que pintar.
     fun tps(bandas: Map<String, BandaReferencia>, unidad: UnidadPosicion, vref: ReferenciaVoltaje): List<BandaEnEscala> =
@@ -58,9 +58,9 @@ object BandasPosicion {
     }
 
     private fun origenCorto(origen: OrigenBanda): String = when (origen) {
-        OrigenBanda.TIPICO -> "típico"
-        OrigenBanda.FUENTE -> "según fuente"
-        OrigenBanda.USUARIO -> "editado por ti"
+        OrigenBanda.TIPICO -> "typical"
+        OrigenBanda.FUENTE -> "from source"
+        OrigenBanda.USUARIO -> "edited by you"
     }
 
     // Espacio duro antes de la unidad: con letra grande el «%» o la «V» no quedan solos en otra línea.
@@ -87,8 +87,8 @@ object FormatoPosicion {
 // Cómo va una señal en la ventana visible, para el resumen accesible de las gráficas en vivo.
 object Tendencia {
     fun de(valores: List<Double>, estableHasta: Double): String = when {
-        valores.size < 2 || valores.max() - valores.min() <= estableHasta -> "estable"
-        valores.last() > valores.first() -> "subiendo"
-        else -> "bajando"
+        valores.size < 2 || valores.max() - valores.min() <= estableHasta -> "stable"
+        valores.last() > valores.first() -> "rising"
+        else -> "falling"
     }
 }

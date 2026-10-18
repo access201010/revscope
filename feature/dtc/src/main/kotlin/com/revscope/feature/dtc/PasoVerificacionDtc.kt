@@ -39,9 +39,9 @@ data class PasoVerificacionUi(
 )
 
 fun textoAccionGuia(accion: AccionGuia): String = when (accion) {
-    is AccionGuia.Prueba -> "Iniciar prueba: ${accion.tipo.titulo}"
-    is AccionGuia.Multimetro -> "Medir con multímetro"
-    AccionGuia.BorrarCodigos -> "Borrar códigos"
+    is AccionGuia.Prueba -> "Start test: ${accion.tipo.titulo}"
+    is AccionGuia.Multimetro -> "Measure with multimeter"
+    AccionGuia.BorrarCodigos -> "Clear codes"
 }
 
 // Una acción sin destino todavía (p. ej. una prueba que la app aún no trae) no muestra botón.

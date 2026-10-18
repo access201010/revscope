@@ -2,7 +2,7 @@ package com.revscope.core.obd.taller.sesion
 
 object TituloSesion {
 
-    const val POR_DEFECTO = "Diagnóstico"
+    const val POR_DEFECTO = "Diagnosis"
     private const val MAX_CARACTERES = 80
 
     fun de(solicitud: SolicitudSesion): String =

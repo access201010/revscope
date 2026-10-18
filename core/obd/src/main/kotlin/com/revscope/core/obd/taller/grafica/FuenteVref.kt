@@ -20,7 +20,7 @@ import javax.inject.Inject
 data class EstadoVref(val usada: ReferenciaVoltaje, val medida: ReferenciaVoltaje?, val editadaV: Double?)
 
 object VrefSesion {
-    const val ORIGEN = "Medida con el multímetro en esta sesión"
+    const val ORIGEN = "Measured with the multimeter in this session"
 
     // Lee la forma de LecturaMultimetro del asistente (§2.5): {"lecturas":[{"funcion","valor","unidad"}]}.
     fun desde(eventos: List<EventoTaller>): ReferenciaVoltaje? = eventos
@@ -50,7 +50,7 @@ object ResolutorVref {
     // Quitar el valor editado vuelve a lo medido en la sesión, o a la típica si no hay medición.
     fun textoRestablecer(estado: EstadoVref): String? {
         if (estado.editadaV == null) return null
-        return estado.medida?.let { "Usar la del multímetro (${FormatoPosicion.voltios(it.voltios)})" } ?: "Volver a 5,0 V típico"
+        return estado.medida?.let { "Use the multimeter reading (${FormatoPosicion.voltios(it.voltios)})" } ?: "Reset to typical 5.0 V"
     }
 }
 

@@ -1,9 +1,9 @@
 package com.revscope.core.obd.taller.pruebas
 
 enum class TipoPrueba(val titulo: String) {
-    TPS_BARRIDO("Barrido del TPS"),
-    MINIMO_RETORNO("Mínimo y retorno"),
-    ARRANQUE_FRIO("Arranque en frío"),
-    BATERIA_CARGA("Batería y carga"),
-    MAP_BARO("MAP contra presión barométrica"),
+    TPS_BARRIDO("TPS sweep"),
+    MINIMO_RETORNO("Idle and return"),
+    ARRANQUE_FRIO("Cold start"),
+    BATERIA_CARGA("Battery and charging"),
+    MAP_BARO("MAP vs barometric pressure"),
 }

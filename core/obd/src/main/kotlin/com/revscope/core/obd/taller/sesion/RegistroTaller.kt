@@ -56,7 +56,7 @@ class RegistroTaller(
 
     suspend fun abrirSesion(solicitud: SolicitudSesion): Result<SesionTaller> {
         val actual = vehiculo.actual()
-            ?: return Result.failure(IllegalStateException("Elige el vehículo activo antes de abrir una sesión"))
+            ?: return Result.failure(IllegalStateException("Select an active vehicle before opening a session"))
         val ahora = reloj()
         val sesion = SesionTaller(
             vehiculoId = actual.id,

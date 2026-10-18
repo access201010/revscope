@@ -137,13 +137,13 @@ object AnalizadorMinimo {
     private fun comprobaciones(a: AnalisisMinimo, bandas: Map<String, BandaReferencia>): List<Comprobacion> {
         val m = a.minimo ?: return emptyList()
         return listOfNotNull(
-            Comprobacion.contra(ClavesBanda.MINIMO_RPM, "Mínimo (media)", m.mediaRpm, "rpm", bandas),
-            Comprobacion.contra(ClavesBanda.MINIMO_DERIVA_MAX, "Deriva del mínimo (sin signo)", abs(m.derivaRpmS), "rpm/s", bandas),
-            Comprobacion.contra(ClavesBanda.MINIMO_DESVIACION_MAX, "Desviación del mínimo", m.desviacionRpm, "rpm", bandas),
-            Comprobacion.siNo(CLAVE_SIN_OSCILACION, "Sin oscilación de más de ${OSCILACION_AMPLITUD_RPM.toInt()} rpm", m.oscilacion == null),
-            Comprobacion.siNo(CLAVE_SIN_APAGONES, "No se apagó", m.apagones + a.apagonesAlSoltar == 0),
-            valleMasBajo(a)?.let { Comprobacion.contra(ClavesBanda.RETORNO_VALLE_MIN, "Valle más bajo al soltar", it, "% del mínimo", bandas) },
-            a.tpsRalenti?.let { Comprobacion.contra(ClavesBanda.TPS_CERRADO_V, "TPS en ralentí", it.mediaV, "V", bandas) },
+            Comprobacion.contra(ClavesBanda.MINIMO_RPM, "Idle (average)", m.mediaRpm, "rpm", bandas),
+            Comprobacion.contra(ClavesBanda.MINIMO_DERIVA_MAX, "Idle drift (absolute)", abs(m.derivaRpmS), "rpm/s", bandas),
+            Comprobacion.contra(ClavesBanda.MINIMO_DESVIACION_MAX, "Idle variation", m.desviacionRpm, "rpm", bandas),
+            Comprobacion.siNo(CLAVE_SIN_OSCILACION, "No oscillation greater than ${OSCILACION_AMPLITUD_RPM.toInt()} rpm", m.oscilacion == null),
+            Comprobacion.siNo(CLAVE_SIN_APAGONES, "Did not stall", m.apagones + a.apagonesAlSoltar == 0),
+            valleMasBajo(a)?.let { Comprobacion.contra(ClavesBanda.RETORNO_VALLE_MIN, "Lowest dip on throttle release", it, "% of idle speed", bandas) },
+            a.tpsRalenti?.let { Comprobacion.contra(ClavesBanda.TPS_CERRADO_V, "TPS at idle", it.mediaV, "V", bandas) },
         )
     }
 

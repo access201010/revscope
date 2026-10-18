@@ -58,7 +58,7 @@ object AnalizadorMapBaro {
         val fuente = FormatoTaller.compacto(a.referencia?.incertidumbreKpa ?: 0.0)
         return Comprobacion(
             clave = ClavesBanda.MAP_KOEO_VS_BARO_KPA,
-            etiqueta = "Diferencia entre el MAP y la barométrica (más ±$fuente kPa de la fuente)",
+            etiqueta = "Difference between MAP and barometric pressure (over the source uncertainty of ±$fuente kPa)",
             valor = abs(delta),
             unidad = "kPa",
             banda = a.banda,

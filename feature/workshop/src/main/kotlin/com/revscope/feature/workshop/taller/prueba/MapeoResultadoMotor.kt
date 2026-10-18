@@ -78,8 +78,8 @@ internal object MapeoResultadoMotor {
         if (puntos.size < 2) return null
         val modelo = ModeloGrafica(
             series = listOf(SerieGrafica(m.nombre, puntos)),
-            descripcion = "${m.nombre} en toda la prueba: de ${m.texto(puntos.minOf { it.y })} a ${m.texto(puntos.maxOf { it.y })}, " +
-                "${pasosSombreados(datos.segmentos.size)}." + leyendaBanda?.let { " Banda $it" }.orEmpty(),
+            descripcion = "${m.nombre} throughout the test: ${m.texto(puntos.minOf { it.y })} to ${m.texto(puntos.maxOf { it.y })}, " +
+                "${pasosSombreados(datos.segmentos.size)}." + leyendaBanda?.let { " Range $it" }.orEmpty(),
             bandas = listOfNotNull(bandaGrafica),
             tramos = datos.segmentos.mapIndexed { i, s -> TramoGrafica("${i + 1}", s.inicioMs / 1_000.0, s.finMs / 1_000.0) },
         )
@@ -88,11 +88,11 @@ internal object MapeoResultadoMotor {
         return GraficaResultadoUi(tituloSerie(m), modelo, leyenda)
     }
 
-    private fun pasosSombreados(n: Int) = if (n == 1) "1 paso sombreado" else "$n pasos sombreados"
+    private fun pasosSombreados(n: Int) = if (n == 1) "1 shaded step" else "$n shaded steps"
 
     // «RPM en toda la prueba, en rpm» repite la unidad: solo se agrega cuando dice algo más que el nombre.
     private fun tituloSerie(m: Magnitud): String {
-        val titulo = "${m.nombre} en toda la prueba"
-        return if (m.unidad.equals(m.nombre, ignoreCase = true)) titulo else "$titulo, en ${m.unidad}"
+        val title = "${m.nombre} throughout the test"
+        return if (m.unidad.equals(m.nombre, ignoreCase = true)) title else "$title, in ${m.unidad}"
     }
 }

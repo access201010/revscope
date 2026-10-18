@@ -17,8 +17,8 @@ object CondicionesMultimetro {
 object PlantillasGenericas {
 
     private const val POR_DETRAS =
-        "Por detrás del conector, sin desconectarlo, con el contacto puesto y el motor apagado: punta negra al " +
-            "negativo de la batería y punta roja en cada cable."
+        "Back-probe the connector without unplugging it, with the ignition on and engine off: touch the black probe " +
+            "to battery negative and the red probe to each wire."
 
     fun para(sensor: SensorMultimetro, tipo: VehicleType): PlantillaCableado = when (sensor) {
         SensorMultimetro.TPS -> tps()
@@ -31,9 +31,9 @@ object PlantillasGenericas {
 
     private fun tps(): PlantillaCableado {
         val condiciones = listOf(
-            Condicion(CondicionesMultimetro.CERRADO, "Cerrado"),
-            Condicion(CondicionesMultimetro.MEDIO, "Medio"),
-            Condicion(CondicionesMultimetro.FONDO, "A fondo"),
+            Condicion(CondicionesMultimetro.CERRADO, "Throttle closed"),
+            Condicion(CondicionesMultimetro.MEDIO, "Half throttle"),
+            Condicion(CondicionesMultimetro.FONDO, "Full throttle"),
         )
         val claves = condiciones.map { it.clave }
         val senal = mapOf(
@@ -43,7 +43,7 @@ object PlantillasGenericas {
         )
         return PlantillaCableado(
             sensor = SensorMultimetro.TPS,
-            titulo = "TPS de 3 cables",
+            titulo = "3-wire TPS",
             cables = listOf(
                 cable(FuncionCable.REF_5V, claves.associateWith { Esperado.Banda(ClavesBanda.REF_5V_V) }),
                 cable(FuncionCable.MASA, claves.associateWith { Esperado.Banda(ClavesBanda.MASA_V) }),
@@ -51,20 +51,20 @@ object PlantillasGenericas {
             ),
             condiciones = condiciones,
             unidad = "V",
-            dondeMedir = "$POR_DETRAS Lleva el acelerador a cada posición y sostenlo mientras lees.",
+            dondeMedir = "$POR_DETRAS Move the throttle to each position and hold it there while taking a reading.",
             condicionesEcu = setOf(CondicionesMultimetro.CERRADO, CondicionesMultimetro.FONDO),
         )
     }
 
     private fun map() = PlantillaCableado(
         sensor = SensorMultimetro.MAP,
-        titulo = "MAP de 3 cables",
+        titulo = "3-wire MAP",
         cables = listOf(
             cable(FuncionCable.REF_5V, contacto(Esperado.Banda(ClavesBanda.REF_5V_V))),
             cable(FuncionCable.MASA, contacto(Esperado.Banda(ClavesBanda.MASA_V))),
             cable(
                 FuncionCable.SENAL,
-                contacto(Esperado.SinValor("Proporcional a la presión barométrica: compárala con la prueba del MAP")),
+                contacto(Esperado.SinValor("Proportional to barometric pressure: compare it with the MAP test")),
             ),
         ),
         condiciones = listOf(condicionContacto()),
@@ -74,11 +74,11 @@ object PlantillasGenericas {
 
     private fun temperatura(sensor: SensorMultimetro) = PlantillaCableado(
         sensor = sensor,
-        titulo = if (sensor == SensorMultimetro.ECT) "Temperatura del motor de 2 cables" else "Temperatura del aire de 2 cables",
+        titulo = if (sensor == SensorMultimetro.ECT) "2-wire engine temperature sensor" else "2-wire intake air temperature sensor",
         cables = listOf(
             cable(
                 FuncionCable.SENAL,
-                contacto(Esperado.SinValor("Depende de la temperatura: compárala con la tabla del manual")),
+                contacto(Esperado.SinValor("Depends on temperature: compare it with the manual's table")),
             ),
             cable(FuncionCable.MASA, contacto(Esperado.Banda(ClavesBanda.MASA_V))),
         ),
@@ -89,26 +89,25 @@ object PlantillasGenericas {
 
     private fun inyector() = PlantillaCableado(
         sensor = SensorMultimetro.INYECTOR,
-        titulo = "Resistencia del inyector",
+        titulo = "Injector resistance",
         cables = listOf(
             Cable(
                 FuncionCable.OTRO,
                 color = null,
                 esperadoPorCondicion = mapOf(CondicionesMultimetro.DESCONECTADO to Esperado.Banda(ClavesBanda.INYECTOR_OHM)),
-                etiqueta = "Bobina (entre terminales)",
+                etiqueta = "Coil (across terminals)",
             ),
         ),
-        condiciones = listOf(Condicion(CondicionesMultimetro.DESCONECTADO, "Desconectado")),
+        condiciones = listOf(Condicion(CondicionesMultimetro.DESCONECTADO, "Unplugged")),
         unidad = "Ω",
-        dondeMedir = "Contacto quitado y el conector del inyector desconectado: multímetro en ohmios entre los dos " +
-            "terminales del inyector.",
+        dondeMedir = "Ignition off, injector unplugged: set the multimeter to ohms and measure across the two injector terminals.",
     )
 
     private fun bateria(tipo: VehicleType): PlantillaCableado {
         val reposo = if (tipo == VehicleType.MOTORCYCLE) ClavesBanda.BATERIA_CONTACTO_CON_LUCES_V else ClavesBanda.BATERIA_CONTACTO_V
         return PlantillaCableado(
             sensor = SensorMultimetro.BATERIA,
-            titulo = "Batería y carga",
+            titulo = "Battery and charging",
             cables = listOf(
                 Cable(
                     FuncionCable.ALIMENTACION_12V,
@@ -118,17 +117,17 @@ object PlantillasGenericas {
                         CondicionesMultimetro.ARRANQUE to Esperado.Banda(ClavesBanda.ARRANQUE_MIN_V),
                         CondicionesMultimetro.CARGA to Esperado.Banda(ClavesBanda.CARGA_V),
                     ),
-                    etiqueta = "Bornes de la batería",
+                    etiqueta = "Battery terminals",
                 ),
             ),
             condiciones = listOf(
-                Condicion(CondicionesMultimetro.CONTACTO, "Contacto"),
-                Condicion(CondicionesMultimetro.ARRANQUE, "Al arrancar"),
-                Condicion(CondicionesMultimetro.CARGA, "Motor a 3 000 rpm"),
+                Condicion(CondicionesMultimetro.CONTACTO, "Ignition on"),
+                Condicion(CondicionesMultimetro.ARRANQUE, "While starting"),
+                Condicion(CondicionesMultimetro.CARGA, "Engine at 3,000 rpm"),
             ),
             unidad = "V",
-            dondeMedir = "En los bornes de la batería: punta roja al positivo y negra al negativo. Al arrancar anota " +
-                "el valor más bajo que veas.",
+            dondeMedir = "At the battery terminals, connect the red probe to positive and the black probe to negative. " +
+                "While starting, note the lowest reading."
         )
     }
 

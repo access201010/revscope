@@ -11,14 +11,14 @@ import com.revscope.core.obd.taller.sesion.Veredicto
 object TextosBarridoTps {
 
     private const val SIN_BARRIDO_EVALUADO =
-        "no llegaron muestras suficientes del barrido lento, así que no se buscaron saltos ni zonas muertas"
+        "there were too few samples during the slow sweep to check for spikes or dead spots"
 
     val TITULOS_PASO = mapOf(
-        Pasos.CERRADO_1 to "Cerrado",
-        Pasos.MEDIO to "Medio",
-        Pasos.A_FONDO to "A fondo",
-        Pasos.CERRADO_2 to "Cerrado otra vez",
-        Pasos.BARRIDO_LENTO to "Barrido lento",
+        Pasos.CERRADO_1 to "Throttle closed",
+        Pasos.MEDIO to "Half throttle",
+        Pasos.A_FONDO to "Full throttle",
+        Pasos.CERRADO_2 to "Throttle closed again",
+        Pasos.BARRIDO_LENTO to "Slow sweep",
     )
 
     fun resultado(a: AnalisisBarridoTps) = ResultadoPrueba(
@@ -35,72 +35,72 @@ object TextosBarridoTps {
     fun sinDatos(faltan: List<String>) = ResultadoPrueba(
         tipo = TipoPrueba.TPS_BARRIDO,
         veredicto = Veredicto.ATENCION,
-        titulo = "Sin datos suficientes del TPS",
-        interpretacion = "No llegaron muestras del TPS en: ${faltan.joinToString { TITULOS_PASO[it] ?: it }}. " +
-            "Sin ellas no se puede comparar con las bandas.",
-        siguientePaso = "Revisa que el adaptador siga conectado y repite la prueba",
+        titulo = "Not enough TPS data",
+        interpretacion = "No TPS samples were received during: ${faltan.joinToString { TITULOS_PASO[it] ?: it }}. " +
+            "Without them, the readings cannot be compared with the ranges.",
+        siguientePaso = "Check the adapter is still connected and repeat the test",
         hallazgos = emptyList(),
         bajaConfianza = false,
         detalle = SinDatosTps(faltan),
     )
 
     fun titulo(patron: PatronTps): String = when (patron) {
-        PatronTps.CORTES_O_SALTOS -> "Cortes o saltos en la señal"
-        PatronTps.SENAL_BAJA_TODO_EL_RECORRIDO -> "Señal baja en todo el recorrido, pareja y estable"
-        PatronTps.SENAL_ALTA -> "Señal alta con el acelerador cerrado"
-        PatronTps.RANGO_DESEMPENO -> "Señal fuera de rango o irregular"
-        PatronTps.SIN_BARRIDO -> "Pasos sostenidos dentro de lo típico, sin el barrido lento"
-        PatronTps.NORMAL -> "Señal del TPS dentro de lo típico"
+        PatronTps.CORTES_O_SALTOS -> "Signal dropouts or spikes"
+        PatronTps.SENAL_BAJA_TODO_EL_RECORRIDO -> "Signal consistently low throughout the sweep"
+        PatronTps.SENAL_ALTA -> "Signal high with the throttle closed"
+        PatronTps.RANGO_DESEMPENO -> "Signal outside the range or inconsistent"
+        PatronTps.SIN_BARRIDO -> "Held positions within typical values; slow sweep not assessed"
+        PatronTps.NORMAL -> "TPS signal within typical values"
     }
 
     fun siguientePaso(patron: PatronTps): String? = when (patron) {
         PatronTps.CORTES_O_SALTOS ->
-            "Revisa el conector y el cableado del TPS y mide la señal con el multímetro moviendo el acelerador despacio"
+            "Check the TPS plug and wiring, then measure the signal with a multimeter while moving the throttle slowly"
         PatronTps.SENAL_BAJA_TODO_EL_RECORRIDO ->
-            "Mide con el multímetro la referencia de 5 V, la masa y la señal del TPS (plantilla TPS), confirma que el " +
-                "repuesto sea el original y revisa el conector"
-        PatronTps.SENAL_ALTA -> "Mide con el multímetro la masa y la señal del TPS (plantilla TPS) con el acelerador cerrado"
+            "Measure the 5 V reference, earth and TPS signal with a multimeter (TPS template), confirm the part is " +
+                "the correct original part, and check the plug"
+        PatronTps.SENAL_ALTA -> "Measure the TPS earth and signal with a multimeter (TPS template) with the throttle closed"
         PatronTps.RANGO_DESEMPENO ->
-            "Revisa el tope mecánico del acelerador y repite la prueba; si se repite, mide la señal con el multímetro"
-        PatronTps.SIN_BARRIDO -> "Repite la prueba y, cuando la app lo pida, barre el acelerador despacio de cerrado a fondo"
+            "Check the mechanical throttle stop and repeat the test; if the result persists, measure the signal with a multimeter"
+        PatronTps.SIN_BARRIDO -> "Repeat the test and, when prompted, move the throttle slowly from fully closed to fully open"
         PatronTps.NORMAL -> null
     }
 
     private fun interpretacion(a: AnalisisBarridoTps): String = when (a.patron) {
         PatronTps.CORTES_O_SALTOS ->
-            "La señal tuvo ${cuantos(a.cuenta(TipoIrregularidad.CORTE), "corte", "cortes")} y " +
-                "${cuantos(a.cuenta(TipoIrregularidad.SALTO), "salto", "saltos")} durante la prueba: compatible con " +
-                "P0124 (señal intermitente del TPS) o con una pista gastada del sensor."
+            "The signal had ${cuantos(a.cuenta(TipoIrregularidad.CORTE), "dropout", "dropouts")} and " +
+                "${cuantos(a.cuenta(TipoIrregularidad.SALTO), "spike", "spikes")} during the test: consistent with " +
+                "P0124 (intermittent TPS signal) or a worn sensor track."
         PatronTps.SENAL_BAJA_TODO_EL_RECORRIDO -> senalBaja(a)
         PatronTps.SENAL_ALTA ->
-            "Cerrado ${v(a.cerradoV)}, por encima de la banda (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}): compatible " +
-                "con P0123 (señal alta del TPS): referencia en corto con la señal, señal a 5 V o masa abierta."
+            "With the throttle closed, ${v(a.cerradoV)} is above the range (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}): " +
+                "consistent with P0123 (high TPS signal), a short between the reference and signal, signal at 5 V or an open earth."
         PatronTps.RANGO_DESEMPENO ->
-            "Recorre ${v(a.recorridoV)}, pero ${a.comprobaciones.filterNot { it.cumple }.joinToString("; ") { falla(it, a) }}: " +
-                "compatible con P0121 (rango o desempeño del TPS) o con un ajuste mecánico del tope."
+            "The sweep is ${v(a.recorridoV)}, but ${a.comprobaciones.filterNot { it.cumple }.joinToString("; ") { falla(it, a) }}: " +
+                "consistent with P0121 (TPS range or performance) or an incorrectly adjusted throttle stop."
         PatronTps.SIN_BARRIDO ->
-            "Cerrado ${v(a.cerradoV)} (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}), a fondo ${v(a.fondoV)} " +
-                "(${bandaDe(a, ClavesBanda.TPS_FONDO_V)}) y recorrido ${v(a.recorridoV)}: estable y en orden en los " +
-                "pasos sostenidos, pero $SIN_BARRIDO_EVALUADO."
+            "Closed ${v(a.cerradoV)} (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}), full throttle ${v(a.fondoV)} " +
+                "(${bandaDe(a, ClavesBanda.TPS_FONDO_V)}) and sweep ${v(a.recorridoV)}: stable and within range at the " +
+                "held positions, but $SIN_BARRIDO_EVALUADO."
         PatronTps.NORMAL ->
-            "Cerrado ${v(a.cerradoV)} (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}), a fondo ${v(a.fondoV)} " +
-                "(${bandaDe(a, ClavesBanda.TPS_FONDO_V)}) y recorrido ${v(a.recorridoV)}: estable, en orden y sin " +
-                "cortes, saltos ni zonas muertas."
+            "Closed ${v(a.cerradoV)} (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}), full throttle ${v(a.fondoV)} " +
+                "(${bandaDe(a, ClavesBanda.TPS_FONDO_V)}) and sweep ${v(a.recorridoV)}: stable and within range, with no " +
+                "dropouts, spikes or dead spots."
     }
 
     private fun senalBaja(a: AnalisisBarridoTps): String {
-        val tipico = a.recorridoTipicoV?.let { " (≈${v(it)})" }.orEmpty()
-        val fraccion = a.fraccionRecorrido?.let { ", el ${FormatoTaller.numero(it * 100, 0)} % del típico$tipico" }.orEmpty()
-        return "Cerrado ${v(a.cerradoV)} (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}) y a fondo ${v(a.fondoV)} " +
-            "(${bandaDe(a, ClavesBanda.TPS_FONDO_V)}): la señal queda baja en todo el recorrido. Recorre " +
-            "${v(a.recorridoV)}$fraccion. Sube en orden, pareja, y repite el cerrado (${v(a.repetibilidadV)}): " +
-            "compatible con P0122 (señal baja del TPS)."
+        val typical = a.recorridoTipicoV?.let { " (≈${v(it)})" }.orEmpty()
+        val fraction = a.fraccionRecorrido?.let { ", ${FormatoTaller.numero(it * 100, 0)}% of typical$typical" }.orEmpty()
+        return "Closed ${v(a.cerradoV)} (${bandaDe(a, ClavesBanda.TPS_CERRADO_V)}) and full throttle ${v(a.fondoV)} " +
+            "(${bandaDe(a, ClavesBanda.TPS_FONDO_V)}): the signal stays low throughout the sweep. Travel is " +
+            "${v(a.recorridoV)}$fraction. It rises steadily; the repeated closed-throttle reading is ${v(a.repetibilidadV)}: " +
+            "consistent with P0122 (low TPS signal)."
     }
 
     private fun notaConfianza(a: AnalisisBarridoTps): String {
         val depende = a.patron == PatronTps.CORTES_O_SALTOS || a.patron == PatronTps.RANGO_DESEMPENO
         if (!a.bajaConfianza || !depende) return ""
-        return " Detección con baja confianza por la tasa de ${hz(a.tasaHz)}."
+        return " Low-confidence detection due to the ${hz(a.tasaHz)} sample rate."
     }
 
     private fun hallazgos(a: AnalisisBarridoTps): List<String> = buildList {
@@ -108,29 +108,29 @@ object TextosBarridoTps {
         irregularidades(a)?.let(::add)
         if (!a.barridoEvaluado && a.patron != PatronTps.SIN_BARRIDO) add(SIN_BARRIDO_EVALUADO.replaceFirstChar(Char::uppercase))
         if (a.bajaConfianza) {
-            add("Tasa de ${hz(a.tasaHz)}, por debajo de 8 Hz: la detección de saltos y zonas muertas es de baja confianza")
+            add("Sample rate of ${hz(a.tasaHz)}, below 8 Hz: spike and dead-spot detection has low confidence")
         }
     }
 
     private fun irregularidades(a: AnalisisBarridoTps): String? {
         val partes = listOf(
-            a.cuenta(TipoIrregularidad.CORTE) to ("corte" to "cortes"),
-            a.cuenta(TipoIrregularidad.SALTO) to ("salto" to "saltos"),
-            a.cuenta(TipoIrregularidad.ZONA_MUERTA) to ("zona muerta" to "zonas muertas"),
+            a.cuenta(TipoIrregularidad.CORTE) to ("dropout" to "dropouts"),
+            a.cuenta(TipoIrregularidad.SALTO) to ("spike" to "spikes"),
+            a.cuenta(TipoIrregularidad.ZONA_MUERTA) to ("dead spot" to "dead spots"),
         ).filter { it.first > 0 }.map { (n, nombres) -> cuantos(n, nombres.first, nombres.second) }
         return partes.takeIf { it.isNotEmpty() }?.joinToString(", ")?.replaceFirstChar(Char::uppercase)
     }
 
     private fun falla(c: Comprobacion, a: AnalisisBarridoTps): String = when {
-        c.clave == AnalizadorBarridoTps.CLAVE_ORDEN -> "las posiciones no quedan en orden (cerrado < medio < fondo)"
+        c.clave == AnalizadorBarridoTps.CLAVE_ORDEN -> "positions are out of order (closed < half throttle < full throttle)"
         c.clave == AnalizadorBarridoTps.CLAVE_SIN_ZONAS_MUERTAS ->
-            "${cuantos(a.cuenta(TipoIrregularidad.ZONA_MUERTA), "zona muerta", "zonas muertas")} en plena subida o bajada"
-        c.valor == null -> "${c.etiqueta.lowercase()} no se pudo calcular"
-        else -> "${c.etiqueta.lowercase()} ${valor(c)} ${lado(c.posicion)} de la banda (${c.banda?.let(::banda)})"
+            "${cuantos(a.cuenta(TipoIrregularidad.ZONA_MUERTA), "dead spot", "dead spots")} while opening or closing the throttle"
+        c.valor == null -> "${c.etiqueta.lowercase()} could not be calculated"
+        else -> "${c.etiqueta.lowercase()} ${valor(c)} ${lado(c.posicion)} the range (${c.banda?.let(::banda)})"
     }
 
     private fun lado(posicion: PosicionEnBanda?): String =
-        if (posicion == PosicionEnBanda.BAJO) "por debajo" else "por encima"
+        if (posicion == PosicionEnBanda.BAJO) "below" else "above"
 
     private fun valor(c: Comprobacion): String {
         val x = c.valor ?: return "—"
@@ -138,7 +138,7 @@ object TextosBarridoTps {
     }
 
     private fun bandaDe(a: AnalisisBarridoTps, clave: String): String =
-        a.comprobacion(clave)?.banda?.let(::banda) ?: "sin banda de referencia"
+        a.comprobacion(clave)?.banda?.let(::banda) ?: "no reference range"
 
     fun banda(b: BandaReferencia): String = "${rango(b)}, ${b.etiquetaOrigen}"
 

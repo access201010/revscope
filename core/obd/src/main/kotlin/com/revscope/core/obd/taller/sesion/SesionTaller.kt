@@ -19,19 +19,19 @@ data class SesionTaller(
 }
 
 enum class Sintoma(val etiqueta: String) {
-    NO_ARRANCA("No arranca"),
-    ARRANQUE_DIFICIL_FRIO("Cuesta arrancar en frío"),
-    NO_SOSTIENE_MINIMO_FRIO("No sostiene el mínimo en frío"),
-    MINIMO_INESTABLE("Mínimo inestable"),
-    SE_APAGA_AL_SOLTAR("Se apaga al soltar el acelerador"),
-    SE_AHOGA_AL_ACELERAR("Se ahoga al acelerar"),
-    PIERDE_POTENCIA("Pierde potencia"),
-    TIRONES("Tirones"),
-    CONSUMO_ALTO("Consume más"),
-    MIL_ENCENDIDA("Testigo de falla encendido"),
-    BATERIA_DESCARGA("Se descarga la batería"),
-    SOBRECALIENTA("Se calienta de más"),
-    OTRO("Otro"),
+    NO_ARRANCA("Does not start"),
+    ARRANQUE_DIFICIL_FRIO("Hard to start when cold"),
+    NO_SOSTIENE_MINIMO_FRIO("Will not idle when cold"),
+    MINIMO_INESTABLE("Unstable idle"),
+    SE_APAGA_AL_SOLTAR("Stalls when the throttle is released"),
+    SE_AHOGA_AL_ACELERAR("Hesitates when accelerating"),
+    PIERDE_POTENCIA("Loss of power"),
+    TIRONES("Jerking or surging"),
+    CONSUMO_ALTO("High fuel consumption"),
+    MIL_ENCENDIDA("Engine warning light on"),
+    BATERIA_DESCARGA("Battery discharges"),
+    SOBRECALIENTA("Overheating"),
+    OTRO("Other"),
 }
 
 data class EventoTaller(

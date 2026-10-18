@@ -82,7 +82,7 @@ private fun AccionesExportacion(acciones: AccionesInforme) {
             }
             OutlinedButton(onClick = acciones.onEditarInterpretacion, modifier = Modifier.heightIn(min = 48.dp)) {
                 Icon(Icons.Filled.Edit, contentDescription = null)
-                Text("Editar interpretación", modifier = Modifier.padding(start = 8.dp))
+                Text("Edit interpretation", modifier = Modifier.padding(start = 8.dp))
             }
         }
     }
@@ -92,7 +92,7 @@ private fun AccionesExportacion(acciones: AccionesInforme) {
 private fun EditorInterpretacion(estado: InformeUi, acciones: AccionesInforme) {
     AlertDialog(
         onDismissRequest = acciones.onCancelarEdicion,
-        title = { Text("Interpretación del técnico", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("Technician's interpretation", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
@@ -103,7 +103,7 @@ private fun EditorInterpretacion(estado: InformeUi, acciones: AccionesInforme) {
                 OutlinedTextField(
                     value = estado.borradorInterpretacion,
                     onValueChange = acciones.onCambiarInterpretacion,
-                    label = { Text("Interpretación") },
+                    label = { Text("Interpretation") },
                     minLines = 4,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -111,12 +111,12 @@ private fun EditorInterpretacion(estado: InformeUi, acciones: AccionesInforme) {
         },
         confirmButton = {
             TextButton(onClick = acciones.onGuardarInterpretacion, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Guardar")
+                Text("Save")
             }
         },
         dismissButton = {
             TextButton(onClick = acciones.onCancelarEdicion, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Cancelar")
+                Text("Cancel")
             }
         },
         containerColor = RevScopeColors.Surface,

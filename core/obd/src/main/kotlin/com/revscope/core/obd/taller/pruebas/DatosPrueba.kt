@@ -13,7 +13,7 @@ data class Punto(val tMs: Long, val valor: Double)
 // La referencia con la que el % del PID se convierte a voltios (5,0 V típico, o la medida con el multímetro).
 data class ReferenciaVoltaje(val voltios: Double, val origen: String) {
     init {
-        require(voltios in MIN_V..MAX_V) { "La referencia debe estar entre $MIN_V y $MAX_V V" }
+        require(voltios in MIN_V..MAX_V) { "Reference voltage must be between $MIN_V and $MAX_V V" }
     }
 
     fun aVoltios(porcentaje: Double): Double = porcentaje * voltios / 100.0
@@ -23,8 +23,8 @@ data class ReferenciaVoltaje(val voltios: Double, val origen: String) {
     companion object {
         const val MIN_V = 3.0
         const val MAX_V = 5.5
-        val TIPICA = ReferenciaVoltaje(5.0, "Típico (editable)")
-        fun editada(voltios: Double) = ReferenciaVoltaje(voltios, "Editado por ti")
+        val TIPICA = ReferenciaVoltaje(5.0, "Typical (editable)")
+        fun editada(voltios: Double) = ReferenciaVoltaje(voltios, "Edited by you")
     }
 }
 

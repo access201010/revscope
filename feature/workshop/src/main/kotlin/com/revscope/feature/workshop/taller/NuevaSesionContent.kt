@@ -55,7 +55,7 @@ data class AccionesNuevaSesion(
 @Composable
 fun NuevaSesionContent(estado: NuevaSesionEstado, acciones: AccionesNuevaSesion) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver(titulo = "Nueva sesión", subtitulo = estado.vehiculo, onVolver = acciones.onVolver)
+        BarraConVolver(titulo = "New session", subtitulo = estado.vehiculo, onVolver = acciones.onVolver)
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -63,11 +63,11 @@ fun NuevaSesionContent(estado: NuevaSesionEstado, acciones: AccionesNuevaSesion)
         ) {
             item(key = "sintomas") { SeccionSintomas(estado.sintomas, acciones.onSintoma) }
             item(key = "texto") {
-                CampoTexto("Descripción", "Qué notas, en tus palabras.", estado.sintomasTexto, acciones.onSintomasTexto)
+                CampoTexto("Description", "Describe what you notice, in your own words.", estado.sintomasTexto, acciones.onSintomasTexto)
             }
             item(key = "odometro") { CampoOdometro(estado, acciones.onOdometro) }
             item(key = "notas") {
-                CampoTexto("Notas", "Repuestos cambiados, arreglos previos…", estado.notas, acciones.onNotas)
+                CampoTexto("Notes", "Parts replaced, previous repairs…", estado.notas, acciones.onNotas)
             }
             item(key = "base") { SeccionBase(estado, acciones.onBase) }
             estado.error?.let { item(key = "error") { TextoError(it) } }
@@ -81,8 +81,8 @@ fun NuevaSesionContent(estado: NuevaSesionEstado, acciones: AccionesNuevaSesion)
 @Composable
 private fun SeccionSintomas(elegidos: Set<Sintoma>, onSintoma: (Sintoma) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        EncabezadoSeccion("Síntomas")
-        Text("Marca todos los que apliquen.", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+        EncabezadoSeccion("Symptoms")
+        Text("Select all that apply.", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Sintoma.entries.forEach { sintoma ->
                 ChipSeleccion(sintoma.etiqueta, seleccionado = sintoma in elegidos, onClick = { onSintoma(sintoma) })
@@ -112,13 +112,13 @@ private const val LINEAS_TEXTO = 3
 private fun CampoOdometro(estado: NuevaSesionEstado, onCambio: (String) -> Unit) {
     val ayuda = when {
         estado.errorOdometro != null -> estado.errorOdometro
-        estado.odometroDeEcu -> "Leído de la ECU; corrígelo si el tablero dice otra cosa."
-        else -> "Opcional."
+        estado.odometroDeEcu -> "Read from the ECU; change it if the dashboard shows a different figure."
+        else -> "Optional."
     }
     OutlinedTextField(
         value = estado.odometro,
         onValueChange = onCambio,
-        label = { Text("Odómetro (km)", style = RevScopeType.body) },
+        label = { Text("Odometer (km)", style = RevScopeType.body) },
         supportingText = { Text(ayuda, style = RevScopeType.bodySmall) },
         isError = estado.errorOdometro != null,
         singleLine = true,
@@ -145,11 +145,11 @@ private fun coloresCampo() = OutlinedTextFieldDefaults.colors(
 @Composable
 private fun SeccionBase(estado: NuevaSesionEstado, onBase: (Long?) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.selectableGroup()) {
-        EncabezadoSeccion("Chequeo base para comparar")
+        EncabezadoSeccion("Baseline check for comparison")
         if (estado.bases.isEmpty()) {
             Text(
-                "No hay chequeos de salud anteriores de este vehículo. La sesión se abre sin base; si corres un chequeo " +
-                    "dentro de la sesión, la próxima podrá compararse con él.",
+                "This vehicle has no previous health checks. The session will start without a baseline; run a check " +
+                    "during this session and the next one can be compared with it.",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.body,
             )
@@ -158,7 +158,7 @@ private fun SeccionBase(estado: NuevaSesionEstado, onBase: (Long?) -> Unit) {
         estado.bases.forEach { base ->
             OpcionBase(base.fecha, base.resumen, estado.baseElegida == base.id) { onBase(base.id) }
         }
-        OpcionBase("Sin chequeo base", "No comparar con un chequeo anterior", estado.baseElegida == null) { onBase(null) }
+        OpcionBase("No baseline check", "Do not compare with a previous check", estado.baseElegida == null) { onBase(null) }
     }
 }
 
@@ -198,7 +198,7 @@ private fun TextoError(mensaje: String) {
 private fun BarraAbrir(estado: NuevaSesionEstado, onAbrir: () -> Unit) {
     Surface(color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.navigationBarsPadding().padding(16.dp)) {
-            val texto = if (estado.abriendo) "Abriendo…" else "Abrir sesión"
+            val texto = if (estado.abriendo) "Opening…" else "Open session"
             BotonPrincipalTaller(texto, onClick = onAbrir, habilitado = estado.puedeAbrir)
         }
     }
@@ -209,23 +209,23 @@ private fun DialogoCerrarAnterior(anterior: SesionPorCerrar, acciones: AccionesN
     AlertDialog(
         onDismissRequest = acciones.onCancelarCierre,
         containerColor = RevScopeColors.SurfaceHigh,
-        title = { Text("Ya hay una sesión abierta", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("There is already an open session", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             Text(
-                "«${anterior.titulo}», abierta el ${anterior.desde}. Para abrir esta se cierra la anterior; su línea " +
-                    "de tiempo se conserva y puedes verla en Sesiones anteriores.",
+                "“${anterior.titulo}”, opened on ${anterior.desde}. Opening this session will close the previous one; " +
+                    "its timeline will be kept and you can find it under Previous sessions.",
                 color = RevScopeColors.TextPrimary,
                 style = RevScopeType.body,
             )
         },
         confirmButton = {
             TextButton(onClick = acciones.onConfirmarCierre, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Cerrar la anterior y abrir esta", color = RevScopeColors.Accent, style = RevScopeType.label)
+                Text("Close previous and open this one", color = RevScopeColors.Accent, style = RevScopeType.label)
             }
         },
         dismissButton = {
             TextButton(onClick = acciones.onCancelarCierre, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Cancelar", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+                Text("Cancel", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
             }
         },
     )

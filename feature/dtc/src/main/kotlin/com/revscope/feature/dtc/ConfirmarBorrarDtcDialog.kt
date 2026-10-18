@@ -30,11 +30,11 @@ fun ConfirmarBorrarDtcDialog(
 ) {
     var declaraDetenido by remember { mutableStateOf(false) }
     ConfirmarDestructivoDialog(
-        titulo = "¿Borrar los códigos de falla?",
-        mensaje = "Se enviará el borrado (modo 04) de: ${confirmacion.codigos.joinToString()}. " +
-            "Después se relee la ECU para ver si vuelven.",
+        titulo = "Clear fault codes?",
+        mensaje = "A mode 04 clear request will be sent for: ${confirmacion.codigos.joinToString()}. " +
+            "The ECU will then be reread to check whether they return.",
         avisos = avisosBorradoDtc(confirmacion.freezeFrameEnSesion),
-        textoConfirmar = "Sí, borrar",
+        textoConfirmar = "Yes, clear",
         confirmarHabilitado = permiteBorrarDesdeUi(confirmacion.rechazo, declaraDetenido),
         onConfirmar = { onConfirmar(declaraDetenido) },
         onCancelar = onCancelar,
@@ -78,7 +78,7 @@ private fun DeclaracionDetenido(marcada: Boolean, onCambio: (Boolean) -> Unit) {
             ),
         )
         Text(
-            "Confirmo que el vehículo está detenido",
+            "I confirm that the vehicle is stationary",
             color = RevScopeColors.TextPrimary,
             style = RevScopeType.body,
             modifier = Modifier.weight(1f),

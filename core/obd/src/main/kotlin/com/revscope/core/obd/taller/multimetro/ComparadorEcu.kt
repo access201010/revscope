@@ -63,20 +63,20 @@ object ComparadorEcu {
     private fun texto(resultado: ResultadoEcu, filas: List<FilaComparacionEcu>, plantilla: PlantillaCableado): String {
         val todas = condiciones(filas, plantilla)
         val distintas = condiciones(filas.filterNot { it.coincide }, plantilla)
-        val tolerancia = "±${FormatoTaller.numero(TOLERANCIA_V, 1)} V, típico"
+        val tolerancia = "±${FormatoTaller.numero(TOLERANCIA_V, 1)} V, typical"
         return when (resultado) {
             ResultadoEcu.COINCIDE ->
-                "Coincide con la prueba guiada: la ECU recibe lo mismo que mide el multímetro ($tolerancia, en $todas), " +
-                    "así que el cableado entre el sensor y la ECU no cambia la señal."
+                "Matches the guided test: the ECU receives the same voltage as the multimeter ($tolerancia, at $todas), " +
+                    "so the wiring between the sensor and ECU is not changing the signal."
             ResultadoEcu.ECU_RECIBE_MENOS ->
-                "La ECU recibe menos de lo que mide el multímetro en $distintas: apunta al cableado o al conector del " +
-                    "lado de la ECU."
+                "The ECU receives less than the multimeter measures at $distintas: this points to wiring or the connector " +
+                    "on the ECU side."
             ResultadoEcu.ECU_RECIBE_MAS ->
-                "La ECU recibe más de lo que mide el multímetro en $distintas: revisa la masa del sensor del lado de la " +
-                    "ECU o un cruce en el cableado."
+                "The ECU receives more than the multimeter measures at $distintas: check the sensor earth on the ECU side " +
+                    "or for a short in the wiring."
             ResultadoEcu.DIFIEREN ->
-                "La ECU y el multímetro difieren más de $tolerancia en $distintas: repite las dos medidas en la " +
-                    "misma posición."
+                "The ECU and multimeter differ by more than $tolerancia at $distintas: repeat both readings in the " +
+                    "same position."
         }
     }
 
@@ -86,7 +86,7 @@ object ComparadorEcu {
     private fun enumerar(partes: List<String>): String = when (partes.size) {
         0 -> ""
         1 -> partes.single()
-        else -> partes.dropLast(1).joinToString(", ") + " y " + partes.last()
+        else -> partes.dropLast(1).joinToString(", ") + " and " + partes.last()
     }
 }
 
@@ -110,7 +110,7 @@ object LecturasEcuSesion {
             CondicionesMultimetro.MEDIO to detalle.numero("medioV"),
             CondicionesMultimetro.FONDO to detalle.numero("fondoV"),
         ).filterValues { it != null }.mapValues { it.value!! }
-        return voltios.takeIf { it.isNotEmpty() }?.let { LecturasEcu("Prueba guiada «${TipoPrueba.TPS_BARRIDO.titulo}» de esta sesión", it) }
+        return voltios.takeIf { it.isNotEmpty() }?.let { LecturasEcu("${TipoPrueba.TPS_BARRIDO.titulo} guided test in this session", it) }
     }
 
     private fun JSONObject.numero(nombre: String): Double? = optDouble(nombre).takeUnless(Double::isNaN)

@@ -1,42 +1,42 @@
 {
   "version": 1,
-  "fuenteDescripciones": "SAE J2012 (descripción genérica de códigos P0xxx)",
-  "aviso": "Orientación general, no es el procedimiento del fabricante",
+  "fuenteDescripciones": "SAE J2012 (generic descriptions for P0xxx codes)",
+  "aviso": "General guidance, not the manufacturer's procedure",
   "codigos": [
     {
       "codigo": "P0105",
-      "titulo": "Circuito del sensor de presión absoluta del múltiple (MAP) / presión barométrica: falla del circuito",
+      "titulo": "Manifold absolute pressure (MAP) / barometric pressure sensor circuit: circuit malfunction",
       "sistema": "MAP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Conector del MAP suelto o sulfatado",
-        "Cable de señal, referencia o masa abierto",
-        "Sensor MAP dañado",
-        "Falla de la referencia de 5 V que comparte con otros sensores (TPS)"
+        "Loose or corroded MAP connector",
+        "Open signal, reference or earth wire",
+        "Faulty MAP sensor",
+        "Fault in the 5 V reference shared with other sensors (TPS)"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines flojos o doblados; limpia con limpiacontactos y vuelve a medir."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and loose or bent pins; clean with electrical contact cleaner and measure again."
         },
         {
-          "paso": "Medir referencia, masa y señal en el conector",
-          "detalle": "Contacto puesto: referencia ≈5 V y masa ≈0 V (típico). La señal con motor apagado debe ser proporcional a la presión barométrica.",
+          "paso": "Measure reference, earth and signal at the connector",
+          "detalle": "With the ignition on, expect ≈5 V at the reference and ≈0 V at earth (typical). With the engine off, the signal should be proportional to barometric pressure.",
           "accion": "MULTIMETRO:MAP"
         },
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado y contacto puesto el MAP debe leer casi lo mismo que la presión atmosférica del lugar.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off and ignition on, MAP should read close to the local atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En monocilíndricos el vacío del múltiple pulsa mucho: la lectura del MAP en marcha oscila más que en un carro y eso es normal."
+        "On single-cylinder engines, manifold vacuum pulses strongly: MAP readings fluctuate more while running than in a car, which is normal."
       ],
       "relacionados": [
         "P0106",
@@ -47,42 +47,42 @@
     },
     {
       "codigo": "P0106",
-      "titulo": "Circuito del sensor de presión absoluta del múltiple (MAP) / presión barométrica: rango o desempeño",
+      "titulo": "Manifold absolute pressure (MAP) / barometric pressure sensor circuit: range or performance",
       "sistema": "MAP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Manguera de vacío rota, suelta o con obstrucción",
-        "Entrada de aire falsa en el múltiple o en el cuerpo de inyección",
-        "Sensor MAP descalibrado o dañado",
-        "Problema mecánico que cambia el vacío (válvulas, compresión)"
+        "Split, loose or blocked vacuum hose",
+        "Air leak at the manifold or throttle body",
+        "Miscalibrated or faulty MAP sensor",
+        "Mechanical issue affecting vacuum (valves or compression)"
       ],
       "verificaciones": [
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado y contacto puesto el MAP debe leer casi lo mismo que la presión atmosférica del lugar.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off and ignition on, MAP should read close to the local atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Revisar la toma de vacío",
-          "detalle": "Si el sensor va conectado por manguera: que no esté rota, doblada, suelta ni con agua o aceite adentro."
+          "paso": "Inspect the vacuum connection",
+          "detalle": "If the sensor uses a hose, check that it is not split, kinked or loose, and contains no water or oil."
         },
         {
-          "paso": "Medir referencia, masa y señal en el conector",
-          "detalle": "Contacto puesto: referencia ≈5 V y masa ≈0 V (típico). La señal con motor apagado debe ser proporcional a la presión barométrica.",
+          "paso": "Measure reference, earth and signal at the connector",
+          "detalle": "With the ignition on, expect ≈5 V at the reference and ≈0 V at earth (typical). With the engine off, the signal should be proportional to barometric pressure.",
           "accion": "MULTIMETRO:MAP"
         },
         {
-          "paso": "Buscar entradas de aire falsas",
-          "detalle": "Revisa abrazaderas y el acople del cuerpo de inyección al múltiple con el motor en mínimo."
+          "paso": "Check for air leaks",
+          "detalle": "With the engine idling, check the clamps and throttle-body connection to the manifold."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "La ECU compara el MAP con la posición del acelerador y las rpm: un desfase sostenido dispara este código aunque el circuito esté completo."
+        "The ECU compares MAP with throttle position and RPM. A sustained mismatch can trigger this code even when the circuit is intact."
       ],
       "relacionados": [
         "P0105",
@@ -93,42 +93,42 @@
     },
     {
       "codigo": "P0107",
-      "titulo": "Circuito del sensor de presión absoluta del múltiple (MAP) / presión barométrica: circuito con señal baja",
+      "titulo": "Manifold absolute pressure (MAP) / barometric pressure sensor circuit: low input",
       "sistema": "MAP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Cable de señal a masa o cortado",
-        "Referencia de 5 V ausente o baja",
-        "Conector del MAP desconectado o sulfatado",
-        "Sensor MAP dañado"
+        "Signal wire shorted to earth or broken",
+        "Missing or low 5 V reference",
+        "MAP connector unplugged or corroded",
+        "Faulty MAP sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines flojos o doblados; limpia con limpiacontactos y vuelve a medir."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and loose or bent pins; clean with electrical contact cleaner and measure again."
         },
         {
-          "paso": "Medir referencia, masa y señal en el conector",
-          "detalle": "Contacto puesto: referencia ≈5 V y masa ≈0 V (típico). La señal con motor apagado debe ser proporcional a la presión barométrica.",
+          "paso": "Measure reference, earth and signal at the connector",
+          "detalle": "With the ignition on, expect ≈5 V at the reference and ≈0 V at earth (typical). With the engine off, the signal should be proportional to barometric pressure.",
           "accion": "MULTIMETRO:MAP"
         },
         {
-          "paso": "Mirar si el TPS también falla",
-          "detalle": "Si hay a la vez un código del TPS, sospecha de la referencia de 5 V común o de la masa de sensores."
+          "paso": "Check whether the TPS is also faulty",
+          "detalle": "If a TPS code is also present, suspect the shared 5 V reference or sensor earth."
         },
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado y contacto puesto el MAP debe leer casi lo mismo que la presión atmosférica del lugar.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off and ignition on, MAP should read close to the local atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "El MAP y el TPS suelen compartir la referencia de 5 V: un corto en uno puede tumbar al otro."
+        "The MAP and TPS often share the 5 V reference: a short in one sensor can affect the other."
       ],
       "relacionados": [
         "P0105",
@@ -140,38 +140,38 @@
     },
     {
       "codigo": "P0108",
-      "titulo": "Circuito del sensor de presión absoluta del múltiple (MAP) / presión barométrica: circuito con señal alta",
+      "titulo": "Manifold absolute pressure (MAP) / barometric pressure sensor circuit: high input",
       "sistema": "MAP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Masa del sensor abierta o con resistencia",
-        "Señal en corto con la referencia de 5 V o con 12 V",
-        "Manguera de vacío desconectada (el sensor ve presión atmosférica en todo momento)",
-        "Sensor MAP dañado"
+        "Open or resistive sensor earth",
+        "Signal shorted to the 5 V reference or 12 V",
+        "Vacuum hose disconnected (the sensor always sees atmospheric pressure)",
+        "Faulty MAP sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar la toma de vacío",
-          "detalle": "Si el sensor va conectado por manguera: que no esté rota, doblada, suelta ni con agua o aceite adentro."
+          "paso": "Inspect the vacuum connection",
+          "detalle": "If the sensor uses a hose, check that it is not split, kinked or loose, and contains no water or oil."
         },
         {
-          "paso": "Medir referencia, masa y señal en el conector",
-          "detalle": "Contacto puesto: referencia ≈5 V y masa ≈0 V (típico). La señal con motor apagado debe ser proporcional a la presión barométrica.",
+          "paso": "Measure reference, earth and signal at the connector",
+          "detalle": "With the ignition on, expect ≈5 V at the reference and ≈0 V at earth (typical). With the engine off, the signal should be proportional to barometric pressure.",
           "accion": "MULTIMETRO:MAP"
         },
         {
-          "paso": "Medir la masa contra el negativo de la batería",
-          "detalle": "Con contacto puesto debe ser ≈0 V (típico); si marca más, hay resistencia en la masa.",
+          "paso": "Measure earth against battery negative",
+          "detalle": "With the ignition on, expect ≈0 V (typical); a higher reading indicates resistance in the earth connection.",
           "accion": "MULTIMETRO:MAP"
         },
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado y contacto puesto el MAP debe leer casi lo mismo que la presión atmosférica del lugar.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off and ignition on, MAP should read close to the local atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -186,36 +186,36 @@
     },
     {
       "codigo": "P0109",
-      "titulo": "Circuito del sensor de presión absoluta del múltiple (MAP) / presión barométrica: intermitente",
+      "titulo": "Manifold absolute pressure (MAP) / barometric pressure sensor circuit: intermittent",
       "sistema": "MAP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Mal contacto en el conector o en los terminales",
-        "Cableado rozado que hace corto al mover el manubrio o con vibración",
-        "Sensor MAP con falla intermitente"
+        "Poor contact at the connector or terminals",
+        "Chafed wiring shorting when the handlebars move or under vibration",
+        "Intermittently faulty MAP sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines flojos o doblados; limpia con limpiacontactos y vuelve a medir."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and loose or bent pins; clean with electrical contact cleaner and measure again."
         },
         {
-          "paso": "Mover el arnés mientras miras la lectura",
-          "detalle": "Con motor apagado y contacto puesto, mueve suavemente el cableado y el manubrio: la lectura del MAP no debe saltar."
+          "paso": "Move the wiring loom while watching the reading",
+          "detalle": "With the engine off and ignition on, gently move the wiring and handlebars: the MAP reading should remain steady."
         },
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado y contacto puesto el MAP debe leer casi lo mismo que la presión atmosférica del lugar.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off and ignition on, MAP should read close to the local atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En moto el arnés pasa cerca de la dirección y del motor: vibración y calor sueltan terminales con el tiempo."
+        "On a motorbike, the loom runs close to the steering and engine: vibration and heat can loosen terminals over time."
       ],
       "relacionados": [
         "P0105",
@@ -226,37 +226,37 @@
     },
     {
       "codigo": "P0110",
-      "titulo": "Circuito del sensor de temperatura del aire de admisión (IAT) 1: falla del circuito",
+      "titulo": "Intake air temperature (IAT) sensor 1 circuit malfunction",
       "sistema": "IAT",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Conector del IAT suelto o sulfatado",
-        "Cable abierto o en corto",
-        "Sensor IAT dañado"
+        "IAT connector loose or corroded",
+        "Open or shorted wire",
+        "Faulty IAT sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables rozados cerca de la caja del filtro."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or chafed wires near the air-filter box."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:IAT"
         },
         {
-          "paso": "Comparar IAT con la temperatura ambiente en frío",
-          "detalle": "Con la moto fría (varias horas apagada) el IAT debe leer cerca de la temperatura ambiente y del motor.",
+          "paso": "Compare IAT with ambient temperature when cold",
+          "detalle": "After the motorbike has been off for several hours, IAT should be close to ambient and engine temperature.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En algunas motos el IAT va integrado con el MAP en un mismo sensor: revisa el catálogo del modelo antes de comprar el repuesto."
+        "On some motorbikes, the IAT and MAP are combined in one sensor: check the model parts catalogue before buying a replacement."
       ],
       "relacionados": [
         "P0111",
@@ -267,37 +267,37 @@
     },
     {
       "codigo": "P0111",
-      "titulo": "Circuito del sensor de temperatura del aire de admisión (IAT) 1: rango o desempeño",
+      "titulo": "Intake air temperature (IAT) sensor 1 circuit range or performance",
       "sistema": "IAT",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Sensor IAT descalibrado",
-        "Sensor ubicado cerca de una fuente de calor (motor, escape)",
-        "Mal contacto que altera la resistencia"
+        "IAT sensor out of calibration",
+        "Sensor positioned near a heat source (engine or exhaust)",
+        "Poor connection affecting resistance"
       ],
       "verificaciones": [
         {
-          "paso": "Comparar IAT con la temperatura ambiente en frío",
-          "detalle": "Con la moto fría (varias horas apagada) el IAT debe leer cerca de la temperatura ambiente y del motor.",
+          "paso": "Compare IAT with ambient temperature when cold",
+          "detalle": "After the motorbike has been off for several hours, IAT should be close to ambient and engine temperature.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:IAT"
         },
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables rozados cerca de la caja del filtro."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or chafed wires near the air-filter box."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Con la moto detenida y caliente el aire bajo el tanque se calienta mucho: la comparación válida es en frío."
+        "Air under the tank heats up significantly when a stationary motorbike is warm: make this comparison with the engine cold."
       ],
       "relacionados": [
         "P0110",
@@ -308,37 +308,37 @@
     },
     {
       "codigo": "P0112",
-      "titulo": "Circuito del sensor de temperatura del aire de admisión (IAT) 1: circuito con señal baja",
+      "titulo": "Intake air temperature (IAT) sensor 1 circuit: low input",
       "sistema": "IAT",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Cable de señal a masa",
-        "Sensor IAT en corto interno",
-        "Humedad en el conector"
+        "Signal wire shorted to earth",
+        "IAT sensor shorted internally",
+        "Moisture in the connector"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables rozados cerca de la caja del filtro."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or chafed wires near the air-filter box."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:IAT"
         },
         {
-          "paso": "Comparar IAT con la temperatura ambiente en frío",
-          "detalle": "Con la moto fría (varias horas apagada) el IAT debe leer cerca de la temperatura ambiente y del motor.",
+          "paso": "Compare IAT with ambient temperature when cold",
+          "detalle": "After the motorbike has been off for several hours, IAT should be close to ambient and engine temperature.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Señal baja en un sensor de temperatura NTC se lee como temperatura muy alta."
+        "A low signal from an NTC temperature sensor is interpreted as a very high temperature."
       ],
       "relacionados": [
         "P0110",
@@ -349,37 +349,37 @@
     },
     {
       "codigo": "P0113",
-      "titulo": "Circuito del sensor de temperatura del aire de admisión (IAT) 1: circuito con señal alta",
+      "titulo": "Intake air temperature (IAT) sensor 1 circuit: high input",
       "sistema": "IAT",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Sensor IAT desconectado",
-        "Cable de señal o de masa abierto",
-        "Sensor IAT dañado (abierto)"
+        "IAT sensor disconnected",
+        "Open signal or earth wire",
+        "Faulty IAT sensor (open circuit)"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables rozados cerca de la caja del filtro."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or chafed wires near the air-filter box."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:IAT"
         },
         {
-          "paso": "Comparar IAT con la temperatura ambiente en frío",
-          "detalle": "Con la moto fría (varias horas apagada) el IAT debe leer cerca de la temperatura ambiente y del motor.",
+          "paso": "Compare IAT with ambient temperature when cold",
+          "detalle": "After the motorbike has been off for several hours, IAT should be close to ambient and engine temperature.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Señal alta en un sensor NTC se lee como temperatura muy baja (p. ej. −40 °C): suele ser circuito abierto."
+        "A high signal from an NTC sensor is interpreted as a very low temperature (for example, −40 °C), usually indicating an open circuit."
       ],
       "relacionados": [
         "P0110",
@@ -390,31 +390,31 @@
     },
     {
       "codigo": "P0114",
-      "titulo": "Circuito del sensor de temperatura del aire de admisión (IAT) 1: intermitente",
+      "titulo": "Intake air temperature (IAT) sensor 1 circuit: intermittent",
       "sistema": "IAT",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Mal contacto en el conector",
-        "Cable rozado que hace corto con la vibración",
-        "Sensor IAT con falla intermitente"
+        "Poor contact at the connector",
+        "Chafed wire shorting under vibration",
+        "Intermittently faulty IAT sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables rozados cerca de la caja del filtro."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or chafed wires near the air-filter box."
         },
         {
-          "paso": "Mover el arnés mientras miras la lectura",
-          "detalle": "Con contacto puesto, mueve el cableado del sensor: la temperatura no debe saltar."
+          "paso": "Move the wiring loom while watching the reading",
+          "detalle": "With the ignition on, move the sensor wiring: the temperature reading should remain steady."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:IAT"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -428,38 +428,38 @@
     },
     {
       "codigo": "P0115",
-      "titulo": "Circuito del sensor de temperatura del motor/refrigerante (ECT) 1: falla del circuito",
+      "titulo": "Engine coolant temperature (ECT) sensor 1 circuit malfunction",
       "sistema": "ECT",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Conector del sensor suelto o sulfatado",
-        "Cable abierto o en corto",
-        "Sensor de temperatura dañado"
+        "Sensor connector loose or corroded",
+        "Open or shorted wire",
+        "Faulty temperature sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables cocinados por el calor del motor."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or wires damaged by engine heat."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:ECT"
         },
         {
-          "paso": "Comparar el motor con el aire en frío",
-          "detalle": "Con la moto fría (varias horas apagada) ECT e IAT deben leer casi lo mismo; una diferencia de más de ≈5 °C (típico) apunta a un sensor.",
+          "paso": "Compare engine and intake-air temperatures when cold",
+          "detalle": "After the motorbike has been off for several hours, ECT and IAT should be close. A difference greater than ≈5 °C (typical) points to a sensor fault.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos refrigeradas por aire este sensor suele medir la temperatura de la culata o del aceite, no la de un refrigerante.",
-        "Sin una lectura de temperatura confiable la ECU enriquece la mezcla y el arranque en frío se vuelve difícil."
+        "On air-cooled motorbikes, this sensor usually measures cylinder-head or oil temperature, not coolant temperature.",
+        "Without a reliable temperature reading, the ECU enriches the mixture and cold starting becomes difficult."
       ],
       "relacionados": [
         "P0116",
@@ -470,37 +470,37 @@
     },
     {
       "codigo": "P0116",
-      "titulo": "Circuito del sensor de temperatura del motor/refrigerante (ECT) 1: rango o desempeño",
+      "titulo": "Engine coolant temperature (ECT) sensor 1 circuit range or performance",
       "sistema": "ECT",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Sensor descalibrado (lee distinto a la temperatura real)",
-        "Termostato abierto o ausente en motos refrigeradas por líquido",
-        "Mal contacto que altera la resistencia"
+        "Sensor out of calibration (reading differs from the actual temperature)",
+        "Thermostat stuck open or missing on liquid-cooled motorbikes",
+        "Poor connection affecting resistance"
       ],
       "verificaciones": [
         {
-          "paso": "Comparar el motor con el aire en frío",
-          "detalle": "Con la moto fría (varias horas apagada) ECT e IAT deben leer casi lo mismo; una diferencia de más de ≈5 °C (típico) apunta a un sensor.",
+          "paso": "Compare engine and intake-air temperatures when cold",
+          "detalle": "After the motorbike has been off for several hours, ECT and IAT should be close. A difference greater than ≈5 °C (typical) points to a sensor fault.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Ver cómo sube la temperatura al calentar",
-          "detalle": "La temperatura del motor debe subir pareja durante los primeros minutos en mínimo, sin saltos."
+          "paso": "Watch the temperature rise during warm-up",
+          "detalle": "Engine temperature should rise steadily during the first few minutes at idle, without spikes."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:ECT"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos refrigeradas por aire este sensor suele medir la temperatura de la culata o del aceite, no la de un refrigerante."
+        "On air-cooled motorbikes, this sensor usually measures cylinder-head or oil temperature, not coolant temperature."
       ],
       "relacionados": [
         "P0115",
@@ -511,37 +511,37 @@
     },
     {
       "codigo": "P0117",
-      "titulo": "Circuito del sensor de temperatura del motor/refrigerante (ECT) 1: circuito con señal baja",
+      "titulo": "Engine coolant temperature (ECT) sensor 1 circuit: low input",
       "sistema": "ECT",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Cable de señal a masa",
-        "Sensor en corto interno",
-        "Humedad o sulfato en el conector"
+        "Signal wire shorted to earth",
+        "Sensor shorted internally",
+        "Moisture or corrosion in the connector"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables cocinados por el calor del motor."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or wires damaged by engine heat."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:ECT"
         },
         {
-          "paso": "Comparar el motor con el aire en frío",
-          "detalle": "Con la moto fría (varias horas apagada) ECT e IAT deben leer casi lo mismo; una diferencia de más de ≈5 °C (típico) apunta a un sensor.",
+          "paso": "Compare engine and intake-air temperatures when cold",
+          "detalle": "After the motorbike has been off for several hours, ECT and IAT should be close. A difference greater than ≈5 °C (typical) points to a sensor fault.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Señal baja en un sensor NTC se lee como motor muy caliente: la ECU puede empobrecer la mezcla en frío."
+        "A low signal from an NTC sensor is interpreted as an overheated engine: the ECU may lean the mixture when cold."
       ],
       "relacionados": [
         "P0115",
@@ -552,37 +552,37 @@
     },
     {
       "codigo": "P0118",
-      "titulo": "Circuito del sensor de temperatura del motor/refrigerante (ECT) 1: circuito con señal alta",
+      "titulo": "Engine coolant temperature (ECT) sensor 1 circuit: high input",
       "sistema": "ECT",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Sensor desconectado",
-        "Cable de señal o de masa abierto",
-        "Sensor dañado (abierto)"
+        "Sensor disconnected",
+        "Open signal or earth wire",
+        "Faulty sensor (open circuit)"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables cocinados por el calor del motor."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or wires damaged by engine heat."
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:ECT"
         },
         {
-          "paso": "Comparar el motor con el aire en frío",
-          "detalle": "Con la moto fría (varias horas apagada) ECT e IAT deben leer casi lo mismo; una diferencia de más de ≈5 °C (típico) apunta a un sensor.",
+          "paso": "Compare engine and intake-air temperatures when cold",
+          "detalle": "After the motorbike has been off for several hours, ECT and IAT should be close. A difference greater than ≈5 °C (typical) points to a sensor fault.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Señal alta en un sensor NTC se lee como motor muy frío (p. ej. −40 °C): la ECU enriquece de más y la moto se ahoga."
+        "A high signal from an NTC sensor is interpreted as an extremely cold engine (for example, −40 °C): the ECU over-enriches the mixture and the motorbike may flood."
       ],
       "relacionados": [
         "P0115",
@@ -593,41 +593,41 @@
     },
     {
       "codigo": "P0119",
-      "titulo": "Circuito del sensor de temperatura del motor/refrigerante (ECT) 1: intermitente o errático",
+      "titulo": "Engine coolant temperature (ECT) sensor 1 circuit: intermittent or erratic",
       "sistema": "ECT",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Mal contacto en el conector",
-        "Cable rozado o cocinado que falla con la vibración o el calor",
-        "Sensor con falla intermitente"
+        "Poor contact at the connector",
+        "Chafed or heat-damaged wire failing under vibration or heat",
+        "Intermittently faulty sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cables cocinados por el calor del motor."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or wires damaged by engine heat."
         },
         {
-          "paso": "Mover el arnés mientras miras la lectura",
-          "detalle": "Con contacto puesto, mueve el cableado del sensor: la temperatura no debe saltar."
+          "paso": "Move the wiring loom while watching the reading",
+          "detalle": "With the ignition on, move the sensor wiring: the temperature reading should remain steady."
         },
         {
-          "paso": "Seguir el calentamiento con la prueba guiada",
-          "detalle": "La prueba de arranque en frío graba la temperatura desde el contacto hasta que el motor calienta y marca cada salto de más de 5 °C en menos de 1 s (umbral típico).",
+          "paso": "Track warm-up with the guided test",
+          "detalle": "The cold-start test records temperature from ignition-on until the engine warms up and flags jumps greater than 5 °C in under 1 s (typical threshold).",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Medir el sensor con el multímetro",
-          "detalle": "Sensor de 2 cables: la señal depende de la temperatura; compara con la tabla del manual del modelo.",
+          "paso": "Measure the sensor with a multimeter",
+          "detalle": "For a two-wire sensor, the signal depends on temperature; compare it with the model's service-manual table.",
           "accion": "MULTIMETRO:ECT"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos refrigeradas por aire este sensor suele medir la temperatura de la culata o del aceite, no la de un refrigerante."
+        "On air-cooled motorbikes, this sensor usually measures cylinder-head or oil temperature, not coolant temperature."
       ],
       "relacionados": [
         "P0115",
@@ -638,43 +638,43 @@
     },
     {
       "codigo": "P0120",
-      "titulo": "Sensor/interruptor de posición del acelerador/mariposa «A»: falla del circuito",
+      "titulo": "Throttle/pedal position sensor/switch 'A' circuit malfunction",
       "sistema": "TPS",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Conector del TPS suelto o sulfatado",
-        "Cable de señal, referencia o masa abierto",
-        "Sensor dañado o no equivalente al original",
-        "Falla de la referencia de 5 V que comparte con otros sensores (MAP)"
+        "TPS connector loose or corroded",
+        "Open signal, reference or earth wire",
+        "Faulty sensor or one that is not equivalent to the original",
+        "Fault in the 5 V reference shared with other sensors (MAP)"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines doblados o flojos; limpiar con limpiacontactos."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and bent or loose pins; clean with electrical contact cleaner."
         },
         {
-          "paso": "Medir el conector con el multímetro",
-          "detalle": "Referencia ≈5 V, masa ≈0 V y señal subiendo pareja (típico).",
+          "paso": "Measure the connector with a multimeter",
+          "detalle": "Expect ≈5 V reference, ≈0 V earth and a steadily rising signal (typical).",
           "accion": "MULTIMETRO:TPS"
         },
         {
-          "paso": "Barrido guiado del TPS",
-          "detalle": "Cerrado, medio, a fondo y cerrado, con motor apagado y contacto puesto.",
+          "paso": "Run the guided TPS sweep",
+          "detalle": "Move through closed, half, fully open and closed positions with the engine off and ignition on.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Confirmar que el TPS instalado es el original",
-          "detalle": "Compara la referencia con la del modelo (Conocimiento del modelo)."
+          "paso": "Confirm the installed TPS is the correct original part",
+          "detalle": "Compare its part number with the one for this model (Model information)."
         },
         {
-          "paso": "Borrar el código y reaprender el mínimo",
-          "detalle": "Con el procedimiento del manual de servicio del modelo.",
+          "paso": "Clear the code and relearn idle",
+          "detalle": "Follow the procedure in the model's service manual.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con ECU de pocos PIDs (K-line, p. ej. Delphi MT05) la posición se ve como % de la referencia de 5 V: ≈10 % cerrado y ≈90 % a fondo es lo típico de un TPS sano.",
-        "Un TPS genérico puede encajar en el cuerpo de inyección sin ser equivalente al original."
+        "On motorbikes with ECUs exposing few PIDs (K-line, for example Delphi MT05), position is shown as a percentage of the 5 V reference: ≈10% closed and ≈90% fully open are typical for a healthy TPS.",
+        "A generic TPS may fit the throttle body without being equivalent to the original."
       ],
       "relacionados": [
         "P0121",
@@ -685,43 +685,43 @@
     },
     {
       "codigo": "P0121",
-      "titulo": "Sensor/interruptor de posición del acelerador/mariposa «A»: rango o desempeño",
+      "titulo": "Throttle/pedal position sensor/switch 'A' circuit range or performance",
       "sistema": "TPS",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Pista del sensor gastada (zonas muertas o saltos en el recorrido)",
-        "Sensor no equivalente al original (otra curva)",
-        "Tope de la mariposa desajustado o mínimo mal ajustado",
-        "Mal contacto que altera la señal"
+        "Worn sensor track (dead spots or spikes through its travel)",
+        "Sensor not equivalent to the original (different response curve)",
+        "Throttle stop or idle incorrectly adjusted",
+        "Poor connection affecting the signal"
       ],
       "verificaciones": [
         {
-          "paso": "Barrido guiado del TPS",
-          "detalle": "Cerrado, medio, a fondo y cerrado, con motor apagado y contacto puesto.",
+          "paso": "Run the guided TPS sweep",
+          "detalle": "Move through closed, half, fully open and closed positions with the engine off and ignition on.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Confirmar que el TPS instalado es el original",
-          "detalle": "Compara la referencia con la del modelo (Conocimiento del modelo)."
+          "paso": "Confirm the installed TPS is the correct original part",
+          "detalle": "Compare its part number with the one for this model (Model information)."
         },
         {
-          "paso": "Medir el conector con el multímetro",
-          "detalle": "Referencia ≈5 V, masa ≈0 V y señal subiendo pareja (típico).",
+          "paso": "Measure the connector with a multimeter",
+          "detalle": "Expect ≈5 V reference, ≈0 V earth and a steadily rising signal (typical).",
           "accion": "MULTIMETRO:TPS"
         },
         {
-          "paso": "Revisar el tope y el cable del acelerador",
-          "detalle": "La mariposa debe cerrar completa y el cable tener un juego libre pequeño."
+          "paso": "Inspect the throttle stop and cable",
+          "detalle": "The throttle plate should close fully and the cable should have a small amount of free play."
         },
         {
-          "paso": "Borrar el código y reaprender el mínimo",
-          "detalle": "Con el procedimiento del manual de servicio del modelo.",
+          "paso": "Clear the code and relearn idle",
+          "detalle": "Follow the procedure in the model's service manual.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con ECU de pocos PIDs (K-line, p. ej. Delphi MT05) la posición se ve como % de la referencia de 5 V: ≈10 % cerrado y ≈90 % a fondo es lo típico de un TPS sano.",
-        "La ECU compara la posición con las rpm y el MAP: una señal que no concuerda con la carga dispara este código."
+        "On motorbikes with ECUs exposing few PIDs (K-line, for example Delphi MT05), position is shown as a percentage of the 5 V reference: ≈10% closed and ≈90% fully open are typical for a healthy TPS.",
+        "The ECU compares throttle position with RPM and MAP: a signal inconsistent with engine load can trigger this code."
       ],
       "relacionados": [
         "P0120",
@@ -732,59 +732,59 @@
     },
     {
       "codigo": "P0122",
-      "titulo": "Sensor/interruptor de posición del acelerador/mariposa «A»: circuito con señal baja",
+      "titulo": "Throttle/pedal position sensor/switch 'A' circuit: low input",
       "sistema": "TPS",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Sensor dañado o no equivalente al original (p. ej. repuesto genérico con otra curva)",
-        "Mal contacto en el conector o en los terminales (sulfato, pines flojos)",
-        "Referencia de 5 V baja o masa con resistencia (compártela con otros sensores: MAP)",
-        "Cable de señal a masa o cortado",
-        "Orden de pines equivocado en un sensor no original"
+        "Faulty sensor or one that is not equivalent to the original (for example, a generic part with a different response curve)",
+        "Poor contact at the connector or terminals (corrosion or loose pins)",
+        "Low 5 V reference or resistive earth (shared with other sensors such as MAP)",
+        "Signal wire shorted to earth or broken",
+        "Incorrect pinout on a non-original sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Confirmar que el TPS instalado es el original",
-          "detalle": "Compara la referencia con la del modelo (Conocimiento del modelo)."
+          "paso": "Confirm the installed TPS is the correct original part",
+          "detalle": "Compare its part number with the one for this model (Model information)."
         },
         {
-          "paso": "Barrido guiado del TPS",
-          "detalle": "Cerrado, medio, a fondo y cerrado, con motor apagado y contacto puesto.",
+          "paso": "Run the guided TPS sweep",
+          "detalle": "Move through closed, half, fully open and closed positions with the engine off and ignition on.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Medir el conector con el multímetro",
-          "detalle": "Referencia ≈5 V, masa ≈0 V y señal subiendo pareja (típico).",
+          "paso": "Measure the connector with a multimeter",
+          "detalle": "Expect ≈5 V reference, ≈0 V earth and a steadily rising signal (typical).",
           "accion": "MULTIMETRO:TPS"
         },
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines doblados o flojos; limpiar con limpiacontactos."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and bent or loose pins; clean with electrical contact cleaner."
         },
         {
-          "paso": "Si no es original, verificar el orden de pines con el ohmímetro",
-          "detalle": "El cursor (resistencia variable) debe ir al cable de señal."
+          "paso": "If it is not original, check the pinout with an ohmmeter",
+          "detalle": "The wiper (variable resistance) must connect to the signal wire."
         },
         {
-          "paso": "Medir de nuevo después de corregir",
-          "detalle": "Repite el barrido: la señal debe cubrir casi todo el recorrido (≈10 % a ≈90 %, típico).",
+          "paso": "Measure again after correcting the fault",
+          "detalle": "Repeat the sweep: the signal should cover almost the full range (typically ≈10% to ≈90%).",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Borrar el código y reaprender el mínimo",
-          "detalle": "Con el procedimiento del manual de servicio del modelo.",
+          "paso": "Clear the code and relearn idle",
+          "detalle": "Follow the procedure in the model's service manual.",
           "accion": "DTC:BORRAR"
         },
         {
-          "paso": "Probar en frío",
-          "detalle": "Al día siguiente, arranque en frío guiado.",
+          "paso": "Test when cold",
+          "detalle": "Run the guided cold-start test the following day.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         }
       ],
       "notasMoto": [
-        "En motos con ECU de pocos PIDs (K-line, p. ej. Delphi MT05) la posición se ve como % de la referencia de 5 V: ≈10 % cerrado y ≈90 % a fondo es lo típico de un TPS sano.",
-        "Un TPS genérico puede encajar en el cuerpo de inyección sin ser equivalente al original.",
-        "Si la referencia y la masa miden bien y la señal es baja en todo el recorrido pero sube pareja, apunta al sensor o al contacto sensor-conector."
+        "On motorbikes with ECUs exposing few PIDs (K-line, for example Delphi MT05), position is shown as a percentage of the 5 V reference: ≈10% closed and ≈90% fully open are typical for a healthy TPS.",
+        "A generic TPS may fit the throttle body without being equivalent to the original.",
+        "If reference and earth are correct but the signal remains low throughout its travel while rising steadily, suspect the sensor or its connector."
       ],
       "relacionados": [
         "P0120",
@@ -795,43 +795,43 @@
     },
     {
       "codigo": "P0123",
-      "titulo": "Sensor/interruptor de posición del acelerador/mariposa «A»: circuito con señal alta",
+      "titulo": "Throttle/pedal position sensor/switch 'A' circuit: high input",
       "sistema": "TPS",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Masa del sensor abierta o con resistencia",
-        "Señal en corto con la referencia de 5 V",
-        "Sensor dañado o no equivalente al original",
-        "Orden de pines equivocado en un sensor no original"
+        "Open or resistive sensor earth",
+        "Signal shorted to the 5 V reference",
+        "Faulty sensor or one that is not equivalent to the original",
+        "Incorrect pinout on a non-original sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Barrido guiado del TPS",
-          "detalle": "Cerrado, medio, a fondo y cerrado, con motor apagado y contacto puesto.",
+          "paso": "Run the guided TPS sweep",
+          "detalle": "Move through closed, half, fully open and closed positions with the engine off and ignition on.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Medir el conector con el multímetro",
-          "detalle": "Referencia ≈5 V, masa ≈0 V y señal subiendo pareja (típico).",
+          "paso": "Measure the connector with a multimeter",
+          "detalle": "Expect ≈5 V reference, ≈0 V earth and a steadily rising signal (typical).",
           "accion": "MULTIMETRO:TPS"
         },
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines doblados o flojos; limpiar con limpiacontactos."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and bent or loose pins; clean with electrical contact cleaner."
         },
         {
-          "paso": "Si no es original, verificar el orden de pines con el ohmímetro",
-          "detalle": "El cursor (resistencia variable) debe ir al cable de señal."
+          "paso": "If it is not original, check the pinout with an ohmmeter",
+          "detalle": "The wiper (variable resistance) must connect to the signal wire."
         },
         {
-          "paso": "Borrar el código y reaprender el mínimo",
-          "detalle": "Con el procedimiento del manual de servicio del modelo.",
+          "paso": "Clear the code and relearn idle",
+          "detalle": "Follow the procedure in the model's service manual.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con ECU de pocos PIDs (K-line, p. ej. Delphi MT05) la posición se ve como % de la referencia de 5 V: ≈10 % cerrado y ≈90 % a fondo es lo típico de un TPS sano.",
-        "Un TPS genérico puede encajar en el cuerpo de inyección sin ser equivalente al original."
+        "On motorbikes with ECUs exposing few PIDs (K-line, for example Delphi MT05), position is shown as a percentage of the 5 V reference: ≈10% closed and ≈90% fully open are typical for a healthy TPS.",
+        "A generic TPS may fit the throttle body without being equivalent to the original."
       ],
       "relacionados": [
         "P0120",
@@ -842,41 +842,41 @@
     },
     {
       "codigo": "P0124",
-      "titulo": "Sensor/interruptor de posición del acelerador/mariposa «A»: circuito intermitente",
+      "titulo": "Throttle/pedal position sensor/switch 'A' circuit: intermittent",
       "sistema": "TPS",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Pista del sensor gastada en una zona",
-        "Mal contacto en el conector con la vibración",
-        "Cable rozado cerca de la dirección o del motor"
+        "Sensor track worn in one area",
+        "Poor contact at the connector under vibration",
+        "Chafed wire near the steering or engine"
       ],
       "verificaciones": [
         {
-          "paso": "Barrido guiado del TPS",
-          "detalle": "Cerrado, medio, a fondo y cerrado, con motor apagado y contacto puesto.",
+          "paso": "Run the guided TPS sweep",
+          "detalle": "Move through closed, half, fully open and closed positions with the engine off and ignition on.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Revisar el conector",
-          "detalle": "Sulfato, pines doblados o flojos; limpiar con limpiacontactos."
+          "paso": "Inspect the connector",
+          "detalle": "Check for corrosion and bent or loose pins; clean with electrical contact cleaner."
         },
         {
-          "paso": "Mover el arnés mientras miras la señal",
-          "detalle": "Con motor apagado y contacto puesto, mueve suavemente el cableado del TPS: la señal no debe saltar."
+          "paso": "Move the wiring loom while watching the signal",
+          "detalle": "With the engine off and ignition on, gently move the TPS wiring: the signal should remain steady."
         },
         {
-          "paso": "Medir el conector con el multímetro",
-          "detalle": "Referencia ≈5 V, masa ≈0 V y señal subiendo pareja (típico).",
+          "paso": "Measure the connector with a multimeter",
+          "detalle": "Expect ≈5 V reference, ≈0 V earth and a steadily rising signal (typical).",
           "accion": "MULTIMETRO:TPS"
         },
         {
-          "paso": "Borrar el código y reaprender el mínimo",
-          "detalle": "Con el procedimiento del manual de servicio del modelo.",
+          "paso": "Clear the code and relearn idle",
+          "detalle": "Follow the procedure in the model's service manual.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con ECU de pocos PIDs (K-line, p. ej. Delphi MT05) la posición se ve como % de la referencia de 5 V: ≈10 % cerrado y ≈90 % a fondo es lo típico de un TPS sano."
+        "On motorbikes with ECUs exposing few PIDs (K-line, for example Delphi MT05), position is shown as a percentage of the 5 V reference: ≈10% closed and ≈90% fully open are typical for a healthy TPS."
       ],
       "relacionados": [
         "P0120",
@@ -887,35 +887,35 @@
     },
     {
       "codigo": "P0130",
-      "titulo": "Circuito del sensor de oxígeno (banco 1, sensor 1): falla",
+      "titulo": "Oxygen sensor circuit (bank 1, sensor 1): malfunction",
       "sistema": "O2",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Conector o cable del sensor dañado",
-        "Sensor de oxígeno agotado o contaminado",
-        "Fuga en el escape antes del sensor"
+        "Damaged sensor connector or wiring",
+        "Worn or contaminated oxygen sensor",
+        "Exhaust leak upstream of the sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cable del sensor",
-          "detalle": "El cable pasa cerca del escape: busca aislante derretido, pines sulfatados o el conector suelto."
+          "paso": "Inspect the sensor connector and wiring",
+          "detalle": "The wire runs near the exhaust: check for melted insulation, corroded pins or a loose connector."
         },
         {
-          "paso": "Buscar fugas en el escape antes del sensor",
-          "detalle": "Una fuga deja entrar aire y el sensor lee mezcla pobre aunque no lo sea."
+          "paso": "Check for exhaust leaks upstream of the sensor",
+          "detalle": "A leak lets air in and can make the sensor report a lean mixture when it is not actually lean."
         },
         {
-          "paso": "Mirar la señal con el motor caliente",
-          "detalle": "En circuito cerrado un sensor de zirconio sano oscila entre ≈0,1 y ≈0,9 V (típico); en Sensores revisa si el PID del O2 cambia."
+          "paso": "Check the signal with the engine warm",
+          "detalle": "In closed loop, a healthy zirconia sensor typically switches between ≈0.1 and ≈0.9 V; in Sensors, check whether the O2 PID changes."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Muchas motos pequeñas no tienen sensor de oxígeno o lo tienen sin calefactor: si tu moto no lo trae, este código no aplica y conviene revisar la lectura."
+        "Many small motorbikes do not have an oxygen sensor or have an unheated one: if yours does not have one, this code does not apply and the reading should be checked."
       ],
       "relacionados": [
         "P0131",
@@ -927,35 +927,35 @@
     },
     {
       "codigo": "P0131",
-      "titulo": "Circuito del sensor de oxígeno (banco 1, sensor 1): voltaje bajo",
+      "titulo": "Oxygen sensor circuit (bank 1, sensor 1): low voltage",
       "sistema": "O2",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Fuga en el escape antes del sensor",
-        "Mezcla realmente pobre (entrada de aire, inyector sucio, baja presión de combustible)",
-        "Cable de señal a masa",
-        "Sensor de oxígeno agotado"
+        "Exhaust leak upstream of the sensor",
+        "Genuinely lean mixture (air leak, dirty injector or low fuel pressure)",
+        "Signal wire shorted to earth",
+        "Worn oxygen sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Buscar fugas en el escape antes del sensor",
-          "detalle": "Una fuga deja entrar aire y el sensor lee mezcla pobre aunque no lo sea."
+          "paso": "Check for exhaust leaks upstream of the sensor",
+          "detalle": "A leak lets air in and can make the sensor report a lean mixture when it is not actually lean."
         },
         {
-          "paso": "Revisar el conector y el cable del sensor",
-          "detalle": "El cable pasa cerca del escape: busca aislante derretido, pines sulfatados o el conector suelto."
+          "paso": "Inspect the sensor connector and wiring",
+          "detalle": "The wire runs near the exhaust: check for melted insulation, corroded pins or a loose connector."
         },
         {
-          "paso": "Mirar la señal con el motor caliente",
-          "detalle": "En circuito cerrado un sensor de zirconio sano oscila entre ≈0,1 y ≈0,9 V (típico); en Sensores revisa si el PID del O2 cambia."
+          "paso": "Check the signal with the engine warm",
+          "detalle": "In closed loop, a healthy zirconia sensor typically switches between ≈0.1 and ≈0.9 V; in Sensors, check whether the O2 PID changes."
         },
         {
-          "paso": "Revisar los ajustes de combustible",
-          "detalle": "Si el ajuste corto y largo están muy positivos, la mezcla es de verdad pobre: sigue la guía de P0171."
+          "paso": "Check the fuel trims",
+          "detalle": "If short- and long-term trims are strongly positive, the mixture really is lean: follow the P0171 guide."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -971,30 +971,30 @@
     },
     {
       "codigo": "P0132",
-      "titulo": "Circuito del sensor de oxígeno (banco 1, sensor 1): voltaje alto",
+      "titulo": "Oxygen sensor circuit (bank 1, sensor 1): high voltage",
       "sistema": "O2",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Mezcla realmente rica (inyector goteando, sensor de temperatura mal)",
-        "Cable de señal en corto con el calefactor o con voltaje",
-        "Sensor contaminado (aceite, silicona, combustible)"
+        "Genuinely rich mixture (leaking injector or faulty temperature sensor)",
+        "Signal wire shorted to the heater circuit or a voltage supply",
+        "Sensor contaminated by oil, silicone or fuel"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cable del sensor",
-          "detalle": "El cable pasa cerca del escape: busca aislante derretido, pines sulfatados o el conector suelto."
+          "paso": "Inspect the sensor connector and wiring",
+          "detalle": "The wire runs near the exhaust: check for melted insulation, corroded pins or a loose connector."
         },
         {
-          "paso": "Mirar la señal con el motor caliente",
-          "detalle": "En circuito cerrado un sensor de zirconio sano oscila entre ≈0,1 y ≈0,9 V (típico); en Sensores revisa si el PID del O2 cambia."
+          "paso": "Check the signal with the engine warm",
+          "detalle": "In closed loop, a healthy zirconia sensor typically switches between ≈0.1 and ≈0.9 V; in Sensors, check whether the O2 PID changes."
         },
         {
-          "paso": "Revisar los ajustes de combustible",
-          "detalle": "Si los ajustes están muy negativos, la mezcla es de verdad rica: sigue la guía de P0172."
+          "paso": "Check the fuel trims",
+          "detalle": "If fuel trims are strongly negative, the mixture really is rich: follow the P0172 guide."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -1010,30 +1010,30 @@
     },
     {
       "codigo": "P0133",
-      "titulo": "Circuito del sensor de oxígeno (banco 1, sensor 1): respuesta lenta",
+      "titulo": "Oxygen sensor circuit (bank 1, sensor 1): slow response",
       "sistema": "O2",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Sensor de oxígeno envejecido",
-        "Sensor contaminado por aceite o combustible",
-        "Fuga en el escape antes del sensor"
+        "Ageing oxygen sensor",
+        "Sensor contaminated by oil or fuel",
+        "Exhaust leak upstream of the sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Mirar la señal con el motor caliente",
-          "detalle": "En circuito cerrado un sensor de zirconio sano oscila entre ≈0,1 y ≈0,9 V (típico); en Sensores revisa si el PID del O2 cambia."
+          "paso": "Check the signal with the engine warm",
+          "detalle": "In closed loop, a healthy zirconia sensor typically switches between ≈0.1 and ≈0.9 V; in Sensors, check whether the O2 PID changes."
         },
         {
-          "paso": "Buscar fugas en el escape antes del sensor",
-          "detalle": "Una fuga deja entrar aire y el sensor lee mezcla pobre aunque no lo sea."
+          "paso": "Check for exhaust leaks upstream of the sensor",
+          "detalle": "A leak lets air in and can make the sensor report a lean mixture when it is not actually lean."
         },
         {
-          "paso": "Revisar el conector y el cable del sensor",
-          "detalle": "El cable pasa cerca del escape: busca aislante derretido, pines sulfatados o el conector suelto."
+          "paso": "Inspect the sensor connector and wiring",
+          "detalle": "The wire runs near the exhaust: check for melted insulation, corroded pins or a loose connector."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -1048,35 +1048,35 @@
     },
     {
       "codigo": "P0134",
-      "titulo": "Circuito del sensor de oxígeno (banco 1, sensor 1): sin actividad detectada",
+      "titulo": "Oxygen sensor circuit (bank 1, sensor 1): no activity detected",
       "sistema": "O2",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Sensor sin calentar (calefactor dañado)",
-        "Cable de señal abierto",
-        "Sensor de oxígeno agotado"
+        "Sensor not warmed up (faulty heater)",
+        "Open signal wire",
+        "Worn oxygen sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cable del sensor",
-          "detalle": "El cable pasa cerca del escape: busca aislante derretido, pines sulfatados o el conector suelto."
+          "paso": "Inspect the sensor connector and wiring",
+          "detalle": "The wire runs near the exhaust: check for melted insulation, corroded pins or a loose connector."
         },
         {
-          "paso": "Mirar la señal con el motor caliente",
-          "detalle": "En circuito cerrado un sensor de zirconio sano oscila entre ≈0,1 y ≈0,9 V (típico); en Sensores revisa si el PID del O2 cambia."
+          "paso": "Check the signal with the engine warm",
+          "detalle": "In closed loop, a healthy zirconia sensor typically switches between ≈0.1 and ≈0.9 V; in Sensors, check whether the O2 PID changes."
         },
         {
-          "paso": "Revisar si también está P0135",
-          "detalle": "Sin calefactor el sensor tarda mucho en activarse y la ECU no ve actividad."
+          "paso": "Check whether P0135 is also present",
+          "detalle": "Without a heater, the sensor takes longer to activate and the ECU may not detect activity."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos que pasan mucho tiempo en mínimo el escape se enfría y el sensor puede quedar inactivo si no tiene calefactor."
+        "On motorbikes that spend a long time idling, the exhaust cools and an unheated sensor may become inactive."
       ],
       "relacionados": [
         "P0130",
@@ -1088,30 +1088,30 @@
     },
     {
       "codigo": "P0135",
-      "titulo": "Circuito del sensor de oxígeno (banco 1, sensor 1): falla del circuito del calefactor",
+      "titulo": "Oxygen sensor circuit (bank 1, sensor 1): heater circuit malfunction",
       "sistema": "O2",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Calefactor del sensor abierto",
-        "Fusible o alimentación del calefactor cortada",
-        "Conector o cable dañado por el calor del escape"
+        "Sensor heater open circuit",
+        "Heater fuse blown or power supply interrupted",
+        "Connector or wiring damaged by exhaust heat"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cable del sensor",
-          "detalle": "El cable pasa cerca del escape: busca aislante derretido, pines sulfatados o el conector suelto."
+          "paso": "Inspect the sensor connector and wiring",
+          "detalle": "The wire runs near the exhaust: check for melted insulation, corroded pins or a loose connector."
         },
         {
-          "paso": "Revisar el fusible del calefactor",
-          "detalle": "Consulta el diagrama del modelo para saber qué fusible lo alimenta."
+          "paso": "Check the heater fuse",
+          "detalle": "Consult the model wiring diagram to identify its fuse."
         },
         {
-          "paso": "Medir la resistencia del calefactor",
-          "detalle": "Sensor desconectado, entre los dos cables del calefactor: compara con el valor del manual del modelo."
+          "paso": "Measure heater resistance",
+          "detalle": "With the sensor disconnected, measure between the two heater wires and compare with the model's service-manual value."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -1126,43 +1126,43 @@
     },
     {
       "codigo": "P0171",
-      "titulo": "Sistema demasiado pobre (banco 1)",
-      "sistema": "Mezcla",
+      "titulo": "System too lean (bank 1)",
+      "sistema": "Fuel mixture",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Entrada de aire falsa (múltiple, acople del cuerpo de inyección, manguera de vacío)",
-        "Inyector sucio o parcialmente tapado",
-        "Baja presión de combustible (filtro o bomba)",
-        "Sensor MAP, IAT o de temperatura del motor leyendo mal",
-        "Fuga en el escape antes del sensor de oxígeno"
+        "Air leak (manifold, throttle-body joint or vacuum hose)",
+        "Dirty or partially blocked injector",
+        "Low fuel pressure (filter or pump)",
+        "Incorrect reading from the MAP, IAT or engine-temperature sensor",
+        "Exhaust leak upstream of the oxygen sensor"
       ],
       "verificaciones": [
         {
-          "paso": "Buscar entradas de aire falsas",
-          "detalle": "Con el motor en mínimo revisa abrazaderas, el acople del cuerpo de inyección y las mangueras."
+          "paso": "Check for air leaks",
+          "detalle": "With the engine idling, check the clamps, throttle-body joint and hoses."
         },
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado el MAP debe leer casi la presión atmosférica.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off, MAP should read close to atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Mirar el mínimo y el ajuste de combustible",
-          "detalle": "Un ajuste que baja mucho al acelerar apunta a entrada de aire; si sube con la carga, a combustible.",
+          "paso": "Check idle and fuel trims",
+          "detalle": "Trims that fall sharply when revving point to an air leak; trims that rise under load point to a fuel-supply issue.",
           "accion": "PRUEBA:MINIMO_RETORNO"
         },
         {
-          "paso": "Revisar filtro y presión de combustible",
-          "detalle": "Según el manual del modelo."
+          "paso": "Check the fuel filter and pressure",
+          "detalle": "Follow the model's service manual."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con pocos PIDs puede que la ECU no reporte el ajuste de combustible: entonces el MAP y las temperaturas son la mejor pista."
+        "On motorbikes with few PIDs, the ECU may not report fuel trims: MAP and temperature readings are then the best clues."
       ],
       "relacionados": [
         "P0172",
@@ -1173,38 +1173,38 @@
     },
     {
       "codigo": "P0172",
-      "titulo": "Sistema demasiado rico (banco 1)",
-      "sistema": "Mezcla",
+      "titulo": "System too rich (bank 1)",
+      "sistema": "Fuel mixture",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Inyector goteando o con mala pulverización",
-        "Sensor de temperatura del motor leyendo frío",
-        "Filtro de aire tapado",
-        "Presión de combustible alta (regulador)",
-        "Sensor MAP leyendo presión alta"
+        "Leaking or poorly atomising injector",
+        "Engine-temperature sensor reading cold",
+        "Blocked air filter",
+        "High fuel pressure (regulator)",
+        "MAP sensor reading high pressure"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el filtro de aire",
-          "detalle": "Sucio o empapado limita el aire y enriquece la mezcla."
+          "paso": "Inspect the air filter",
+          "detalle": "A dirty or soaked filter restricts airflow and enriches the mixture."
         },
         {
-          "paso": "Comparar el motor con el aire en frío",
-          "detalle": "Un sensor de temperatura que lee frío con el motor caliente enriquece la mezcla.",
+          "paso": "Compare engine and intake-air temperatures when cold",
+          "detalle": "A temperature sensor that reads cold when the engine is warm will enrich the mixture.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Comparar el MAP con la presión barométrica",
-          "detalle": "Con motor apagado el MAP debe leer casi la presión atmosférica.",
+          "paso": "Compare MAP with barometric pressure",
+          "detalle": "With the engine off, MAP should read close to atmospheric pressure.",
           "accion": "PRUEBA:MAP_BARO"
         },
         {
-          "paso": "Revisar el inyector",
-          "detalle": "Goteo o chorro irregular; limpieza por ultrasonido si hace falta."
+          "paso": "Inspect the injector",
+          "detalle": "Check for dribbling or an uneven spray pattern; use ultrasonic cleaning if needed."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -1218,38 +1218,38 @@
     },
     {
       "codigo": "P0201",
-      "titulo": "Circuito del inyector del cilindro 1: abierto o con falla",
-      "sistema": "Inyector",
+      "titulo": "Cylinder 1 injector circuit: open or malfunction",
+      "sistema": "Injector",
       "urgencia": "DETENERSE",
       "causas": [
-        "Conector del inyector suelto o sulfatado",
-        "Bobina del inyector abierta",
-        "Cable de mando o alimentación cortado",
-        "Driver de la ECU dañado"
+        "Injector connector loose or corroded",
+        "Injector coil open circuit",
+        "Control or power-supply wire broken",
+        "Faulty ECU driver"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector del inyector",
-          "detalle": "Sulfato, pines flojos o el seguro roto."
+          "paso": "Inspect the injector connector",
+          "detalle": "Check for corrosion, loose pins or a broken locking tab."
         },
         {
-          "paso": "Medir la resistencia del inyector",
-          "detalle": "Inyector desconectado: los de alta impedancia suelen dar 10-16 Ω (típico); compara con el manual.",
+          "paso": "Measure injector resistance",
+          "detalle": "With the injector disconnected, high-impedance types typically measure 10–16 Ω; compare with the service manual.",
           "accion": "MULTIMETRO:INYECTOR"
         },
         {
-          "paso": "Verificar alimentación con contacto puesto",
-          "detalle": "Uno de los pines debe tener voltaje de batería con contacto puesto.",
+          "paso": "Check the power supply with the ignition on",
+          "detalle": "One pin should have battery voltage with the ignition on.",
           "accion": "MULTIMETRO:BATERIA"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En un monocilíndrico este es el único inyector: si falla, la moto no arranca o se apaga."
+        "On a single-cylinder engine, this is the only injector: if it fails, the motorbike will not start or will stall."
       ],
       "relacionados": [
         "P0300",
@@ -1259,37 +1259,37 @@
     },
     {
       "codigo": "P0230",
-      "titulo": "Circuito primario de la bomba de combustible: falla",
-      "sistema": "Combustible",
+      "titulo": "Fuel pump primary circuit malfunction",
+      "sistema": "Fuel",
       "urgencia": "DETENERSE",
       "causas": [
-        "Relé de la bomba dañado",
-        "Fusible fundido",
-        "Conector de la bomba suelto o sulfatado",
-        "Bomba de combustible dañada"
+        "Faulty fuel-pump relay",
+        "Blown fuse",
+        "Fuel-pump connector loose or corroded",
+        "Faulty fuel pump"
       ],
       "verificaciones": [
         {
-          "paso": "Escuchar la bomba al dar contacto",
-          "detalle": "Debe sonar unos segundos al dar contacto; si no suena, revisa fusible y relé."
+          "paso": "Listen for the pump when switching on the ignition",
+          "detalle": "It should run for a few seconds; if it does not, check the fuse and relay."
         },
         {
-          "paso": "Revisar fusible y relé",
-          "detalle": "Consulta el diagrama del modelo."
+          "paso": "Check the fuse and relay",
+          "detalle": "Consult the model wiring diagram."
         },
         {
-          "paso": "Medir el voltaje de batería",
-          "detalle": "Con voltaje bajo la bomba y el relé fallan.",
+          "paso": "Measure battery voltage",
+          "detalle": "Low voltage can affect the pump and relay.",
           "accion": "MULTIMETRO:BATERIA"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En muchas motos la bomba va dentro del tanque junto con el flotador del nivel: revisa el conector del tanque."
+        "On many motorbikes the pump is inside the tank with the fuel-level sender: check the tank connector."
       ],
       "relacionados": [
         "P0171",
@@ -1298,39 +1298,39 @@
     },
     {
       "codigo": "P0300",
-      "titulo": "Falla de encendido aleatoria o en varios cilindros detectada",
-      "sistema": "Encendido",
+      "titulo": "Random or multiple-cylinder misfire detected",
+      "sistema": "Ignition",
       "urgencia": "DETENERSE",
       "causas": [
-        "Bujía gastada, sucia o con la calibración abierta",
-        "Capuchón o cable de bujía dañado",
-        "Mezcla pobre (entrada de aire, inyector)",
-        "Bobina de encendido débil",
-        "Combustible contaminado o con agua"
+        "Worn, dirty or incorrectly gapped spark plug",
+        "Damaged spark-plug cap or lead",
+        "Lean mixture (air leak or injector issue)",
+        "Weak ignition coil",
+        "Contaminated or waterlogged fuel"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar la bujía y el capuchón",
-          "detalle": "Color, desgaste y calibración según el manual del modelo."
+          "paso": "Inspect the spark plug and cap",
+          "detalle": "Check the colour, wear and gap against the model's service manual."
         },
         {
-          "paso": "Mirar la estabilidad del mínimo",
-          "detalle": "Un mínimo que tiembla o cae sin razón acompaña a las fallas de encendido.",
+          "paso": "Check idle stability",
+          "detalle": "An unstable or unexpectedly falling idle can accompany misfires.",
           "accion": "PRUEBA:MINIMO_RETORNO"
         },
         {
-          "paso": "Revisar entradas de aire y combustible",
-          "detalle": "Una mezcla pobre también produce fallas de encendido."
+          "paso": "Check for air leaks and fuel-supply problems",
+          "detalle": "A lean mixture can also cause misfires."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Si el testigo de falla parpadea, baja el ritmo y revisa pronto: las fallas de encendido pueden dañar el catalizador.",
-        "En un monocilíndrico P0300 y P0301 suelen señalar lo mismo."
+        "If the warning light flashes, reduce engine load and investigate promptly: misfires can damage the catalytic converter.",
+        "On a single-cylinder engine, P0300 and P0301 often indicate the same issue."
       ],
       "relacionados": [
         "P0301",
@@ -1341,43 +1341,43 @@
     },
     {
       "codigo": "P0301",
-      "titulo": "Falla de encendido detectada en el cilindro 1",
-      "sistema": "Encendido",
+      "titulo": "Cylinder 1 misfire detected",
+      "sistema": "Ignition",
       "urgencia": "DETENERSE",
       "causas": [
-        "Bujía gastada, sucia o con la calibración abierta",
-        "Capuchón o cable de bujía dañado",
-        "Bobina de encendido débil",
-        "Inyector del cilindro 1 sucio",
-        "Baja compresión (válvulas o anillos)"
+        "Worn, dirty or incorrectly gapped spark plug",
+        "Damaged spark-plug cap or lead",
+        "Weak ignition coil",
+        "Cylinder 1 injector dirty",
+        "Low compression (valves or rings)"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar la bujía y el capuchón",
-          "detalle": "Color, desgaste y calibración según el manual del modelo."
+          "paso": "Inspect the spark plug and cap",
+          "detalle": "Check the colour, wear and gap against the model's service manual."
         },
         {
-          "paso": "Mirar la estabilidad del mínimo",
-          "detalle": "Un mínimo que tiembla o cae sin razón acompaña a las fallas de encendido.",
+          "paso": "Check idle stability",
+          "detalle": "An unstable or unexpectedly falling idle can accompany misfires.",
           "accion": "PRUEBA:MINIMO_RETORNO"
         },
         {
-          "paso": "Medir la resistencia del inyector",
-          "detalle": "Compara con el manual del modelo.",
+          "paso": "Measure injector resistance",
+          "detalle": "Compare with the model's service manual.",
           "accion": "MULTIMETRO:INYECTOR"
         },
         {
-          "paso": "Medir la compresión",
-          "detalle": "Con un compresómetro, según el manual del modelo."
+          "paso": "Measure compression",
+          "detalle": "Use a compression tester and follow the model's service manual."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Si el testigo de falla parpadea, baja el ritmo y revisa pronto: las fallas de encendido pueden dañar el catalizador."
+        "If the warning light flashes, reduce engine load and investigate promptly: misfires can damage the catalytic converter."
       ],
       "relacionados": [
         "P0300",
@@ -1387,36 +1387,36 @@
     },
     {
       "codigo": "P0335",
-      "titulo": "Circuito del sensor de posición del cigüeñal (CKP) «A»: falla",
+      "titulo": "Crankshaft position (CKP) sensor 'A' circuit malfunction",
       "sistema": "CKP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Conector del sensor suelto o sulfatado",
-        "Cable abierto o en corto (pasa cerca del motor)",
-        "Sensor CKP dañado",
-        "Rueda fónica (dientes del volante) dañada o sucia"
+        "Sensor connector loose or corroded",
+        "Open or shorted wire (routed near the engine)",
+        "Faulty CKP sensor",
+        "Damaged or dirty reluctor wheel (flywheel teeth)"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado del CKP",
-          "detalle": "Sulfato, pines flojos o cable rozado con la tapa del volante."
+          "paso": "Inspect the CKP connector and wiring",
+          "detalle": "Check for corrosion, loose pins or a wire chafed against the flywheel cover."
         },
         {
-          "paso": "Mirar si hay rpm al dar arranque",
-          "detalle": "Si la ECU no ve rpm al dar arranque, no inyecta ni da chispa."
+          "paso": "Check for RPM while cranking",
+          "detalle": "If the ECU does not detect RPM while cranking, it will not inject fuel or provide a spark."
         },
         {
-          "paso": "Medir la resistencia del sensor",
-          "detalle": "Sensor inductivo desconectado: compara con el valor del manual del modelo."
+          "paso": "Measure sensor resistance",
+          "detalle": "With the inductive sensor disconnected, compare the reading with the model's service manual."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Sin señal del CKP la moto no arranca o se apaga en marcha."
+        "Without a CKP signal, the motorbike will not start or may stall while riding."
       ],
       "relacionados": [
         "P0336",
@@ -1425,31 +1425,31 @@
     },
     {
       "codigo": "P0336",
-      "titulo": "Circuito del sensor de posición del cigüeñal (CKP) «A»: rango o desempeño",
+      "titulo": "Crankshaft position (CKP) sensor 'A' circuit range or performance",
       "sistema": "CKP",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Sensor sucio (limaduras metálicas) o con distancia incorrecta a la rueda fónica",
-        "Rueda fónica con dientes dañados",
-        "Interferencia por cables de bujía o del regulador cerca del cable del CKP",
-        "Mal contacto intermitente"
+        "Sensor dirty with metal filings or incorrectly spaced from the reluctor wheel",
+        "Reluctor wheel teeth damaged",
+        "Interference from spark-plug or regulator wiring near the CKP lead",
+        "Intermittent poor contact"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector y el cableado del CKP",
-          "detalle": "Sulfato, pines flojos o cable rozado."
+          "paso": "Inspect the CKP connector and wiring",
+          "detalle": "Check for corrosion, loose pins or chafed wiring."
         },
         {
-          "paso": "Revisar la ruta del cable",
-          "detalle": "Que no vaya junto al cable de bujía ni al regulador."
+          "paso": "Check the cable routing",
+          "detalle": "It should not run alongside the spark-plug lead or regulator wiring."
         },
         {
-          "paso": "Inspeccionar sensor y rueda fónica",
-          "detalle": "Con la tapa abierta: limaduras en el imán y dientes completos."
+          "paso": "Inspect the sensor and reluctor wheel",
+          "detalle": "With the cover removed, check the magnet for filings and confirm the teeth are intact."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -1460,37 +1460,37 @@
     },
     {
       "codigo": "P0351",
-      "titulo": "Circuito primario/secundario de la bobina de encendido «A»: falla",
-      "sistema": "Encendido",
+      "titulo": "Ignition coil 'A' primary/secondary circuit malfunction",
+      "sistema": "Ignition",
       "urgencia": "DETENERSE",
       "causas": [
-        "Conector de la bobina suelto o sulfatado",
-        "Bobina dañada (primario abierto o en corto)",
-        "Cable de mando desde la ECU cortado",
-        "Falla de alimentación de la bobina"
+        "Ignition-coil connector loose or corroded",
+        "Faulty coil (primary open circuit or shorted)",
+        "Control wire from the ECU broken",
+        "Ignition-coil power-supply fault"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar el conector de la bobina",
-          "detalle": "Sulfato, pines flojos o el seguro roto."
+          "paso": "Inspect the ignition-coil connector",
+          "detalle": "Check for corrosion, loose pins or a broken locking tab."
         },
         {
-          "paso": "Verificar alimentación con contacto puesto",
-          "detalle": "Un pin de la bobina debe tener voltaje de batería.",
+          "paso": "Check the power supply with the ignition on",
+          "detalle": "One coil pin should have battery voltage.",
           "accion": "MULTIMETRO:BATERIA"
         },
         {
-          "paso": "Medir la resistencia del primario y del secundario",
-          "detalle": "Bobina desconectada: compara con el valor del manual del modelo."
+          "paso": "Measure primary and secondary resistance",
+          "detalle": "With the coil disconnected, compare the readings with the model's service manual."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En moto la bobina suele ir bajo el tanque y recibe calor y agua: revisa el conector primero."
+        "On motorbikes, the coil is often under the tank where it is exposed to heat and water: check the connector first."
       ],
       "relacionados": [
         "P0300",
@@ -1499,36 +1499,36 @@
     },
     {
       "codigo": "P0500",
-      "titulo": "Sensor de velocidad del vehículo (VSS) «A»: falla",
-      "sistema": "Velocidad",
+      "titulo": "Vehicle speed sensor (VSS) 'A' malfunction",
+      "sistema": "Speed",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Conector del sensor suelto o sulfatado",
-        "Cable abierto o en corto",
-        "Sensor de velocidad dañado",
-        "Imán o rueda dentada del sensor dañado"
+        "Speed sensor connector loose or corroded",
+        "Open or shorted wire",
+        "Faulty speed sensor",
+        "Sensor magnet or toothed wheel damaged"
       ],
       "verificaciones": [
         {
-          "paso": "Comparar la velocidad de la ECU con la del GPS",
-          "detalle": "En Conducir, con la moto rodando: si la ECU marca 0 y el GPS no, el sensor no reporta."
+          "paso": "Compare ECU speed with GPS speed",
+          "detalle": "In Drive, while riding: if the ECU reads 0 but GPS does not, the sensor is not reporting."
         },
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato, pines flojos o cable rozado con la cadena."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion, loose pins or a wire chafed by the chain."
         },
         {
-          "paso": "Revisar el sensor y su soporte",
-          "detalle": "Limaduras en el imán o el sensor flojo."
+          "paso": "Inspect the sensor and its mount",
+          "detalle": "Check for filings on the magnet or a loose sensor."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En muchas motos el sensor de velocidad lee la salida de la caja o la rueda trasera: revisa también la cadena de su soporte."
+        "On many motorbikes, the speed sensor reads the gearbox output or rear wheel: also check the chain on its mount."
       ],
       "relacionados": [
         "P0501"
@@ -1536,35 +1536,35 @@
     },
     {
       "codigo": "P0501",
-      "titulo": "Sensor de velocidad del vehículo (VSS) «A»: rango o desempeño",
-      "sistema": "Velocidad",
+      "titulo": "Vehicle speed sensor (VSS) 'A' range or performance",
+      "sistema": "Speed",
       "urgencia": "PUEDE_ESPERAR",
       "causas": [
-        "Sensor sucio o con distancia incorrecta",
-        "Llanta o piñones de otra medida (la ECU espera otra relación)",
-        "Mal contacto intermitente"
+        "Sensor dirty or incorrectly spaced",
+        "Tyre or sprocket size differs from the expected ratio",
+        "Intermittent poor contact"
       ],
       "verificaciones": [
         {
-          "paso": "Comparar la velocidad de la ECU con la del GPS",
-          "detalle": "En Conducir: una diferencia constante apunta a otra medida de llanta o de piñones."
+          "paso": "Compare ECU speed with GPS speed",
+          "detalle": "In Drive, a consistent difference may indicate a different tyre or sprocket size."
         },
         {
-          "paso": "Revisar el sensor y su soporte",
-          "detalle": "Limaduras en el imán o el sensor flojo."
+          "paso": "Inspect the sensor and its mount",
+          "detalle": "Check for filings on the magnet or a loose sensor."
         },
         {
-          "paso": "Revisar el conector y el cableado",
-          "detalle": "Sulfato o pines flojos."
+          "paso": "Inspect the connector and wiring",
+          "detalle": "Check for corrosion or loose pins."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En muchas motos el sensor de velocidad lee la salida de la caja o la rueda trasera: revisa también la cadena de su soporte."
+        "On many motorbikes, the speed sensor reads the gearbox output or rear wheel: also check the chain on its mount."
       ],
       "relacionados": [
         "P0500"
@@ -1572,42 +1572,42 @@
     },
     {
       "codigo": "P0505",
-      "titulo": "Sistema de control del aire de ralentí (IAC): falla",
-      "sistema": "Ralentí",
+      "titulo": "Idle air control (IAC) system malfunction",
+      "sistema": "Idle",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Válvula de control de aire sucia o pegada",
-        "Conector de la válvula suelto o sulfatado",
-        "Válvula dañada",
-        "Pasos de aire del cuerpo de inyección tapados"
+        "Idle air control valve dirty or sticking",
+        "Valve connector loose or corroded",
+        "Faulty valve",
+        "Throttle-body air passages blocked"
       ],
       "verificaciones": [
         {
-          "paso": "Prueba de mínimo y retorno",
-          "detalle": "Mínimo estable con motor caliente y que no caiga al soltar el acelerador.",
+          "paso": "Run the idle and return test",
+          "detalle": "Check that warm idle is stable and does not drop when the throttle is released.",
           "accion": "PRUEBA:MINIMO_RETORNO"
         },
         {
-          "paso": "Limpiar el cuerpo de inyección y los pasos de aire",
-          "detalle": "Con limpiador de cuerpo de aceleración, sin forzar la mariposa; luego reaprende el mínimo según el manual."
+          "paso": "Clean the throttle body and air passages",
+          "detalle": "Use throttle-body cleaner without forcing the plate; then relearn idle as described in the manual."
         },
         {
-          "paso": "Revisar el conector de la válvula",
-          "detalle": "Sulfato o pines flojos."
+          "paso": "Inspect the valve connector",
+          "detalle": "Check for corrosion or loose pins."
         },
         {
-          "paso": "Verificar que el TPS lee cerrado",
-          "detalle": "Si el TPS no marca cerrado, la ECU no entra en modo mínimo.",
+          "paso": "Check that the TPS reads closed",
+          "detalle": "If the TPS does not report closed throttle, the ECU will not enter idle mode.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con válvula de control de aire (IAC/ISC) el mínimo lo regula esa válvula; en otras el mínimo depende de un tornillo en el cuerpo de inyección."
+        "On motorbikes with an idle air control valve (IAC/ISC), that valve regulates idle; on others, idle is set by a screw on the throttle body."
       ],
       "relacionados": [
         "P0506",
@@ -1616,44 +1616,44 @@
     },
     {
       "codigo": "P0506",
-      "titulo": "Sistema de control del aire de ralentí: rpm más bajas de lo esperado",
-      "sistema": "Ralentí",
+      "titulo": "Idle air control system: RPM lower than expected",
+      "sistema": "Idle",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Cuerpo de inyección o pasos de aire sucios",
-        "Válvula de control de aire pegada o lenta",
-        "TPS que no marca cerrado o no equivalente",
-        "Carga eléctrica alta con batería débil"
+        "Throttle body or air passages dirty",
+        "Idle air control valve sticking or slow",
+        "TPS not reporting closed or not equivalent to the original",
+        "High electrical load with a weak battery"
       ],
       "verificaciones": [
         {
-          "paso": "Prueba de mínimo y retorno",
-          "detalle": "Mínimo estable con motor caliente y que no caiga al soltar el acelerador.",
+          "paso": "Run the idle and return test",
+          "detalle": "Check that warm idle is stable and does not drop when the throttle is released.",
           "accion": "PRUEBA:MINIMO_RETORNO"
         },
         {
-          "paso": "Verificar que el TPS lee cerrado",
-          "detalle": "Si el TPS no marca cerrado, la ECU no entra en modo mínimo.",
+          "paso": "Check that the TPS reads closed",
+          "detalle": "If the TPS does not report closed throttle, the ECU will not enter idle mode.",
           "accion": "PRUEBA:TPS_BARRIDO"
         },
         {
-          "paso": "Limpiar el cuerpo de inyección y los pasos de aire",
-          "detalle": "Con limpiador de cuerpo de aceleración, sin forzar la mariposa; luego reaprende el mínimo según el manual."
+          "paso": "Clean the throttle body and air passages",
+          "detalle": "Use throttle-body cleaner without forcing the plate; then relearn idle as described in the manual."
         },
         {
-          "paso": "Revisar batería y carga",
-          "detalle": "Con voltaje bajo el mínimo cae al encender luces.",
+          "paso": "Check the battery and charging system",
+          "detalle": "Low voltage can cause idle speed to drop when the lights are switched on.",
           "accion": "PRUEBA:BATERIA_CARGA"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con válvula de control de aire (IAC/ISC) el mínimo lo regula esa válvula; en otras el mínimo depende de un tornillo en el cuerpo de inyección.",
-        "Si el mínimo cae solo en frío, haz además la prueba de arranque en frío."
+        "On motorbikes with an idle air control valve (IAC/ISC), that valve regulates idle; on others, idle is set by a screw on the throttle body.",
+        "If idle drops only when cold, also run the cold-start test."
       ],
       "relacionados": [
         "P0505",
@@ -1663,42 +1663,42 @@
     },
     {
       "codigo": "P0507",
-      "titulo": "Sistema de control del aire de ralentí: rpm más altas de lo esperado",
-      "sistema": "Ralentí",
+      "titulo": "Idle air control system: RPM higher than expected",
+      "sistema": "Idle",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Entrada de aire falsa después de la mariposa",
-        "Cable del acelerador sin juego (mariposa no cierra)",
-        "Válvula de control de aire pegada abierta",
-        "Sensor de temperatura leyendo frío"
+        "Air leak downstream of the throttle plate",
+        "Throttle cable has no free play (plate does not close)",
+        "Idle air control valve stuck open",
+        "Temperature sensor reading cold"
       ],
       "verificaciones": [
         {
-          "paso": "Prueba de mínimo y retorno",
-          "detalle": "Mínimo estable con motor caliente y que no caiga al soltar el acelerador.",
+          "paso": "Run the idle and return test",
+          "detalle": "Check that warm idle is stable and does not drop when the throttle is released.",
           "accion": "PRUEBA:MINIMO_RETORNO"
         },
         {
-          "paso": "Revisar el juego del cable del acelerador",
-          "detalle": "La mariposa debe cerrar completa al soltar."
+          "paso": "Check throttle-cable free play",
+          "detalle": "The throttle plate should close fully when released."
         },
         {
-          "paso": "Buscar entradas de aire falsas",
-          "detalle": "Revisa abrazaderas y el acople del cuerpo de inyección."
+          "paso": "Check for air leaks",
+          "detalle": "Inspect the clamps and throttle-body joint."
         },
         {
-          "paso": "Comparar el motor con el aire en frío",
-          "detalle": "Un sensor de temperatura que lee frío sube el mínimo.",
+          "paso": "Compare engine and intake-air temperatures when cold",
+          "detalle": "A temperature sensor reading cold can raise idle speed.",
           "accion": "PRUEBA:ARRANQUE_FRIO"
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En motos con válvula de control de aire (IAC/ISC) el mínimo lo regula esa válvula; en otras el mínimo depende de un tornillo en el cuerpo de inyección."
+        "On motorbikes with an idle air control valve (IAC/ISC), that valve regulates idle; on others, idle is set by a screw on the throttle body."
       ],
       "relacionados": [
         "P0505",
@@ -1707,38 +1707,38 @@
     },
     {
       "codigo": "P0560",
-      "titulo": "Voltaje del sistema: falla",
-      "sistema": "Eléctrico",
+      "titulo": "System voltage malfunction",
+      "sistema": "Electrical",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Batería débil o dañada",
-        "Bornes o masas flojos o sulfatados",
-        "Regulador/rectificador dañado",
-        "Estator (alternador) dañado"
+        "Weak or faulty battery",
+        "Loose or corroded terminals or earths",
+        "Faulty regulator/rectifier",
+        "Faulty stator (alternator)"
       ],
       "verificaciones": [
         {
-          "paso": "Prueba guiada de batería y carga",
-          "detalle": "Contacto puesto, caída al arrancar y carga con el motor encendido.",
+          "paso": "Run the guided battery and charging test",
+          "detalle": "Check ignition-on voltage, the drop while starting and charging with the engine running.",
           "accion": "PRUEBA:BATERIA_CARGA"
         },
         {
-          "paso": "Medir la batería con el multímetro",
-          "detalle": "En reposo ≥ ≈12,4 V y en carga ≈13,5-14,5 V (típico).",
+          "paso": "Measure the battery with a multimeter",
+          "detalle": "Typical values: ≥ ≈12.4 V at rest and ≈13.5–14.5 V while charging.",
           "accion": "MULTIMETRO:BATERIA"
         },
         {
-          "paso": "Revisar bornes y masas",
-          "detalle": "Bornes sulfatados o flojos y la masa del chasis al motor."
+          "paso": "Inspect terminals and earth connections",
+          "detalle": "Check for corroded or loose terminals and the chassis-to-engine earth."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "En moto la farola suele quedar encendida con contacto: la batería se descarga rápido si se deja el contacto puesto con el motor apagado."
+        "On motorbikes, the headlamp often stays on with the ignition: the battery can discharge quickly if the ignition is left on with the engine off."
       ],
       "relacionados": [
         "P0561",
@@ -1748,31 +1748,31 @@
     },
     {
       "codigo": "P0561",
-      "titulo": "Voltaje del sistema: inestable",
-      "sistema": "Eléctrico",
+      "titulo": "System voltage unstable",
+      "sistema": "Electrical",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Bornes o masas flojos",
-        "Regulador/rectificador fallando",
-        "Conector del estator quemado o flojo"
+        "Loose terminals or earths",
+        "Regulator/rectifier beginning to fail",
+        "Stator connector burnt or loose"
       ],
       "verificaciones": [
         {
-          "paso": "Revisar bornes y masas",
-          "detalle": "Bornes sulfatados o flojos y la masa del chasis al motor."
+          "paso": "Inspect terminals and earth connections",
+          "detalle": "Check for corroded or loose terminals and the chassis-to-engine earth."
         },
         {
-          "paso": "Prueba guiada de batería y carga",
-          "detalle": "Contacto puesto, caída al arrancar y carga con el motor encendido.",
+          "paso": "Run the guided battery and charging test",
+          "detalle": "Check ignition-on voltage, the drop while starting and charging with the engine running.",
           "accion": "PRUEBA:BATERIA_CARGA"
         },
         {
-          "paso": "Revisar el conector del estator al regulador",
-          "detalle": "Suele recalentarse: pines quemados o plástico derretido."
+          "paso": "Inspect the stator-to-regulator connector",
+          "detalle": "It can overheat: check for burnt pins or melted plastic."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
@@ -1785,42 +1785,42 @@
     },
     {
       "codigo": "P0562",
-      "titulo": "Voltaje del sistema: bajo",
-      "sistema": "Eléctrico",
+      "titulo": "System voltage low",
+      "sistema": "Electrical",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Batería descargada o dañada",
-        "Estator o regulador sin cargar",
-        "Consumo parásito (accesorios, alarma)",
-        "Bornes o masas flojos"
+        "Battery discharged or faulty",
+        "Stator or regulator not charging",
+        "Parasitic drain (accessories or alarm)",
+        "Loose terminals or earths"
       ],
       "verificaciones": [
         {
-          "paso": "Prueba guiada de batería y carga",
-          "detalle": "Contacto puesto, caída al arrancar y carga con el motor encendido.",
+          "paso": "Run the guided battery and charging test",
+          "detalle": "Check ignition-on voltage, the drop while starting and charging with the engine running.",
           "accion": "PRUEBA:BATERIA_CARGA"
         },
         {
-          "paso": "Medir la batería con el multímetro",
-          "detalle": "En reposo ≥ ≈12,4 V y en carga ≈13,5-14,5 V (típico).",
+          "paso": "Measure the battery with a multimeter",
+          "detalle": "Typical values: ≥ ≈12.4 V at rest and ≈13.5–14.5 V while charging.",
           "accion": "MULTIMETRO:BATERIA"
         },
         {
-          "paso": "Revisar bornes y masas",
-          "detalle": "Bornes sulfatados o flojos y la masa del chasis al motor."
+          "paso": "Inspect terminals and earth connections",
+          "detalle": "Check for corroded or loose terminals and the chassis-to-engine earth."
         },
         {
-          "paso": "Revisar accesorios instalados",
-          "detalle": "Alarmas, cargadores USB o luces extra que consumen con la moto apagada."
+          "paso": "Check installed accessories",
+          "detalle": "Alarms, USB chargers or extra lights may draw power while the motorbike is off."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Con voltaje bajo los sensores y la bomba trabajan mal y pueden aparecer otros códigos: atiende primero este."
+        "Low voltage can affect sensors and the fuel pump and trigger other codes: address this fault first."
       ],
       "relacionados": [
         "P0560",
@@ -1830,37 +1830,37 @@
     },
     {
       "codigo": "P0563",
-      "titulo": "Voltaje del sistema: alto",
-      "sistema": "Eléctrico",
+      "titulo": "System voltage high",
+      "sistema": "Electrical",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Regulador/rectificador dañado (sobrecarga)",
-        "Masa del regulador floja",
-        "Batería con celda dañada"
+        "Faulty regulator/rectifier (overcharging)",
+        "Regulator earth loose",
+        "Battery with a damaged cell"
       ],
       "verificaciones": [
         {
-          "paso": "Prueba guiada de batería y carga",
-          "detalle": "Contacto puesto, caída al arrancar y carga con el motor encendido.",
+          "paso": "Run the guided battery and charging test",
+          "detalle": "Check ignition-on voltage, the drop while starting and charging with the engine running.",
           "accion": "PRUEBA:BATERIA_CARGA"
         },
         {
-          "paso": "Medir la batería con el multímetro",
-          "detalle": "En reposo ≥ ≈12,4 V y en carga ≈13,5-14,5 V (típico).",
+          "paso": "Measure the battery with a multimeter",
+          "detalle": "Typical values: ≥ ≈12.4 V at rest and ≈13.5–14.5 V while charging.",
           "accion": "MULTIMETRO:BATERIA"
         },
         {
-          "paso": "Revisar la masa y el conector del regulador",
-          "detalle": "Una masa floja hace que el regulador no limite el voltaje."
+          "paso": "Inspect the regulator earth and connector",
+          "detalle": "A loose earth can prevent the regulator from limiting voltage."
         },
         {
-          "paso": "Borrar el código y confirmar",
-          "detalle": "Con la causa corregida, borra el código con la moto detenida y vuelve a leer después de rodar: si la falla sigue, el código regresa.",
+          "paso": "Clear the code and confirm",
+          "detalle": "Once the cause is fixed, clear the code while the motorbike is stationary and read it again after riding. If the fault remains, the code will return.",
           "accion": "DTC:BORRAR"
         }
       ],
       "notasMoto": [
-        "Por encima de ≈15 V (típico) se queman bombillos y se daña la batería o la ECU: no sigas rodando mucho así."
+        "Above ≈15 V (typical), bulbs can blow and the battery or ECU can be damaged: do not continue riding for long in this condition."
       ],
       "relacionados": [
         "P0560",
@@ -1870,36 +1870,36 @@
     },
     {
       "codigo": "P0601",
-      "titulo": "Módulo de control: error de suma de verificación de la memoria interna",
+      "titulo": "Control module: internal memory checksum error",
       "sistema": "ECU",
       "urgencia": "REVISAR_PRONTO",
       "causas": [
-        "Falla interna de la ECU",
-        "Programación de la ECU interrumpida o alterada",
-        "Voltaje inestable que corrompe la memoria"
+        "Internal ECU fault",
+        "ECU programming interrupted or altered",
+        "Unstable voltage corrupting memory"
       ],
       "verificaciones": [
         {
-          "paso": "Descartar voltaje bajo o inestable",
-          "detalle": "Una batería o carga deficiente puede provocar errores de memoria.",
+          "paso": "Rule out low or unstable voltage",
+          "detalle": "A weak battery or poor charging can cause memory errors.",
           "accion": "PRUEBA:BATERIA_CARGA"
         },
         {
-          "paso": "Revisar bornes y masas",
-          "detalle": "Bornes sulfatados o flojos y la masa del chasis al motor."
+          "paso": "Inspect terminals and earth connections",
+          "detalle": "Check for corroded or loose terminals and the chassis-to-engine earth."
         },
         {
-          "paso": "Borrar y volver a leer",
-          "detalle": "Si el código vuelve de inmediato, la ECU necesita revisión en un taller especializado.",
+          "paso": "Clear and read again",
+          "detalle": "If the code returns immediately, the ECU needs inspection at a specialist workshop.",
           "accion": "DTC:BORRAR"
         },
         {
-          "paso": "Consultar reprogramación o cambio",
-          "detalle": "Solo con el procedimiento y la ECU del fabricante del modelo."
+          "paso": "Ask about reprogramming or replacement",
+          "detalle": "Only use the procedure and ECU specified by the vehicle manufacturer."
         }
       ],
       "notasMoto": [
-        "Si la ECU fue reprogramada (remap), este código puede venir de ahí: coméntalo en el taller."
+        "If the ECU has been remapped, this may be the cause: mention it at the workshop."
       ],
       "relacionados": [
         "P0560",

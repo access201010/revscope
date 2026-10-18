@@ -69,7 +69,7 @@ object TripShareCard {
 
         // Header
         canvas.drawText("REVSCOPE", MARGIN, 140f, title)
-        val date = SimpleDateFormat("dd MMM yyyy · HH:mm", Locale("es")).format(Date(data.startedAt))
+        val date = SimpleDateFormat("dd MMM yyyy · HH:mm", Locale.UK).format(Date(data.startedAt))
         canvas.drawText(date, MARGIN, 200f, label)
 
         // Route panel
@@ -80,22 +80,22 @@ object TripShareCard {
         if (data.track.size >= 2) {
             drawTrack(canvas, data.track, MARGIN + 48f, mapTop + 48f, WIDTH - 2 * MARGIN - 96f, mapBottom - mapTop - 96f)
         } else {
-            canvas.drawText("Sin track GPS", WIDTH / 2f - 120f, (mapTop + mapBottom) / 2f, label)
+            canvas.drawText("No GPS track", WIDTH / 2f - 120f, (mapTop + mapBottom) / 2f, label)
         }
 
         // Stats grid: 2 columns
         val stats = buildList {
-            add("DISTANCIA" to "%.1f km".format(Locale("es"), data.distanceKm))
-            add("DURACIÓN" to formatDuration(data.durationMs))
-            add("VEL MÁX" to "${data.maxSpeed} km/h")
-            add("RPM MÁX" to "${data.maxRpm}")
+            add("DISTANCE" to "%.1f km".format(Locale.UK, data.distanceKm))
+            add("DURATION" to formatDuration(data.durationMs))
+            add("MAX SPEED" to "${data.maxSpeed} km/h")
+            add("MAX RPM" to "${data.maxRpm}")
             data.best0to100Ms?.let { add("0-100" to "%.2fs".format(it / 1000.0)) }
-            data.maxLateralG?.let { add("G LATERAL" to "%.2f G".format(it)) }
-            if (data.showLean) data.maxLeanDeg?.let { add("LEAN MÁX" to "%.0f°".format(it)) }
-            data.maxBpm?.let { add("♥ MÁX" to "${it} bpm") }
+            data.maxLateralG?.let { add("LATERAL G" to "%.2f G".format(it)) }
+            if (data.showLean) data.maxLeanDeg?.let { add("MAX LEAN" to "%.0f°".format(it)) }
+            data.maxBpm?.let { add("MAX BPM" to "${it} bpm") }
             if (data.lapCount > 0) {
-                add("VUELTAS" to "${data.lapCount}")
-                data.bestLapMs?.let { add("MEJOR VUELTA" to formatLapTime(it)) }
+                add("LAPS" to "${data.lapCount}")
+                data.bestLapMs?.let { add("BEST LAP" to formatLapTime(it)) }
             }
         }.take(8)
 

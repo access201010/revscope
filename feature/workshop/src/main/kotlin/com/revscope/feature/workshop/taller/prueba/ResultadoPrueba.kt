@@ -48,7 +48,7 @@ internal fun ColumnScope.ResultadoPrueba(r: ResultadoUi, estado: PruebaGuiadaUi,
         r.graficas.filter { it.modelo.tieneDatos }.forEach { SerieCompleta(it) }
         AccionesResultado(r, estado, acciones)
     }
-    PieConAccion("Listo", acciones.onTerminar)
+    PieConAccion("Done", acciones.onTerminar)
 }
 
 @Composable
@@ -64,14 +64,14 @@ private fun TarjetaVeredicto(r: ResultadoUi) {
 @Composable
 private fun TarjetaSiguiente(texto: String) {
     TarjetaTaller {
-        Text("Siguiente paso sugerido", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+        Text("Suggested next step", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
         Text(texto, color = RevScopeColors.TextPrimary, style = RevScopeType.body)
     }
 }
 
 @Composable
 private fun PesasPorPaso(r: ResultadoUi) {
-    Seccion("Medido contra la banda")
+    Seccion("Measured against the range")
     TarjetaTaller {
         r.pesas.forEach { PesaFila(it) }
         Text("${r.referencia}. Cada barra va de 0 a la referencia.", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
@@ -94,7 +94,7 @@ private fun PesaFila(p: PesaUi) {
         Text(p.valores, color = RevScopeColors.TextPrimary, style = RevScopeType.body.copy(fontFeatureSettings = "tnum"))
         PesaReferencia(p)
         Text(
-            p.banda?.let { "Banda ${it.texto}" } ?: "Sin banda fija: debe quedar entre cerrado y fondo",
+            p.banda?.let { "Range ${it.texto}" } ?: "No fixed range: it should fall between fully closed and fully open",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.bodySmall,
         )
@@ -102,10 +102,10 @@ private fun PesaFila(p: PesaUi) {
 }
 
 private fun textoNivelPesa(nivel: Veredicto): String = when (nivel) {
-    Veredicto.OK -> "Dentro"
-    Veredicto.FALLA -> "Fuera de banda"
-    Veredicto.ATENCION -> "Revisar"
-    Veredicto.INFO -> "Sin banda"
+    Veredicto.OK -> "Within range"
+    Veredicto.FALLA -> "Out of range"
+    Veredicto.ATENCION -> "Check"
+    Veredicto.INFO -> "No range"
 }
 
 @Composable
@@ -114,9 +114,9 @@ private fun Comprobaciones(r: ResultadoUi) {
     TarjetaTaller {
         r.comprobaciones.forEach { c ->
             if (c.cumple) {
-                FilaIcono(Icons.Filled.CheckCircle, RevScopeColors.Success, c.texto, "Cumple")
+                FilaIcono(Icons.Filled.CheckCircle, RevScopeColors.Success, c.texto, "Pass")
             } else {
-                FilaIcono(Icons.Filled.Cancel, RevScopeColors.Danger, c.texto, "No cumple")
+                FilaIcono(Icons.Filled.Cancel, RevScopeColors.Danger, c.texto, "Fail")
             }
         }
     }
@@ -143,13 +143,13 @@ private fun SerieCompleta(g: GraficaResultadoUi) {
 private fun AccionesResultado(r: ResultadoUi, estado: PruebaGuiadaUi, acciones: AccionesPrueba) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         if (r.guardado) {
-            FilaIcono(Icons.Filled.CheckCircle, RevScopeColors.Success, "Ya guardado en la sesión")
+            FilaIcono(Icons.Filled.CheckCircle, RevScopeColors.Success, "Already saved to the session")
         } else {
-            BotonSecundario("Guardar en una sesión nueva", habilitado = !estado.ocupado, onClick = acciones.onGuardarEnSesion)
+            BotonSecundario("Save to a new session", habilitado = !estado.ocupado, onClick = acciones.onGuardarEnSesion)
         }
         val verGuia = acciones.onVerGuia
-        if (r.codigoGuia != null && verGuia != null) BotonSecundario("Ver guía ${r.codigoGuia}") { verGuia(r.codigoGuia) }
-        BotonSecundario("Repetir la prueba", onClick = acciones.onReintentar)
+        if (r.codigoGuia != null && verGuia != null) BotonSecundario("View guide ${r.codigoGuia}") { verGuia(r.codigoGuia) }
+        BotonSecundario("Repeat test", onClick = acciones.onReintentar)
     }
 }
 

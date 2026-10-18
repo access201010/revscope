@@ -102,7 +102,7 @@ class NuevaSesionViewModel @Inject constructor(
         _estado.update { it.copy(abriendo = true, error = null) }
         registro.abrirSesion(solicitud(odometroKm))
             .onSuccess { abiertas.send(it.id) }
-            .onFailure { e -> _estado.update { it.copy(error = e.message ?: "No se pudo abrir la sesión") } }
+            .onFailure { e -> _estado.update { it.copy(error = e.message ?: "Could not open the session") } }
         _estado.update { it.copy(abriendo = false) }
     }
 

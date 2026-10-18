@@ -146,13 +146,13 @@ object AnalizadorArranqueFrio {
     // ── Comprobaciones y patrón ─────────────────────────────────────────────
 
     private fun comprobaciones(a: AnalisisArranqueFrio): List<Comprobacion> = listOfNotNull(
-        Comprobacion.siNo(CLAVE_ARRANCO, "Arrancó", a.arranque.arranco),
-        Comprobacion.siNo(CLAVE_PRIMER_INTENTO, "Al primer intento", a.arranque.arranco && a.arranque.intentos == 1),
-        Comprobacion.siNo(CLAVE_SIN_APAGONES, "Sin apagones después de arrancar", a.apagones == 0),
-        Comprobacion.siNo(CLAVE_ECT_SIN_SALTOS, "Temperatura del motor sin saltos", a.saltosEct.isEmpty()),
-        a.perfil?.baja?.let { Comprobacion.siNo(CLAVE_PERFIL, "El mínimo rápido baja al calentar", it) },
+        Comprobacion.siNo(CLAVE_ARRANCO, "Started", a.arranque.arranco),
+        Comprobacion.siNo(CLAVE_PRIMER_INTENTO, "Started on the first attempt", a.arranque.arranco && a.arranque.intentos == 1),
+        Comprobacion.siNo(CLAVE_SIN_APAGONES, "Did not stall after starting", a.apagones == 0),
+        Comprobacion.siNo(CLAVE_ECT_SIN_SALTOS, "Engine temperature had no spikes", a.saltosEct.isEmpty()),
+        a.perfil?.baja?.let { Comprobacion.siNo(CLAVE_PERFIL, "Fast idle falls as the engine warms up", it) },
         a.plausibilidad.takeIf { it.condicion != CondicionMotor.SIN_DATO }
-            ?.let { Comprobacion.siNo(CLAVE_SENSORES, "Temperaturas coherentes en reposo", it.coherente) },
+            ?.let { Comprobacion.siNo(CLAVE_SENSORES, "Temperatures consistent after resting", it.coherente) },
     )
 
     private fun patron(a: AnalisisArranqueFrio, rpm: List<Punto>): PatronArranque = when {

@@ -9,7 +9,7 @@ internal object TextosMultimetro {
             alimentacion(estado(celdas, FuncionCable.REF_5V), estado(celdas, FuncionCable.MASA)),
             senal(plantilla, celdas.filter { it.funcion == FuncionCable.SENAL }),
         )
-        return partes.joinToString("; ").ifEmpty { "Sin medidas todavía" }.capitalizar()
+            return partes.joinToString("; ").ifEmpty { "No readings yet" }.capitalizar()
     }
 
     fun interpretacionSensor(celdas: List<EvaluacionCelda>): String? {
@@ -21,7 +21,7 @@ internal object TextosMultimetro {
             masa == EstadoGrupo.ALTO -> MASA_CON_CAIDA
             senal == EstadoGrupo.BAJO -> senalBaja(ref, masa)
             senal == EstadoGrupo.ALTO -> SENAL_ALTA
-            todoCorrecto(ref, masa, senal) -> "El circuito del sensor responde dentro de las bandas típicas."
+                todoCorrecto(ref, masa, senal) -> "The sensor circuit is responding within typical ranges."
             else -> null
         }
     }
@@ -30,35 +30,35 @@ internal object TextosMultimetro {
         VeredictoMultimetro.grupo(celdas.filter { it.funcion == funcion })
 
     private fun alimentacion(ref: EstadoGrupo, masa: EstadoGrupo): String? {
-        if (ref == EstadoGrupo.CORRECTO && masa == EstadoGrupo.CORRECTO) return "referencia y masa correctas"
+        if (ref == EstadoGrupo.CORRECTO && masa == EstadoGrupo.CORRECTO) return "reference and earth correct"
         val partes = listOfNotNull(textoReferencia(ref), textoMasa(masa))
-        return partes.takeIf { it.isNotEmpty() }?.joinToString(" y ")
+        return partes.takeIf { it.isNotEmpty() }?.joinToString(" and ")
     }
 
     private fun textoReferencia(e: EstadoGrupo): String? = when (e) {
-        EstadoGrupo.CORRECTO -> "referencia correcta"
-        EstadoGrupo.BAJO -> "referencia de 5 V baja"
-        EstadoGrupo.ALTO -> "referencia de 5 V alta"
-        EstadoGrupo.MIXTO -> "referencia inestable"
+        EstadoGrupo.CORRECTO -> "reference correct"
+        EstadoGrupo.BAJO -> "5 V reference low"
+        EstadoGrupo.ALTO -> "5 V reference high"
+        EstadoGrupo.MIXTO -> "reference unstable"
         EstadoGrupo.SIN_MEDIR, EstadoGrupo.SIN_REFERENCIA -> null
     }
 
     private fun textoMasa(e: EstadoGrupo): String? = when (e) {
-        EstadoGrupo.CORRECTO -> "masa correcta"
-        EstadoGrupo.ALTO -> "masa con caída de voltaje"
-        EstadoGrupo.BAJO -> "masa por debajo de 0 V (revisa las puntas)"
-        EstadoGrupo.MIXTO -> "masa inestable"
+        EstadoGrupo.CORRECTO -> "earth correct"
+        EstadoGrupo.ALTO -> "earth with voltage drop"
+        EstadoGrupo.BAJO -> "earth below 0 V (check the probes)"
+        EstadoGrupo.MIXTO -> "earth unstable"
         EstadoGrupo.SIN_MEDIR, EstadoGrupo.SIN_REFERENCIA -> null
     }
 
     private fun senal(plantilla: PlantillaCableado, celdas: List<EvaluacionCelda>): String? = when (VeredictoMultimetro.grupo(celdas)) {
         EstadoGrupo.SIN_MEDIR -> null
-        EstadoGrupo.SIN_REFERENCIA -> "señal sin valor esperado: compárala con el manual"
-        EstadoGrupo.CORRECTO -> "señal dentro de las bandas"
-        EstadoGrupo.BAJO -> "señal baja ${donde(plantilla, celdas, EstadoCelda.BAJO)}"
-        EstadoGrupo.ALTO -> "señal alta ${donde(plantilla, celdas, EstadoCelda.ALTO)}"
+        EstadoGrupo.SIN_REFERENCIA -> "signal has no expected value: compare it with the manual"
+        EstadoGrupo.CORRECTO -> "signal within range"
+        EstadoGrupo.BAJO -> "signal low ${donde(plantilla, celdas, EstadoCelda.BAJO)}"
+        EstadoGrupo.ALTO -> "signal high ${donde(plantilla, celdas, EstadoCelda.ALTO)}"
         EstadoGrupo.MIXTO ->
-            "señal baja ${donde(plantilla, celdas, EstadoCelda.BAJO)} y alta ${donde(plantilla, celdas, EstadoCelda.ALTO)}"
+              "signal low ${donde(plantilla, celdas, EstadoCelda.BAJO)} and high ${donde(plantilla, celdas, EstadoCelda.ALTO)}"
     }
 
     // «En todo el recorrido» solo si se midieron todas las posiciones y todas salieron del mismo lado.
@@ -66,13 +66,13 @@ internal object TextosMultimetro {
         val fuera = celdas.filter { it.estado == estado }
         val posiciones = plantilla.cable(FuncionCable.SENAL)?.esperadoPorCondicion?.keys.orEmpty()
         val todas = posiciones.size > 1 && fuera.map { it.condicion }.toSet() == posiciones
-        if (todas) return "en todo el recorrido"
+        if (todas) return "throughout the sweep"
         return "(" + enumerar(fuera.map { etiquetaCondicion(plantilla, it.condicion) }) + ")"
     }
 
     private fun senalBaja(ref: EstadoGrupo, masa: EstadoGrupo): String =
         if (ref == EstadoGrupo.CORRECTO && masa == EstadoGrupo.CORRECTO) SENSOR_O_CONTACTO
-        else "Mide también la referencia y la masa: con ellas correctas, ${SENSOR_O_CONTACTO.replaceFirstChar(Char::lowercase)}"
+        else "Also measure the reference and earth: if both are correct, ${SENSOR_O_CONTACTO.replaceFirstChar(Char::lowercase)}"
 
     private fun todoCorrecto(vararg grupos: EstadoGrupo): Boolean =
         grupos.any { it == EstadoGrupo.CORRECTO } && grupos.all { it == EstadoGrupo.CORRECTO || it == EstadoGrupo.SIN_MEDIR }
@@ -82,10 +82,10 @@ internal object TextosMultimetro {
     fun tituloGeneral(plantilla: PlantillaCableado, celdas: List<EvaluacionCelda>): String {
         val fuera = celdas.filter { it.fueraDeBanda }
         return when {
-            fuera.isNotEmpty() -> "Fuera de banda: " + enumerar(fuera.map { celdaCorta(plantilla, it) })
-            celdas.any { it.estado == EstadoCelda.DENTRO } -> "Todo lo medido está dentro de las bandas"
-            celdas.isEmpty() -> "Sin medidas todavía"
-            else -> "Sin valores esperados para comparar"
+            fuera.isNotEmpty() -> "Outside range: " + enumerar(fuera.map { celdaCorta(plantilla, it) })
+            celdas.any { it.estado == EstadoCelda.DENTRO } -> "All readings are within range"
+            celdas.isEmpty() -> "No readings yet"
+            else -> "No expected values available for comparison"
         }
     }
 
@@ -98,8 +98,8 @@ internal object TextosMultimetro {
 
     private fun celdaCorta(plantilla: PlantillaCableado, c: EvaluacionCelda): String {
         val cable = plantilla.cable(c.funcion)?.etiqueta ?: c.funcion.etiqueta
-        val lado = if (c.estado == EstadoCelda.BAJO) "bajo" else "alto"
-        return "${cable.lowercase()}, ${etiquetaCondicion(plantilla, c.condicion)} ($lado)"
+        val lado = if (c.estado == EstadoCelda.BAJO) "low" else "high"
+            return "${cable.lowercase()}, ${etiquetaCondicion(plantilla, c.condicion)} ($lado)"
     }
 
     // ── Comunes ─────────────────────────────────────────────────────────────
@@ -110,33 +110,33 @@ internal object TextosMultimetro {
     fun enumerar(partes: List<String>): String = when (partes.size) {
         0 -> ""
         1 -> partes.single()
-        else -> partes.dropLast(1).joinToString(", ") + " y " + partes.last()
+        else -> partes.dropLast(1).joinToString(", ") + " and " + partes.last()
     }
 
     private fun String.capitalizar(): String = replaceFirstChar(Char::uppercase)
 
     private const val SENSOR_O_CONTACTO =
-        "Apunta al sensor (dañado o no equivalente al original) o al contacto entre el sensor y el conector."
+        "Points to the sensor (damaged or not equivalent to the original) or a poor connection between the sensor and plug."
     private const val REFERENCIA_BAJA =
-        "Con la referencia baja, todo sensor que la comparte lee bajo (el MAP suele compartirla con el TPS): revisa " +
-            "la alimentación de 5 V que sale de la ECU antes de cambiar el sensor."
+        "With a low reference, every sensor sharing it will read low (MAP commonly shares it with TPS): check the ECU's " +
+            "5 V supply before replacing a sensor."
     private const val MASA_CON_CAIDA =
-        "Una masa con caída de voltaje se suma a la señal: revisa el terminal de masa del sensor y su camino hasta la ECU."
+        "An earth voltage drop adds to the signal: check the sensor earth terminal and its path back to the ECU."
     private const val SENAL_ALTA =
-        "Apunta al sensor o a un cruce de la señal con la referencia de 5 V."
+        "Points to the sensor or a short between the signal and 5 V reference."
 
     private val PISTAS = mapOf(
         Triple(SensorMultimetro.BATERIA, CondicionesMultimetro.CONTACTO, EstadoCelda.BAJO) to
-            "Batería baja en reposo: cárgala y vuelve a medir antes de juzgar el arranque y la carga.",
+              "Battery low at rest: charge it and measure again before assessing starting and charging.",
         Triple(SensorMultimetro.BATERIA, CondicionesMultimetro.ARRANQUE, EstadoCelda.BAJO) to
-            "Caída fuerte al arrancar: compatible con una batería débil o con bornes flojos o sulfatados.",
+              "Large voltage drop while starting: consistent with a weak battery or loose or corroded terminals.",
         Triple(SensorMultimetro.BATERIA, CondicionesMultimetro.CARGA, EstadoCelda.BAJO) to
-            "No carga lo suficiente: compatible con un estator o un regulador/rectificador que no entrega.",
+              "Insufficient charging: consistent with a faulty stator or regulator/rectifier.",
         Triple(SensorMultimetro.BATERIA, CondicionesMultimetro.CARGA, EstadoCelda.ALTO) to
-            "Carga de más: compatible con un regulador/rectificador que no limita la carga.",
+              "Overcharging: consistent with a regulator/rectifier that is not limiting the charge.",
         Triple(SensorMultimetro.INYECTOR, CondicionesMultimetro.DESCONECTADO, EstadoCelda.BAJO) to
-            "Resistencia baja: compatible con una bobina en corto o con un inyector de baja impedancia (compara con el manual).",
+              "Low resistance: consistent with a shorted coil or low-impedance injector (compare with the manual).",
         Triple(SensorMultimetro.INYECTOR, CondicionesMultimetro.DESCONECTADO, EstadoCelda.ALTO) to
-            "Resistencia alta: compatible con una bobina abierta o un terminal sulfatado.",
+              "High resistance: consistent with an open coil or corroded terminal."
     )
 }

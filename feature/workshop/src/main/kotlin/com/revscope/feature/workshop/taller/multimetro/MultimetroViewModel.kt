@@ -72,22 +72,22 @@ class MultimetroViewModel @Inject constructor(
         val ctx = l.contexto ?: return@trabajar
         val plantilla = MapeoMultimetro.plantillaEfectiva(ctx, l.colores)
         val lecturas = MapeoMultimetro.lecturas(plantilla, l.textos)
-        if (lecturas.isEmpty()) return@trabajar avisar("Escribe al menos una medida para guardarla")
+        if (lecturas.isEmpty()) return@trabajar avisar("Enter at least one reading to save it")
         if (ctx.sesion == null) {
-            registro.abrirSesion(SolicitudSesion(titulo = "Multímetro: ${plantilla.titulo}"))
-                .onFailure { return@trabajar avisar(it.message ?: "No se pudo abrir la sesión") }
+            registro.abrirSesion(SolicitudSesion(titulo = "Multimeter: ${plantilla.titulo}"))
+                .onFailure { return@trabajar avisar(it.message ?: "Could not open the session") }
         }
         val id = asistente.guardarTabla(plantilla, VeredictoMultimetro.combinar(plantilla, lecturas, ctx.bandas, ctx.ecu))
-        avisar(if (id != null) "Medición guardada en la sesión" else "No se pudo guardar la medición")
+        avisar(if (id != null) "Reading saved to the session" else "Could not save the reading")
         recargarContexto()
     }
 
     fun guardarColores() = trabajar {
         val l = local.value
         val ctx = l.contexto ?: return@trabajar
-        val nombre = ctx.modelo?.nombre ?: return@trabajar avisar("Elige el modelo de referencia del vehículo en Perfiles")
+        val nombre = ctx.modelo?.nombre ?: return@trabajar avisar("Select the vehicle's reference model in Profiles")
         val ok = asistente.guardarColores(ctx.plantilla, l.colores)
-        avisar(if (ok) "Colores guardados en la plantilla de $nombre" else "No se pudieron guardar los colores")
+        avisar(if (ok) "Colours saved to the $nombre template" else "Could not save the colours")
         if (ok) recargarContexto()
     }
 
@@ -102,8 +102,8 @@ class MultimetroViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     if (e is CancellationException) throw e
-                    Timber.w(e, "Multímetro: no se pudo cargar la plantilla")
-                    local.update { it.copy(cargando = false, error = "No se pudo cargar la plantilla del vehículo") }
+                    Timber.w(e, "Multimeter: could not load template")
+                    local.update { it.copy(cargando = false, error = "Could not load the vehicle template") }
                 }
         }
     }
@@ -113,7 +113,7 @@ class MultimetroViewModel @Inject constructor(
         val sensor = local.value.sensor
         runCatching { asistente.contexto(sensor) }
             .onSuccess { ctx -> local.update { l -> if (l.sensor != sensor) l else l.copy(contexto = ctx) } }
-            .onFailure { Timber.w(it, "Multímetro: no se pudo recargar") }
+            .onFailure { Timber.w(it, "Multimeter: could not reload") }
     }
 
     private fun trabajar(bloque: suspend () -> Unit) {

@@ -164,9 +164,9 @@ class ControladorPruebaGuiada(
     private fun rechazoAlIniciar(tipo: TipoPrueba): String? {
         val definicion = definiciones(tipo)
         return when {
-            ejecucion != null -> "Ya hay una prueba guiada en curso: termínala o cancélala"
-            captura.activa() || rafagaVoltaje?.activa() == true -> "Detén la captura rápida primero"
-            definicion == null || capturaPara(definicion) == null -> "La prueba «${tipo.titulo}» todavía no está disponible"
+            ejecucion != null -> "A guided test is already running: finish or cancel it"
+            captura.activa() || rafagaVoltaje?.activa() == true -> "Stop quick capture first"
+            definicion == null || capturaPara(definicion) == null -> "The ${tipo.titulo} test is not available yet"
             else -> null
         }
     }
@@ -185,7 +185,7 @@ class ControladorPruebaGuiada(
         val c = checkNotNull(capturaPara(definicion))
         val config = ConfigCaptura(pidsPara(definicion), definicion.duracionMaximaMs, vigilar = listOf(PID_VELOCIDAD), guiada = true)
         c.iniciar(config).onFailure {
-            return publicar(EstadoPrueba.Fallida(definicion.tipo, "No se pudo iniciar la captura: ${it.message}", reintentable = true))
+            return publicar(EstadoPrueba.Fallida(definicion.tipo, "Could not start capture: ${it.message}", reintentable = true))
         }
         val ahora = relojMs()
         val e = Ejecucion("prueba-$ahora", definicion, opciones, ahora, c)
@@ -230,7 +230,7 @@ class ControladorPruebaGuiada(
         val kmh = velocidadDesde(e.inicioEpochMs)?.takeIf { it > 0.0 } ?: return null
         return EstadoPrueba.Cancelada(
             e.tipo,
-            "Moto en movimiento (${FormatoTaller.numero(kmh, 0)} km/h): la prueba se hace con la moto detenida",
+            "Motorbike moving (${FormatoTaller.numero(kmh, 0)} km/h): this test must be done while stationary",
         )
     }
 
@@ -238,8 +238,8 @@ class ControladorPruebaGuiada(
         motivo == null || motivo.startsWith(CapturaRapida.MOTIVO_ENLACE) ->
             EstadoPrueba.Fallida(tipo, MOTIVO_ENLACE_PERDIDO, reintentable = true)
         motivo.startsWith(PREFIJO_DETENIDA) ->
-            EstadoPrueba.Cancelada(tipo, "Se detuvo la captura rápida desde otra pantalla o el MCP")
-        else -> EstadoPrueba.Fallida(tipo, "La captura se detuvo: $motivo", reintentable = true)
+            EstadoPrueba.Cancelada(tipo, "Quick capture was stopped from another screen or MCP")
+        else -> EstadoPrueba.Fallida(tipo, "Capture stopped: $motivo", reintentable = true)
     }
 
     private fun velocidadDesde(desdeEpochMs: Long): Double? {
@@ -270,7 +270,7 @@ class ControladorPruebaGuiada(
 
     private fun empezarASostener(e: Ejecucion, t: Long) {
         e.progreso = e.progreso.copy(fase = FasePaso.SOSTENIENDO, faseDesdeMs = t)
-        anunciar(e, "Sostén ${segundos(e.paso.modo.limiteMs)} segundos")
+        anunciar(e, "Hold steady for ${segundos(e.paso.modo.limiteMs)} seconds")
         publicarPaso(e, t)
     }
 
@@ -311,11 +311,11 @@ class ControladorPruebaGuiada(
         val actual = vehiculo.actual()
         val datos = DatosPrueba(e.tipo, e.captura.muestrasActuales(), segmentos, e.opciones.vref, contextoAnalisis(e, actual, enlacePerdidoEn))
         val resultado = analizar(e.definicion, datos, bandas(actual))
-            ?: return anotarFallida(e, EstadoPrueba.Fallida(e.tipo, "No se pudo analizar la prueba", true), segmentos, resumen?.rutaCsv)
+            ?: return anotarFallida(e, EstadoPrueba.Fallida(e.tipo, "Could not analyse the test", true), segmentos, resumen?.rutaCsv)
         val evento = EventoPrueba.terminada(resultado, datos, resumen?.rutaCsv, e.opciones.origen)
         ultimoEvento = evento
         val eventoId = registro.anotar(evento)
-        anunciar(e, "Prueba terminada. ${resultado.titulo}")
+        anunciar(e, "Test complete. ${resultado.titulo}")
         publicar(EstadoPrueba.Terminada(resultado, eventoId, datos))
     }
 
@@ -325,7 +325,7 @@ class ControladorPruebaGuiada(
         if (final is EstadoPrueba.Fallida) {
             anotarFallida(e, final, e.progreso.segmentos, resumen?.rutaCsv)
         } else {
-            anunciar(e, "Prueba cancelada")
+            anunciar(e, "Test cancelled")
         }
         return publicar(final)
     }
@@ -333,7 +333,7 @@ class ControladorPruebaGuiada(
     private suspend fun anotarFallida(e: Ejecucion, fallida: EstadoPrueba.Fallida, segmentos: List<SegmentoPaso>, rutaCsv: String?) {
         val datos = DatosPrueba(e.tipo, e.captura.muestrasActuales(), segmentos, e.opciones.vref)
         registro.anotar(EventoPrueba.sinTerminar(fallida, datos, e.definicion.pasos.size, rutaCsv, e.opciones.origen))
-        anunciar(e, "La prueba no terminó. ${fallida.motivo}")
+        anunciar(e, "Test did not finish. ${fallida.motivo}")
         publicar(fallida)
     }
 
@@ -386,9 +386,9 @@ class ControladorPruebaGuiada(
     private fun anunciarPaso(e: Ejecucion) {
         val p = e.progreso
         val cierre = if (p.fase == FasePaso.POSICIONANDO) {
-            "Cuando esté en posición, toca Listo."
+            "When it is in position, tap Ready."
         } else {
-            "Grabando ${segundos(e.paso.modo.limiteMs)} segundos."
+            "Recording for ${segundos(e.paso.modo.limiteMs)} seconds."
         }
         anunciar(e, "Paso ${p.indice + 1} de ${e.definicion.pasos.size}. ${e.paso.titulo}. ${e.paso.instruccion}. $cierre")
     }
@@ -412,11 +412,11 @@ class ControladorPruebaGuiada(
     companion object {
         const val TICK_MS = 100L
         const val PID_VELOCIDAD = ContextoPrueba.PID_VELOCIDAD
-        const val MOTIVO_USUARIO = "Cancelada por el usuario"
-        const val MOTIVO_ENLACE_PERDIDO = "Se perdió el enlace con el adaptador"
-        const val MOTIVO_FIN_CAPTURA = "prueba guiada"
+        const val MOTIVO_USUARIO = "Cancelled by the user"
+        const val MOTIVO_ENLACE_PERDIDO = "Adapter connection lost"
+        const val MOTIVO_FIN_CAPTURA = "guided test"
         private const val PREFIJO_DETENIDA = "detenida"
-        private const val SIN_PRUEBA = "No hay una prueba guiada en curso"
-        private const val SIN_CAPTURA = "La captura de la prueba no está activa"
+        private const val SIN_PRUEBA = "No guided test is running"
+        private const val SIN_CAPTURA = "Test capture is not active"
     }
 }

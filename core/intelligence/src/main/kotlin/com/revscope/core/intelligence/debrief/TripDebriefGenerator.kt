@@ -37,7 +37,7 @@ class TripDebriefGenerator @Inject constructor(
 
     suspend fun generate(digest: TripDigest): Result<String> {
         val provider = aiProviderFactory.current()
-            ?: return Result.failure(IllegalStateException("Configura un proveedor de IA en Ajustes"))
+            ?: return Result.failure(IllegalStateException("Set up an AI provider in Settings"))
         return provider.complete(
             AiRequest(
                 system = SYSTEM_PROMPT,
@@ -48,26 +48,26 @@ class TripDebriefGenerator @Inject constructor(
     }
 
     private fun buildUserPrompt(d: TripDigest): String = buildString {
-        appendLine("Vehículo: ${d.vehicleName} (${if (d.isMotorcycle) "moto" else "carro"})")
-        appendLine("Viaje: %.1f km en %d min · vel prom %d km/h · vel máx %d km/h · RPM máx %d".format(
+        appendLine("Vehicle: ${d.vehicleName} (${if (d.isMotorcycle) "motorbike" else "car"})")
+        appendLine("Trip: %.1f km in %d min · average speed %d km/h · max speed %d km/h · max RPM %d".format(
             d.distanceKm, d.durationMin, d.avgSpeedKmh, d.maxSpeedKmh, d.maxRpm))
-        d.ecoScore?.let { appendLine("Eco-score: $it/100") }
-        d.fuelCostCop?.let { appendLine("Costo combustible: %.0f COP".format(it)) }
-        d.maxBrakingG?.let { appendLine("Frenada máx: %.2f G".format(it)) }
-        d.maxLateralG?.let { appendLine("G lateral máx: %.2f G".format(it)) }
-        d.maxLeanDeg?.takeIf { d.isMotorcycle }?.let { appendLine("Inclinación máx: %.0f°".format(it)) }
-        d.best0to100s?.let { appendLine("Mejor 0-100: %.1f s".format(it)) }
+        d.ecoScore?.let { appendLine("Eco score: $it/100") }
+        d.fuelCostCop?.let { appendLine("Fuel cost: %.0f COP".format(it)) }
+        d.maxBrakingG?.let { appendLine("Max braking G: %.2f G".format(it)) }
+        d.maxLateralG?.let { appendLine("Max lateral G: %.2f G".format(it)) }
+        d.maxLeanDeg?.takeIf { d.isMotorcycle }?.let { appendLine("Max lean: %.0f°".format(it)) }
+        d.best0to100s?.let { appendLine("Best 0–100 km/h: %.1f s".format(it)) }
         if (d.prevTripCount > 0) {
-            appendLine("Historial (${d.prevTripCount} viajes previos): eco prom ${d.prevAvgEcoScore ?: "?"}, vel máx prom ${d.prevAvgMaxSpeedKmh ?: "?"} km/h")
+            appendLine("History (${d.prevTripCount} previous trips): average eco score ${d.prevAvgEcoScore ?: "?"}, average max speed ${d.prevAvgMaxSpeedKmh ?: "?"} km/h")
         }
     }
 
     private companion object {
         const val SYSTEM_PROMPT =
-            "Eres un coach de conducción conciso y directo, en español colombiano neutro. " +
-                "Con los datos del viaje: (1) resume el viaje en 2-3 frases con lo más notable, " +
-                "(2) compara contra el historial si existe (¿mejor o peor que de costumbre?), " +
-                "(3) da máximo 2 consejos accionables de manejo o mantenimiento. " +
-                "Máximo 130 palabras. Sin listas numeradas, sin emojis, sin inventar datos que no te dieron."
+            "You are a concise, direct driving coach. Respond in British English. " +
+                "Using the trip data: (1) summarise the most notable points in 2–3 sentences, " +
+                "(2) compare with the history if available, " +
+                "(3) give no more than 2 practical driving or maintenance tips. " +
+                "Maximum 130 words. No numbered lists or emojis, and do not invent missing data."
     }
 }

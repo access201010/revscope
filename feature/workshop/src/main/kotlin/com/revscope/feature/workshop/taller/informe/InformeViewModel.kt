@@ -60,12 +60,12 @@ class InformeViewModel @Inject constructor(
         viewModelScope.launch {
             val sesion = runCatching { repositorio.sesion(sesionId) }.getOrNull()
             if (sesion == null) {
-                mutableEstado.update { it.copy(error = "La sesión ya no existe.") }
+                mutableEstado.update { it.copy(error = "This session no longer exists.") }
                 return@launch
             }
             runCatching { repositorio.actualizarSesion(sesion.copy(interpretacion = texto)) }
                 .onSuccess { cargar() }
-                .onFailure { mutableEstado.update { it.copy(error = "No se pudo guardar la interpretación.") } }
+                .onFailure { mutableEstado.update { it.copy(error = "Could not save the interpretation.") } }
         }
     }
 
@@ -74,7 +74,7 @@ class InformeViewModel @Inject constructor(
         viewModelScope.launch {
             val archivo = withContext(Dispatchers.IO) { escribir(directorio, html) }
             if (archivo == null) {
-                mutableEstado.update { it.copy(mensaje = "No se pudo preparar el informe para compartir.") }
+                mutableEstado.update { it.copy(mensaje = "Could not prepare the report for sharing.") }
             } else {
                 archivos.send(archivo)
             }
@@ -92,8 +92,8 @@ class InformeViewModel @Inject constructor(
 
     private suspend fun estadoCargado(): InformeUi {
         val informe = runCatching { generador.generar(sesionId) }
-            .getOrElse { return InformeUi(cargando = false, error = "No se pudo generar el informe.") }
-            ?: return InformeUi(cargando = false, error = "No se encontró la sesión para generar el informe.")
+            .getOrElse { return InformeUi(cargando = false, error = "Could not generate the report.") }
+            ?: return InformeUi(cargando = false, error = "Could not find the session to generate the report.")
         return InformeUi(
             cargando = false,
             titulo = informe.titulo,

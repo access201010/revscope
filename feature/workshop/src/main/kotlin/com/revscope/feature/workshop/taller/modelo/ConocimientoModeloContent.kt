@@ -63,7 +63,7 @@ data class AccionesConocimientoModelo(
 @Composable
 fun ConocimientoModeloContent(estado: ConocimientoModeloUi, acciones: AccionesConocimientoModelo = AccionesConocimientoModelo()) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver("Conocimiento del modelo", acciones.onVolver, subtitulo = estado.vehiculo)
+        BarraConVolver("Model information", acciones.onVolver, subtitulo = estado.vehiculo)
         when {
             estado.cargando -> CargandoModelo()
             estado.error != null -> ErrorModelo(estado.error, acciones.onReintentar)
@@ -91,7 +91,7 @@ private fun ErrorModelo(mensaje: String, onReintentar: () -> Unit) {
 @Composable
 private fun SinModelo() {
     EmptyState(
-        "Este vehículo no tiene un modelo de referencia. Elígelo en Perfiles para ver ECU, repuestos, cableado y fuentes.",
+        "This vehicle has no reference model. Select one in Profiles to view ECU information, parts, wiring and sources.",
         modifier = Modifier.padding(16.dp),
     )
 }
@@ -108,20 +108,20 @@ private fun Modelo(modelo: ConocimientoModelo, acciones: AccionesConocimientoMod
         SeccionRepuestos(modelo.repuestos, acciones.onCopiar)
         SeccionCableado(modelo.cableado, acciones.onEditarCable)
         OutlinedButton(onClick = acciones.onReferencias, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
-            Text("Ver y editar referencias", color = RevScopeColors.Accent, style = RevScopeType.label, textAlign = TextAlign.Center)
+            Text("View and edit reference values", color = RevScopeColors.Accent, style = RevScopeType.label, textAlign = TextAlign.Center)
         }
     }
 }
 
 @Composable
 private fun TarjetaEcu(modelo: ConocimientoModelo) {
-    EncabezadoSeccion("ECU y protocolo")
+    EncabezadoSeccion("ECU and protocol")
     TarjetaTaller {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.Top) {
             Icon(Icons.Filled.Memory, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(24.dp))
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(modelo.ecu ?: "ECU sin identificar", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
-                Fuente(modelo.fuenteEcu ?: "Sin fuente registrada")
+                Text(modelo.ecu ?: "Unidentified ECU", color = RevScopeColors.TextPrimary, style = RevScopeType.title)
+                Fuente(modelo.fuenteEcu ?: "No source recorded")
             }
         }
         Text(modelo.notasProtocolo, color = RevScopeColors.TextSecondary, style = RevScopeType.body)
@@ -131,7 +131,7 @@ private fun TarjetaEcu(modelo: ConocimientoModelo) {
 @Composable
 private fun SeccionNotas(protocolo: String, notas: List<NotaModelo>) {
     if (notas.isEmpty() && protocolo.isBlank()) return
-    EncabezadoSeccion("Notas verificables")
+    EncabezadoSeccion("Verifiable notes")
     notas.forEach { nota ->
         TarjetaTaller {
             Text(etiqueta(nota.tipo), color = color(nota.tipo), style = RevScopeType.label)
@@ -144,7 +144,7 @@ private fun SeccionNotas(protocolo: String, notas: List<NotaModelo>) {
 @Composable
 private fun SeccionRepuestos(repuestos: List<RepuestoModelo>, onCopiar: (String) -> Unit) {
     if (repuestos.isEmpty()) return
-    EncabezadoSeccion("Repuestos y referencias")
+    EncabezadoSeccion("Parts and references")
     repuestos.forEach { repuesto -> TarjetaRepuesto(repuesto, onCopiar) }
 }
 
@@ -163,10 +163,10 @@ private fun TarjetaRepuesto(repuesto: RepuestoModelo, onCopiar: (String) -> Unit
             )
             TextButton(
                 onClick = { onCopiar(repuesto.referencia) },
-                modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Copiar referencia ${repuesto.referencia}" },
+                modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Copy part number ${repuesto.referencia}" },
             ) {
                 Icon(Icons.Filled.ContentCopy, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(18.dp))
-                Text("Copiar", color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
+                Text("Copy", color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
             }
         }
         if (repuesto.nota.isNotBlank()) Text(repuesto.nota, color = RevScopeColors.TextSecondary, style = RevScopeType.body)
@@ -177,7 +177,7 @@ private fun TarjetaRepuesto(repuesto: RepuestoModelo, onCopiar: (String) -> Unit
 @Composable
 private fun SeccionCableado(cableados: List<CableadoSensor>, onEditar: (String, FuncionCable) -> Unit) {
     if (cableados.isEmpty()) return
-    EncabezadoSeccion("Cableado editable")
+    EncabezadoSeccion("Editable wiring")
     cableados.forEach { cableado ->
         TarjetaTaller {
             Text(cableado.titulo, color = RevScopeColors.TextPrimary, style = RevScopeType.title)
@@ -185,16 +185,16 @@ private fun SeccionCableado(cableados: List<CableadoSensor>, onEditar: (String, 
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Column(Modifier.weight(1f)) {
                         Text(cable.funcion.etiqueta, color = RevScopeColors.TextPrimary, style = RevScopeType.label)
-                        Text(cable.color ?: "Color sin registrar", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+                        Text(cable.color ?: "Colour not recorded", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
                     }
                     TextButton(
                         onClick = { onEditar(cableado.sensor, cable.funcion) },
                         modifier = Modifier.heightIn(min = 48.dp).semantics {
-                            contentDescription = "Editar color de ${cable.funcion.etiqueta}"
+                            contentDescription = "Edit colour of ${cable.funcion.etiqueta}"
                         },
                     ) {
                         Icon(Icons.Filled.Edit, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(18.dp))
-                        Text("Editar", color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
+                        Text("Edit", color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
                     }
                 }
             }
@@ -207,7 +207,7 @@ private fun SeccionCableado(cableados: List<CableadoSensor>, onEditar: (String, 
 private fun Fuente(texto: String) {
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.Top) {
         Icon(Icons.Filled.Link, contentDescription = null, tint = RevScopeColors.TextSecondary, modifier = Modifier.size(18.dp))
-        Text("Fuente: $texto", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall, modifier = Modifier.weight(1f))
+        Text("Source: $texto", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall, modifier = Modifier.weight(1f))
     }
 }
 
@@ -216,13 +216,13 @@ private fun DialogoCable(edicion: EdicionCableUi, acciones: AccionesConocimiento
     AlertDialog(
         onDismissRequest = acciones.onCerrarDialogo,
         containerColor = RevScopeColors.SurfaceHigh,
-        title = { Text("Color de ${edicion.etiqueta}", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("Colour of ${edicion.etiqueta}", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             OutlinedTextField(
                 value = edicion.color,
                 onValueChange = acciones.onCambiarColor,
-                label = { Text("Color del cable") },
-                supportingText = { Text("Déjalo vacío si el color no está confirmado.", style = RevScopeType.bodySmall) },
+                label = { Text("Wire colour") },
+                supportingText = { Text("Leave blank if the colour has not been confirmed.", style = RevScopeType.bodySmall) },
                 textStyle = RevScopeType.body,
                 singleLine = false,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -239,12 +239,12 @@ private fun DialogoCable(edicion: EdicionCableUi, acciones: AccionesConocimiento
         },
         confirmButton = {
             TextButton(onClick = acciones.onGuardarColor, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Guardar", color = RevScopeColors.Accent, style = RevScopeType.label)
+                Text("Save", color = RevScopeColors.Accent, style = RevScopeType.label)
             }
         },
         dismissButton = {
             TextButton(onClick = acciones.onCerrarDialogo, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Cancelar", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+                Text("Cancel", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
             }
         },
     )
@@ -252,9 +252,9 @@ private fun DialogoCable(edicion: EdicionCableUi, acciones: AccionesConocimiento
 
 private fun etiqueta(tipo: TipoNota): String = when (tipo) {
     TipoNota.NOTA -> "Nota"
-    TipoNota.EJEMPLO -> "Ejemplo, no especificación del fabricante"
-    TipoNota.PENDIENTE -> "Pendiente por confirmar"
-    TipoNota.FUENTE -> "Fuente documental"
+    TipoNota.EJEMPLO -> "Example, not a manufacturer specification"
+    TipoNota.PENDIENTE -> "To be confirmed"
+    TipoNota.FUENTE -> "Documentary source"
 }
 
 private fun color(tipo: TipoNota) = when (tipo) {
@@ -265,8 +265,8 @@ private fun color(tipo: TipoNota) = when (tipo) {
 
 private fun tipo(tipo: TipoRepuesto): String = when (tipo) {
     TipoRepuesto.OEM -> "Original (OEM)"
-    TipoRepuesto.NO_EQUIVALENTE -> "No equivalente al original"
-    TipoRepuesto.ALTERNATIVO -> "Alternativo"
+    TipoRepuesto.NO_EQUIVALENTE -> "Not equivalent to the original"
+    TipoRepuesto.ALTERNATIVO -> "Aftermarket alternative"
 }
 
 private fun color(tipo: TipoRepuesto) = when (tipo) {

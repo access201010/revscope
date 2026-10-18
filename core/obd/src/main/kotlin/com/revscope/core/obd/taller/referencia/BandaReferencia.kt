@@ -13,16 +13,16 @@ data class BandaReferencia(
     val fuente: String = "",
 ) {
     init {
-        require(min != null || max != null) { "La banda $clave necesita al menos un límite" }
-        require(min == null || max == null || min <= max) { "La banda $clave tiene el mínimo mayor que el máximo" }
-        require(origen != OrigenBanda.FUENTE || fuente.isNotBlank()) { "La banda $clave con origen FUENTE necesita citar la fuente" }
+        require(min != null || max != null) { "Range $clave needs at least one limit" }
+        require(min == null || max == null || min <= max) { "Range $clave has a minimum greater than its maximum" }
+        require(origen != OrigenBanda.FUENTE || fuente.isNotBlank()) { "Range $clave with source origin must cite the source" }
     }
 
     val etiquetaOrigen: String
         get() = when (origen) {
-            OrigenBanda.TIPICO -> "Típico (editable)"
-            OrigenBanda.FUENTE -> "Fuente: $fuente"
-            OrigenBanda.USUARIO -> "Editado por ti"
+            OrigenBanda.TIPICO -> "Typical (editable)"
+            OrigenBanda.FUENTE -> "Source: $fuente"
+            OrigenBanda.USUARIO -> "Edited by you"
         }
 
     fun clasificar(valor: Double): PosicionEnBanda = when {

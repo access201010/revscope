@@ -95,7 +95,7 @@ class DtcViewModel @Inject constructor(
         }
         viewModelScope.launch {
             val sesion = registro.marcarPaso(clave, marcado)
-            if (sesion == null) avisar("No se pudo guardar el paso: la sesión ya no está abierta")
+            if (sesion == null) avisar("Could not save the step: the session is no longer open")
             _detalle.update { it.copy(sesion = sesionDtcUi(sesion)) }
         }
     }
@@ -112,9 +112,9 @@ class DtcViewModel @Inject constructor(
                     _detalle.update {
                         it.copy(sesion = sesionDtcUi(conPasos), lecturaEnSesion = anotada, pasosSinSesion = emptySet())
                     }
-                    avisar("Lectura guardada en la sesión «${sesion.titulo}»")
+                    avisar("Reading saved to session “${sesion.titulo}”")
                 }
-                .onFailure { e -> avisar(e.message ?: "No se pudo abrir la sesión") }
+                .onFailure { e -> avisar(e.message ?: "Could not open the session") }
             _detalle.update { it.copy(guardandoEnSesion = false) }
         }
     }
@@ -198,13 +198,13 @@ class DtcViewModel @Inject constructor(
     }
 
     private fun freezeFrameItem(reading: ObdReading): FreezeFrameItem {
-        val label = registry.getDefinition(reading.pid)?.nameEs ?: reading.pid
+        val label = registry.getDefinition(reading.pid)?.name ?: reading.pid
         val value = if (reading.value % 1.0 == 0.0) "${reading.value.toInt()}" else "%.1f".format(reading.value)
         return FreezeFrameItem(label = label, value = "$value ${reading.unit}")
     }
 
-    private fun mensajeDeError(e: Throwable, porDefecto: String = "Error leyendo los códigos"): String =
-        if (e is IllegalStateException && e.message == "Not connected") "Conecta el adaptador primero"
+    private fun mensajeDeError(e: Throwable, porDefecto: String = "Error reading fault codes"): String =
+        if (e is IllegalStateException && e.message == "Not connected") "Connect the adapter first"
         else e.message ?: porDefecto
 
     private fun rechazoConfirmado(connectionVm: ConnectionViewModel, ahoraMs: Long): RechazoBorradoDtc? =
@@ -222,7 +222,7 @@ class DtcViewModel @Inject constructor(
                     _state.value = DtcUiState.Borrado(resultadoBorradoUi(borrado))
                     viewModelScope.launch { registro.anotarBorradoDtc(borrado) }
                 }
-                .onFailure { e -> _state.value = DtcUiState.Error(mensajeDeError(e, "Error borrando los códigos")) }
+                .onFailure { e -> _state.value = DtcUiState.Error(mensajeDeError(e, "Error clearing fault codes")) }
         }
     }
 

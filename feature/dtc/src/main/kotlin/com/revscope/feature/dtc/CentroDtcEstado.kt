@@ -13,7 +13,7 @@ import com.revscope.core.obd.taller.sesion.SesionTaller
 import com.revscope.core.obd.taller.sesion.Sintoma
 import com.revscope.core.obd.taller.sesion.SolicitudSesion
 
-const val SIN_CODIGOS_LECTURA_COMPLETA = "Sin códigos activos, pendientes ni permanentes"
+const val SIN_CODIGOS_LECTURA_COMPLETA = "No active, pending or permanent codes"
 
 sealed interface ExplicacionIa {
     data object NoPedida : ExplicacionIa
@@ -76,19 +76,19 @@ fun guiasAbiertasAlLeer(codigos: List<DtcCodeUi>): Set<String> =
     codigos.singleOrNull()?.takeIf { it.guia != null }?.let { setOf(it.codigo) } ?: emptySet()
 
 fun textoSinGuia(codigo: String): String {
-    val estructura = DecodificadorDtc.decodificar(codigo) ?: return "Código con un formato que RevScope no reconoce."
+    val estructura = DecodificadorDtc.decodificar(codigo) ?: return "Code format not recognised by RevScope."
     val mensaje = DecodificadorDtc.mensajeSinGuia(estructura)
     return if (estructura.ambito == AmbitoDtc.FABRICANTE) mensaje else "${estructura.explicacion}. $mensaje"
 }
 
 fun milUi(scan: DtcScan): MilUi? {
     val encendida = scan.milEncendida ?: return null
-    val luz = if (encendida) "Testigo de falla encendido" else "Testigo de falla apagado"
-    val conteo = scan.conteoSegunEcu?.let { " · la ECU reporta ${textoConteo(it)}" }.orEmpty()
+    val luz = if (encendida) "Engine warning light on" else "Engine warning light off"
+    val conteo = scan.conteoSegunEcu?.let { " · ECU reports ${textoConteo(it)}" }.orEmpty()
     return MilUi(encendida, luz + conteo)
 }
 
-private fun textoConteo(n: Int): String = if (n == 1) "1 código confirmado" else "$n códigos confirmados"
+private fun textoConteo(n: Int): String = if (n == 1) "1 confirmed code" else "$n confirmed codes"
 
 // Solo el movimiento comprobado deshabilita el botón: sin velocidad reciente, el diálogo pide declarar que está detenido.
 fun motivoBorradoDeshabilitado(velocidad: ObdReading?, ahoraMs: Long): String? {
@@ -98,13 +98,13 @@ fun motivoBorradoDeshabilitado(velocidad: ObdReading?, ahoraMs: Long): String? {
 
 fun solicitudDesdeLectura(scan: DtcScan): SolicitudSesion {
     val codigos = scan.todos.map { it.code }.distinct()
-    val titulo = if (codigos.isEmpty()) "Lectura de códigos" else "Códigos ${codigos.joinToString()}"
+    val titulo = if (codigos.isEmpty()) "Fault code reading" else "Codes ${codigos.joinToString()}"
     val sintomas = if (scan.milEncendida == true) setOf(Sintoma.MIL_ENCENDIDA) else emptySet()
     return SolicitudSesion(titulo = titulo, sintomas = sintomas)
 }
 
 fun etiquetaModo(mode: DtcMode): String = when (mode) {
-    DtcMode.Active -> "Activo"
-    DtcMode.Pending -> "Pendiente"
-    DtcMode.Permanent -> "Permanente"
+    DtcMode.Active -> "Active"
+    DtcMode.Pending -> "Pending"
+    DtcMode.Permanent -> "Permanent"
 }

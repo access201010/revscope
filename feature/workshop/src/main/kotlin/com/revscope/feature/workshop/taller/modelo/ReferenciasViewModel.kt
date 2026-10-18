@@ -54,20 +54,20 @@ class ReferenciasViewModel @Inject constructor(
     fun cerrarDialogo() = local.update { it.copy(dialogo = null) }
 
     fun guardar() {
-        val claveModelo = vehiculoActual?.claveModelo ?: return avisar("Elige un modelo de referencia en Perfiles")
+        val claveModelo = vehiculoActual?.claveModelo ?: return avisar("Select a reference model in Profiles")
         val dialogo = local.value.dialogo ?: return
         val limites = limites(dialogo) ?: return
         val banda = dialogo.banda.copy(min = limites.first, max = limites.second, origen = OrigenBanda.USUARIO, fuente = "")
         viewModelScope.launch {
-            ejecutarGuardado("Referencia guardada") { repositorio.guardarBandaUsuario(claveModelo, banda) }
+            ejecutarGuardado("Reference value saved") { repositorio.guardarBandaUsuario(claveModelo, banda) }
         }
     }
 
     fun restablecer(clave: String) {
-        val claveModelo = vehiculoActual?.claveModelo ?: return avisar("Elige un modelo de referencia en Perfiles")
+        val claveModelo = vehiculoActual?.claveModelo ?: return avisar("Select a reference model in Profiles")
         viewModelScope.launch {
-            ejecutarGuardado("Referencia restablecida a Típico") {
-                check(repositorio.restablecerBanda(claveModelo, clave)) { "La referencia no existe" }
+            ejecutarGuardado("Reference value reset to typical") {
+                check(repositorio.restablecerBanda(claveModelo, clave)) { "Reference value does not exist" }
             }
         }
     }
@@ -92,7 +92,7 @@ class ReferenciasViewModel @Inject constructor(
         } catch (e: Exception) {
             if (version != versionCarga) return
             Timber.w(e, "Referencias: no se pudieron cargar")
-            local.value = local.value.copy(cargando = false, error = "No se pudieron cargar las referencias")
+            local.value = local.value.copy(cargando = false, error = "Could not load reference values")
         }
     }
 
@@ -105,7 +105,7 @@ class ReferenciasViewModel @Inject constructor(
             throw e
         } catch (e: Exception) {
             Timber.w(e, "Referencias: no se pudo guardar")
-            avisar("No se pudo guardar la referencia")
+            avisar("Could not save reference value")
         }
     }
 
@@ -113,10 +113,10 @@ class ReferenciasViewModel @Inject constructor(
         val min = dialogo.minimo.decimalONull()
         val max = dialogo.maximo.decimalONull()
         val error = when {
-            dialogo.minimo.isNotBlank() && min == null -> "El mínimo no es un número válido"
-            dialogo.maximo.isNotBlank() && max == null -> "El máximo no es un número válido"
-            min == null && max == null -> "Escribe al menos un límite"
-            min != null && max != null && min > max -> "El mínimo no puede ser mayor que el máximo"
+            dialogo.minimo.isNotBlank() && min == null -> "Minimum must be a valid number"
+            dialogo.maximo.isNotBlank() && max == null -> "Maximum must be a valid number"
+            min == null && max == null -> "Enter at least one limit"
+            min != null && max != null && min > max -> "Minimum cannot be greater than maximum"
             else -> null
         }
         if (error == null) return min to max
@@ -132,7 +132,7 @@ class ReferenciasViewModel @Inject constructor(
     private fun String.decimalONull(): Double? =
         trim().takeIf(String::isNotEmpty)?.replace(',', '.')?.toDoubleOrNull()?.takeIf(Double::isFinite)
 
-    private fun Double?.formatoEditable(): String = this?.toString()?.replace('.', ',').orEmpty()
+    private fun Double?.formatoEditable(): String = this?.toString().orEmpty()
 
     companion object {
         private const val MAX_VALOR = 16

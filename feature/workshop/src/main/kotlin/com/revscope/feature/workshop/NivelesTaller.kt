@@ -8,9 +8,9 @@ internal data class NivelConTexto(val nivel: NivelEstado, val texto: String)
 
 internal fun nivelDocumento(nivel: DocumentStatusCalculator.Nivel): NivelConTexto = when (nivel) {
     DocumentStatusCalculator.Nivel.OK -> NivelConTexto(NivelEstado.OK, "OK")
-    DocumentStatusCalculator.Nivel.ATENCION -> NivelConTexto(NivelEstado.ATENCION, "Atención")
-    DocumentStatusCalculator.Nivel.VENCIDO -> NivelConTexto(NivelEstado.FALLA, "Vencido")
-    DocumentStatusCalculator.Nivel.SIN_CONFIGURAR -> NivelConTexto(NivelEstado.SIN_DATO, "Sin configurar")
+    DocumentStatusCalculator.Nivel.ATENCION -> NivelConTexto(NivelEstado.ATENCION, "Attention")
+    DocumentStatusCalculator.Nivel.VENCIDO -> NivelConTexto(NivelEstado.FALLA, "Expired")
+    DocumentStatusCalculator.Nivel.SIN_CONFIGURAR -> NivelConTexto(NivelEstado.SIN_DATO, "Not set up")
 }
 
 internal fun nivelDiagnostico(nivel: DiagnosticRules.Nivel): NivelEstado = when (nivel) {

@@ -25,8 +25,8 @@ data class DisponibilidadPid(
 
         private fun motivo(pid: String, nombre: String, estado: EstadoSoporte): String? = when (estado) {
             EstadoSoporte.Soportado -> null
-            EstadoSoporte.NoSoportado -> "Esta ECU no reporta $nombre (PID $pid)."
-            EstadoSoporte.Desconocido -> "Aún no se conocen los PIDs que anuncia la ECU."
+            EstadoSoporte.NoSoportado -> "This ECU does not report $nombre (PID $pid)."
+            EstadoSoporte.Desconocido -> "The PIDs advertised by the ECU are not yet known."
         }
     }
 }

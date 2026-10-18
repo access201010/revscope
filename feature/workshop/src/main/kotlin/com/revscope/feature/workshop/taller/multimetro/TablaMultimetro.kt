@@ -77,7 +77,7 @@ private val ANCHO_CABLE = (DisposicionMultimetro.ANCHO_CABLE_DP - DisposicionMul
 private fun TablaCables(plantilla: PlantillaUi, onValor: (FuncionCable, String, String) -> Unit) {
     TarjetaTaller {
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(DisposicionMultimetro.SEPARACION_DP.dp)) {
-            Text("Cable", color = RevScopeColors.TextSecondary, style = RevScopeType.label, modifier = Modifier.width(ANCHO_CABLE))
+            Text("Wire", color = RevScopeColors.TextSecondary, style = RevScopeType.label, modifier = Modifier.width(ANCHO_CABLE))
             plantilla.condiciones.forEach {
                 Text(it, color = RevScopeColors.TextSecondary, style = RevScopeType.label, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
             }
@@ -113,7 +113,7 @@ private fun FilaTabla(fila: FilaCableUi, unidad: String, onValor: (FuncionCable,
 // En la tabla no cabe la banda de cada celda: se cita debajo, una vez por cable si es la misma en todas.
 @Composable
 private fun ValoresEsperados(plantilla: PlantillaUi) {
-    Text("Valores esperados", color = RevScopeColors.TextSecondary, style = RevScopeType.label)
+            Text("Expected values", color = RevScopeColors.TextSecondary, style = RevScopeType.label)
     plantilla.filas.forEach { fila ->
         val celdas = fila.celdas.filter { it.aplica && it.referencia != null }
         val unica = celdas.map { it.referencia }.distinct().singleOrNull()
@@ -150,7 +150,7 @@ private fun CeldaEnTarjeta(fila: FilaCableUi, celda: CeldaUi, unidad: String, on
         Text(celda.etiquetaCondicion, color = RevScopeColors.TextPrimary, style = RevScopeType.label)
         CampoValor(fila, celda, unidad, onValor, conUnidad = true)
         IndicadorCelda(celda, corto = false)
-        celda.referencia?.let { TextoEsperado("Esperado: $it") }
+        celda.referencia?.let { TextoEsperado("Expected: $it") }
     }
 }
 
@@ -160,7 +160,7 @@ private fun CeldaEnTarjeta(fila: FilaCableUi, celda: CeldaUi, unidad: String, on
 private fun EtiquetaCable(fila: FilaCableUi, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(fila.etiqueta, color = RevScopeColors.TextPrimary, style = RevScopeType.label)
-        Text(fila.color ?: "Sin color", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+        Text(fila.color ?: "No colour recorded", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
     }
 }
 
@@ -220,16 +220,16 @@ private fun coloresCampo() = OutlinedTextFieldDefaults.colors(
 private data class Aspecto(val icono: ImageVector, val color: Color, val corto: String, val largo: String)
 
 private fun aspecto(celda: CeldaUi): Aspecto? = when {
-    celda.invalido -> Aspecto(Icons.Filled.Error, RevScopeColors.Danger, "No es un número", "No es un número: usa coma o punto")
+    celda.invalido -> Aspecto(Icons.Filled.Error, RevScopeColors.Danger, "Not a number", "Not a number: use a full stop or comma")
     celda.estado == null -> null
     else -> aspectoDe(celda.estado)
 }
 
 private fun aspectoDe(estado: EstadoCelda): Aspecto = when (estado) {
-    EstadoCelda.DENTRO -> Aspecto(Icons.Filled.CheckCircle, RevScopeColors.Success, "Dentro", "Dentro de lo esperado")
-    EstadoCelda.BAJO -> Aspecto(Icons.Filled.ArrowDownward, RevScopeColors.Danger, "Bajo", "Por debajo de lo esperado")
-    EstadoCelda.ALTO -> Aspecto(Icons.Filled.ArrowUpward, RevScopeColors.Danger, "Alto", "Por encima de lo esperado")
-    EstadoCelda.SIN_REFERENCIA -> Aspecto(Icons.Filled.RemoveCircle, RevScopeColors.TextSecondary, "Sin ref.", "Sin valor esperado")
+    EstadoCelda.DENTRO -> Aspecto(Icons.Filled.CheckCircle, RevScopeColors.Success, "Within", "Within expected range")
+    EstadoCelda.BAJO -> Aspecto(Icons.Filled.ArrowDownward, RevScopeColors.Danger, "Low", "Below expected range")
+    EstadoCelda.ALTO -> Aspecto(Icons.Filled.ArrowUpward, RevScopeColors.Danger, "High", "Above expected range")
+    EstadoCelda.SIN_REFERENCIA -> Aspecto(Icons.Filled.RemoveCircle, RevScopeColors.TextSecondary, "No ref.", "No expected value")
 }
 
 @Composable

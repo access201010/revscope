@@ -111,7 +111,7 @@ internal fun AlDiaContent(
 ) {
     val escalaLetra = LocalDensity.current.fontScale
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver(titulo = "Vehículo al día", subtitulo = vehiculo?.nombre, onVolver = acciones.onVolver)
+        BarraConVolver(titulo = "Colombian vehicle checks", subtitulo = vehiculo?.nombre, onVolver = acciones.onVolver)
         RejillaAlDia(vehiculo, estados, licenciaVenceEn, mantenimientoNivel, mantenimientoDetalle, zoneBrief, acciones, escalaLetra)
     }
 }
@@ -138,13 +138,20 @@ private fun RejillaAlDia(
             item(span = { GridItemSpan(maxLineSpan) }) { SinVehiculoActivo(acciones.onPerfiles) }
             return@LazyVerticalGrid
         }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Text(
+                "Colombian services only. UK vehicle checks are not supported.",
+                color = RevScopeColors.Warning,
+                style = RevScopeType.bodySmall,
+            )
+        }
         zoneBrief?.let { brief -> item(span = { GridItemSpan(maxLineSpan) }) { ZoneBriefCard(brief) } }
         estados.find(DocumentStatusCalculator.DocType.SOAT)?.let { item { DocCard(it, acciones.onPerfiles) } }
         estados.find(DocumentStatusCalculator.DocType.RTM)?.let {
             item {
                 DocCard(it, acciones.onPerfiles) {
                     TextButton(onClick = acciones.onChequeo) {
-                        Text("Chequeo mecánico", color = RevScopeColors.Accent, style = RevScopeType.label)
+                        Text("Mechanical check", color = RevScopeColors.Accent, style = RevScopeType.label)
                     }
                 }
             }
@@ -165,8 +172,8 @@ private fun RejillaAlDia(
 @Composable
 private fun ZoneBriefCard(brief: com.revscope.core.obd.service.ZoneBriefHolder.ZoneBrief) {
     val fuente = when (brief.source) {
-        com.revscope.core.obd.service.ZoneBriefHolder.Source.COMMUNITY -> "De la comunidad"
-        com.revscope.core.obd.service.ZoneBriefHolder.Source.AI -> "Generado por IA"
+        com.revscope.core.obd.service.ZoneBriefHolder.Source.COMMUNITY -> "From the community"
+        com.revscope.core.obd.service.ZoneBriefHolder.Source.AI -> "AI-generated"
     }
     Surface(shape = RoundedCornerShape(14.dp), color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(14.dp)) {
@@ -215,7 +222,7 @@ private fun DocCardContent(
         )
         if (sinConfigurar) {
             Text(
-                "Toca para configurar",
+                "Tap to set up",
                 color = RevScopeColors.Accent,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
@@ -242,14 +249,14 @@ private fun MultasCard(plate: String?) {
     val context = LocalContext.current
     Surface(shape = RoundedCornerShape(14.dp), color = RevScopeColors.Surface, modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(14.dp)) {
-            TituloConNivel("Multas", NivelConTexto(NivelEstado.SIN_DATO, "Sin consultar"))
+            TituloConNivel("Fines", NivelConTexto(NivelEstado.SIN_DATO, "Not checked"))
             Spacer(Modifier.height(8.dp))
-            Text("Consulta comparendos en el sistema SIMIT", color = RevScopeColors.TextSecondary, fontSize = 12.sp)
+            Text("Check fines on the Colombian SIMIT system", color = RevScopeColors.TextSecondary, fontSize = 12.sp)
             TextButton(
                 onClick = { openSimit(context, plate) },
                 modifier = Modifier.padding(top = 6.dp),
             ) {
-                Text("Consultar en SIMIT", color = RevScopeColors.Accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text("Check SIMIT", color = RevScopeColors.Accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -263,7 +270,7 @@ private fun MaintenanceCard(nivel: DocumentStatusCalculator.Nivel, detalle: Stri
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
     ) {
         Column(Modifier.padding(14.dp)) {
-            TituloConNivel("Mantenimiento", nivelDocumento(nivel))
+            TituloConNivel("Maintenance", nivelDocumento(nivel))
             Spacer(Modifier.height(8.dp))
             Text(detalle, color = RevScopeColors.TextPrimary, fontSize = 12.sp)
         }
@@ -275,15 +282,15 @@ private fun openSimit(context: Context, plate: String?) {
     runCatching {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(SIMIT_URL)))
     }.onFailure {
-        Toast.makeText(context, "No hay navegador disponible", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "No browser available", Toast.LENGTH_SHORT).show()
     }
 }
 
 private fun copyPlateToClipboard(context: Context, plate: String?) {
     if (plate.isNullOrBlank()) return
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboard.setPrimaryClip(ClipData.newPlainText("Placa", plate))
-    Toast.makeText(context, "Placa copiada", Toast.LENGTH_SHORT).show()
+    clipboard.setPrimaryClip(ClipData.newPlainText("Registration", plate))
+    Toast.makeText(context, "Registration copied", Toast.LENGTH_SHORT).show()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -302,7 +309,7 @@ private fun LicenseCard(
             .clickable { showPicker = true },
     ) {
         DocCardContent(status, status.nivel == DocumentStatusCalculator.Nivel.SIN_CONFIGURAR) {
-            Text("Toca para editar", color = RevScopeColors.Accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            Text("Tap to edit", color = RevScopeColors.Accent, fontSize = 12.sp, fontWeight = FontWeight.Bold)
         }
     }
 
@@ -314,10 +321,10 @@ private fun LicenseCard(
                 TextButton(onClick = {
                     onChange(pickerState.selectedDateMillis)
                     showPicker = false
-                }) { Text("Aceptar") }
+                }) { Text("OK") }
             },
             dismissButton = {
-                TextButton(onClick = { showPicker = false }) { Text("Cancelar") }
+                TextButton(onClick = { showPicker = false }) { Text("Cancel") }
             },
         ) {
             DatePicker(state = pickerState)
@@ -328,8 +335,8 @@ private fun LicenseCard(
 @Composable
 private fun SinVehiculoActivo(onOpenProfiles: () -> Unit) {
     EmptyState(
-        mensaje = "Sin vehículo activo. Activa un vehículo en Perfiles para ver el estado de sus documentos.",
-        accion = AccionEstado("Ir a perfiles", onOpenProfiles),
+        mensaje = "No active vehicle. Set one up in Profiles to view its document status.",
+        accion = AccionEstado("Go to Profiles", onOpenProfiles),
         icono = Icons.Default.Verified,
         modifier = Modifier.padding(top = 24.dp),
     )

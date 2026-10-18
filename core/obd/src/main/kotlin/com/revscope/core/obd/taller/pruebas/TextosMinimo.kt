@@ -11,10 +11,10 @@ object TextosMinimo {
     private val RPM_S = TextoBanda.unidad("rpm/s")
 
     val TITULOS_PASO = mapOf(
-        Pasos.MINIMO to "Mínimo",
-        Pasos.RETORNO_1 to "Retorno 1",
-        Pasos.RETORNO_2 to "Retorno 2",
-        Pasos.RETORNO_3 to "Retorno 3",
+        Pasos.MINIMO to "Idle",
+        Pasos.RETORNO_1 to "Throttle return 1",
+        Pasos.RETORNO_2 to "Throttle return 2",
+        Pasos.RETORNO_3 to "Throttle return 3",
     )
 
     fun resultado(a: AnalisisMinimo) = ResultadoPrueba(
@@ -30,34 +30,34 @@ object TextosMinimo {
 
     fun titulo(a: AnalisisMinimo): String = when (a.patron) {
         PatronMinimo.SE_APAGA -> tituloApagones(a)
-        PatronMinimo.INESTABLE -> "Mínimo inestable"
-        PatronMinimo.RETORNO_BAJO -> "Al soltar, las RPM caen demasiado"
-        PatronMinimo.FUERA_DE_BANDA -> "Mínimo estable, pero fuera de la banda"
-        PatronMinimo.TPS_RALENTI_FUERA -> "Mínimo estable, con el TPS de ralentí fuera de la banda de cerrado"
-        PatronMinimo.SIN_RETORNOS -> "Mínimo estable; no se detectaron las aceleradas"
-        PatronMinimo.SIN_DATOS -> "Sin datos suficientes de RPM"
-        PatronMinimo.NORMAL -> "Mínimo estable y buen retorno"
+        PatronMinimo.INESTABLE -> "Unstable idle"
+        PatronMinimo.RETORNO_BAJO -> "RPM drop too low on throttle release"
+        PatronMinimo.FUERA_DE_BANDA -> "Stable idle, outside the reference range"
+        PatronMinimo.TPS_RALENTI_FUERA -> "Stable idle, but TPS at idle is outside the closed-throttle range"
+        PatronMinimo.SIN_RETORNOS -> "Stable idle; no throttle returns detected"
+        PatronMinimo.SIN_DATOS -> "Not enough RPM data"
+        PatronMinimo.NORMAL -> "Stable idle with good return"
     }
 
     private fun tituloApagones(a: AnalisisMinimo): String {
         val enMinimo = a.minimo?.apagones ?: 0
-        val alSoltar = "${a.apagonesAlSoltar} de ${a.retornosValidos.size} veces al soltar el acelerador"
+        val alSoltar = "${a.apagonesAlSoltar} of ${a.retornosValidos.size} times when releasing the throttle"
         return when {
-            enMinimo == 0 -> "Se apagó $alSoltar"
-            a.apagonesAlSoltar == 0 -> "Se apagó en el mínimo sin tocar el acelerador"
-            else -> "Se apagó en el mínimo y $alSoltar"
+            enMinimo == 0 -> "Stalled $alSoltar"
+            a.apagonesAlSoltar == 0 -> "Stalled at idle without touching the throttle"
+            else -> "Stalled at idle and $alSoltar"
         }
     }
 
     // ── Interpretación ──────────────────────────────────────────────────────
 
     private fun interpretacion(a: AnalisisMinimo): String {
-        val m = a.minimo ?: return "No llegaron lecturas de RPM durante el mínimo: sin ellas no hay nada que medir."
+        val m = a.minimo ?: return "No RPM readings were received at idle, so there is nothing to measure."
         return listOfNotNull(
             frasesMinimo(a, m),
             fraseBanda(a),
             fraseRetornos(a),
-            a.ectMediaC?.let { "Motor a ${FormatoTaller.numero(it, 0)} °C durante el mínimo." },
+            a.ectMediaC?.let { "Engine temperature was ${FormatoTaller.numero(it, 0)} °C at idle." },
             compatibilidad(a.patron),
         ).joinToString(" ")
     }
@@ -65,13 +65,13 @@ object TextosMinimo {
     private fun frasesMinimo(a: AnalisisMinimo, m: EstadisticaMinimo): String {
         val deriva = a.comprobacion(ClavesBanda.MINIMO_DERIVA_MAX)
         val base = if (deriva?.cumple == false) {
-            "El mínimo ${if (m.derivaRpmS < 0) "cayó" else "subió"} de ${rpm(m.inicioRpm)} a ${rpm(m.finRpm)} rpm en " +
+            "Idle ${if (m.derivaRpmS < 0) "fell" else "rose"} from ${rpm(m.inicioRpm)} to ${rpm(m.finRpm)} rpm over " +
                 "${FormatoTaller.compacto(FormatoTaller.redondear(m.duracionS, 1))} s (${FormatoTaller.numero(m.derivaRpmS, 0)} $RPM_S)"
         } else {
-            "El mínimo quedó en ${rpm(m.mediaRpm)} rpm de media, con desviación de ${rpm(m.desviacionRpm)} rpm"
+            "Average idle was ${rpm(m.mediaRpm)} rpm, with a variation of ${rpm(m.desviacionRpm)} rpm"
         }
-        val oscila = m.oscilacion?.let { ", y oscila ±${rpm(it.amplitudRpm)} rpm${it.periodoS?.let { p -> " cada ${seg(p)} s" }.orEmpty()}" }
-        return base + oscila.orEmpty() + if (m.inestable) ": inestable${bandasEstabilidad(a)}." else "."
+        val oscila = m.oscilacion?.let { ", oscillating by ±${rpm(it.amplitudRpm)} rpm${it.periodoS?.let { p -> " every ${seg(p)} s" }.orEmpty()}" }
+        return base + oscila.orEmpty() + if (m.inestable) ": unstable${bandasEstabilidad(a)}." else "."
     }
 
     private fun bandasEstabilidad(a: AnalisisMinimo): String {
@@ -84,25 +84,25 @@ object TextosMinimo {
     // Con el mínimo inestable, la media no dice dónde queda el ralentí: la banda se calla.
     private fun fraseBanda(a: AnalisisMinimo): String? {
         val c = mediaFueraDeBanda(a)?.takeIf { it.banda != null } ?: return null
-        return "La media, ${rpm(c.valor ?: 0.0)} rpm, queda ${TextoBanda.lado(c.posicion)} de la banda " +
+        return "The average, ${rpm(c.valor ?: 0.0)} rpm, is ${TextoBanda.lado(c.posicion)} the range " +
             "(${TextoBanda.citar(checkNotNull(c.banda), 0)})."
     }
 
     private fun fraseRetornos(a: AnalisisMinimo): String? {
         val validos = a.retornosValidos
         if (validos.isEmpty()) return null
-        if (a.apagonesAlSoltar > 0) return "Al soltar el acelerador se apagó ${a.apagonesAlSoltar} de ${validos.size} veces."
+        if (a.apagonesAlSoltar > 0) return "The engine stalled ${a.apagonesAlSoltar} out of ${validos.size} times when the throttle was released."
         val peor = validos.minBy { it.valleFraccion ?: 1.0 }
         val tiempos = validos.mapNotNull { it.tiempoS }
-        val vuelta = if (tiempos.isEmpty()) "" else " y volvió al mínimo en ${seg(tiempos.max())} s como mucho"
-        return "Al soltar, el valle más bajo fue de ${rpm(peor.valleRpm ?: 0.0)} rpm " +
-            "(${pct(peor.valleFraccion)} del mínimo)$vuelta."
+        val vuelta = if (tiempos.isEmpty()) "" else " and returned to idle within ${seg(tiempos.max())} s"
+        return "On release, the lowest dip was ${rpm(peor.valleRpm ?: 0.0)} rpm " +
+            "(${pct(peor.valleFraccion)} of idle speed)$vuelta."
     }
 
     private fun compatibilidad(patron: PatronMinimo): String? = when (patron) {
         PatronMinimo.SE_APAGA, PatronMinimo.INESTABLE, PatronMinimo.RETORNO_BAJO ->
-            "Compatible con un mínimo mal controlado: válvula o motor paso a paso del mínimo, cuerpo de aceleración " +
-                "sucio, aire falso o una señal del TPS que la ECU no reconoce como ralentí."
+            "Consistent with poor idle control: idle-control valve or stepper motor, a dirty throttle body, an air leak " +
+                "or a TPS signal the ECU does not recognise as idle."
         else -> null
     }
 
@@ -111,8 +111,8 @@ object TextosMinimo {
     private fun hallazgos(a: AnalisisMinimo): List<String> = buildList {
         val m = a.minimo ?: return@buildList
         if (m.inestable) add(hallazgoInestable(m))
-        if (m.apagones > 0) add("Se apagó ${veces(m.apagones)} en el mínimo sin tocar el acelerador")
-        a.retornos.filter { it.seApago }.takeIf { it.isNotEmpty() }?.let { add("Se apagó al soltar en ${nombres(it)}") }
+        if (m.apagones > 0) add("Stalled ${veces(m.apagones)} at idle without touching the throttle")
+        a.retornos.filter { it.seApago }.takeIf { it.isNotEmpty() }?.let { add("Stalled on throttle release during ${nombres(it)}") }
         addAll(a.retornos.mapNotNull(::hallazgoRetorno))
         hallazgoValle(a)?.let(::add)
         hallazgoBanda(a)?.let(::add)
@@ -121,15 +121,15 @@ object TextosMinimo {
 
     private fun hallazgoInestable(m: EstadisticaMinimo): String {
         val osc = m.oscilacion?.let { ", oscila ±${rpm(it.amplitudRpm)} rpm" }.orEmpty()
-        return "Mínimo inestable: deriva de ${FormatoTaller.numero(m.derivaRpmS, 1)} $RPM_S y desviación de " +
+        return "Unstable idle: drift of ${FormatoTaller.numero(m.derivaRpmS, 1)} $RPM_S and variation of " +
             "${rpm(m.desviacionRpm)} rpm$osc"
     }
 
     private fun hallazgoRetorno(r: RetornoMedido): String? {
         val nombre = TITULOS_PASO[r.clave] ?: r.clave
         return when {
-            !r.acelerada -> "$nombre: no se detectó la acelerada (llegó a ${rpm(r.picoRpm)} rpm); no cuenta"
-            !r.seApago && r.tiempoS == null -> "$nombre: no volvió a ±10 % del mínimo antes de terminar el paso"
+            !r.acelerada -> "$nombre: throttle input not detected (reached ${rpm(r.picoRpm)} rpm); not counted"
+            !r.seApago && r.tiempoS == null -> "$nombre: did not return to within ±10% of idle before the step ended"
             else -> null
         }
     }
@@ -137,13 +137,13 @@ object TextosMinimo {
     private fun hallazgoValle(a: AnalisisMinimo): String? {
         val c = a.comprobacion(ClavesBanda.RETORNO_VALLE_MIN)?.takeIf { !it.cumple && a.apagonesAlSoltar == 0 } ?: return null
         val banda = c.banda?.let { " (${TextoBanda.citar(it, 0)})" }.orEmpty()
-        return "Valle al soltar de ${FormatoTaller.numero(c.valor ?: 0.0, 0)} % del mínimo, por debajo de la banda$banda"
+        return "Throttle-release dip was ${FormatoTaller.numero(c.valor ?: 0.0, 0)}% of idle speed, below the range$banda"
     }
 
     private fun hallazgoBanda(a: AnalisisMinimo): String? {
         val c = mediaFueraDeBanda(a) ?: return null
         val banda = c.banda?.let { " (${TextoBanda.citar(it, 0)})" }.orEmpty()
-        return "Mínimo de ${rpm(c.valor ?: 0.0)} rpm, ${TextoBanda.lado(c.posicion)} de la banda$banda"
+        return "Idle speed of ${rpm(c.valor ?: 0.0)} rpm, ${TextoBanda.lado(c.posicion)} the range$banda"
     }
 
     private fun mediaFueraDeBanda(a: AnalisisMinimo): Comprobacion? {
@@ -155,27 +155,27 @@ object TextosMinimo {
         val t = a.tpsRalenti?.takeIf { it.posicion != null && it.posicion != PosicionEnBanda.DENTRO } ?: return null
         val banda = t.banda?.let { " (${TextoBanda.citar(it, 1)})" }.orEmpty()
         val consecuencia = if (t.posicion == PosicionEnBanda.BAJO) {
-            "la ECU puede no reconocer la posición de ralentí"
+            "the ECU may not recognise the idle position"
         } else {
-            "el acelerador puede no cerrar del todo o el tope estar desajustado"
+            "the throttle may not be closing fully or the stop may be misadjusted"
         }
-        return "TPS en ralentí ${FormatoTaller.numero(t.minV, 2)}-${FormatoTaller.numero(t.maxV, 2)} V, " +
-            "${TextoBanda.lado(t.posicion)} de la banda de cerrado$banda: $consecuencia"
+        return "TPS at idle ${FormatoTaller.numero(t.minV, 2)}–${FormatoTaller.numero(t.maxV, 2)} V, " +
+            "${TextoBanda.lado(t.posicion)} the closed-throttle range$banda: $consecuencia"
     }
 
     private fun siguientePaso(a: AnalisisMinimo): String? {
         val tpsFuera = a.tpsRalenti?.posicion.let { it != null && it != PosicionEnBanda.DENTRO }
         if (tpsFuera && a.patron != PatronMinimo.SIN_DATOS) {
-            return "Corre el barrido del TPS con el motor apagado y mide su señal con el multímetro (plantilla TPS)"
+            return "Run the TPS sweep with the engine off and measure its signal with a multimeter (TPS template)"
         }
         return when (a.patron) {
             PatronMinimo.SE_APAGA, PatronMinimo.INESTABLE, PatronMinimo.RETORNO_BAJO ->
-                "Revisa el cuerpo de aceleración y el control del mínimo, busca entradas de aire falso y repite la " +
-                    "prueba en frío y en caliente para comparar"
+                "Check the throttle body and idle control, look for air leaks, then repeat the test with the engine cold " +
+                    "and warm to compare"
             PatronMinimo.FUERA_DE_BANDA ->
-                "Confirma el mínimo que indica el fabricante para este modelo; si difiere de la banda típica, edítala"
-            PatronMinimo.SIN_RETORNOS -> "Repite la prueba acelerando hasta unas 3 000 rpm en cada retorno"
-            PatronMinimo.SIN_DATOS -> "Revisa que el adaptador siga conectado y repite la prueba"
+                "Check the manufacturer's idle-speed specification for this model; edit the typical range if it differs"
+            PatronMinimo.SIN_RETORNOS -> "Repeat the test, raising the revs to about 3,000 rpm for each return"
+            PatronMinimo.SIN_DATOS -> "Check the adapter is still connected and repeat the test"
             PatronMinimo.TPS_RALENTI_FUERA, PatronMinimo.NORMAL -> null
         }
     }
@@ -185,25 +185,25 @@ object TextosMinimo {
     fun medidas(a: AnalisisMinimo): List<String> {
         val m = a.minimo ?: return emptyList()
         return listOfNotNull(
-            "Mínimo: media ${rpm(m.mediaRpm)} rpm, desviación ${rpm(m.desviacionRpm)} rpm, de ${rpm(m.minRpm)} a " +
-                "${rpm(m.maxRpm)} rpm (${m.n} muestras en ${seg(m.duracionS)} s)",
-            "Deriva: ${FormatoTaller.numero(m.derivaRpmS, 1)} $RPM_S (de ${rpm(m.inicioRpm)} a ${rpm(m.finRpm)} rpm)",
-            "Oscilación: " + (m.oscilacion?.let { o -> "±${rpm(o.amplitudRpm)} rpm${o.periodoS?.let { " cada ${seg(it)} s" }.orEmpty()}" } ?: "no"),
+            "Idle: average ${rpm(m.mediaRpm)} rpm, variation ${rpm(m.desviacionRpm)} rpm, range ${rpm(m.minRpm)}–" +
+                "${rpm(m.maxRpm)} rpm (${m.n} samples over ${seg(m.duracionS)} s)",
+            "Drift: ${FormatoTaller.numero(m.derivaRpmS, 1)} $RPM_S (${rpm(m.inicioRpm)}–${rpm(m.finRpm)} rpm)",
+            "Oscillation: " + (m.oscilacion?.let { o -> "±${rpm(o.amplitudRpm)} rpm${o.periodoS?.let { " every ${seg(it)} s" }.orEmpty()}" } ?: "none"),
             a.tpsRalenti?.let { t ->
-                "TPS en ralentí: ${FormatoTaller.numero(t.minV, 2)}-${FormatoTaller.numero(t.maxV, 2)} V " +
-                    "(media ${FormatoTaller.numero(t.mediaV, 2)} V)"
+                "TPS at idle: ${FormatoTaller.numero(t.minV, 2)}–${FormatoTaller.numero(t.maxV, 2)} V " +
+                    "(average ${FormatoTaller.numero(t.mediaV, 2)} V)"
             },
-            a.ectMediaC?.let { "Motor a ${FormatoTaller.numero(it, 0)} °C durante el mínimo" },
+            a.ectMediaC?.let { "Engine temperature ${FormatoTaller.numero(it, 0)} °C at idle" },
         ) + a.retornos.map(::medidaRetorno)
     }
 
     private fun medidaRetorno(r: RetornoMedido): String {
         val nombre = TITULOS_PASO[r.clave] ?: r.clave
         return when {
-            !r.acelerada -> "$nombre: sin acelerada (máximo ${rpm(r.picoRpm)} rpm)"
-            r.seApago -> "$nombre: pico ${rpm(r.picoRpm)} rpm y se apagó al soltar"
-            else -> "$nombre: pico ${rpm(r.picoRpm)} rpm, valle ${rpm(r.valleRpm ?: 0.0)} rpm (${pct(r.valleFraccion)} del mínimo), " +
-                (r.tiempoS?.let { "volvió en ${seg(it)} s" } ?: "no volvió a ±10 % del mínimo")
+            !r.acelerada -> "$nombre: no throttle input (maximum ${rpm(r.picoRpm)} rpm)"
+            r.seApago -> "$nombre: peak ${rpm(r.picoRpm)} rpm; stalled on release"
+            else -> "$nombre: peak ${rpm(r.picoRpm)} rpm, dip ${rpm(r.valleRpm ?: 0.0)} rpm (${pct(r.valleFraccion)} of idle speed), " +
+                (r.tiempoS?.let { "returned in ${seg(it)} s" } ?: "did not return to within ±10% of idle")
         }
     }
 
@@ -211,10 +211,10 @@ object TextosMinimo {
 
     private fun nombres(retornos: List<RetornoMedido>): String {
         val lista = retornos.map { (TITULOS_PASO[it.clave] ?: it.clave).lowercase() }
-        return if (lista.size == 1) "el ${lista.first()}" else "el ${lista.dropLast(1).joinToString(", el ")} y el ${lista.last()}"
+        return if (lista.size == 1) lista.first() else "${lista.dropLast(1).joinToString(", ")} and ${lista.last()}"
     }
 
-    private fun veces(n: Int) = if (n == 1) "1 vez" else "$n veces"
+    private fun veces(n: Int) = if (n == 1) "once" else "$n times"
 
     private fun rpm(x: Double) = FormatoTaller.numero(x, 0)
 

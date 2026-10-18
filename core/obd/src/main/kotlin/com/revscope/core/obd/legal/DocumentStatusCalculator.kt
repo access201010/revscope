@@ -58,8 +58,8 @@ object DocumentStatusCalculator {
         expiryStatus(DocType.SOAT, "SOAT", documents.soatExpiresAt, nowMs, timeZoneId),
         expiryStatus(DocType.RTM, "Tecnomecánica", documents.rtmExpiresAt, nowMs, timeZoneId),
         picoYPlacaStatus(documents, overrideRules, aiFallbackRules, nowMs),
-        expiryStatus(DocType.TODO_RIESGO, "Todo riesgo", documents.insuranceExpiresAt, nowMs, timeZoneId),
-        expiryStatus(DocType.LICENCIA, "Licencia", documents.licenseExpiresAt, nowMs, timeZoneId),
+        expiryStatus(DocType.TODO_RIESGO, "Comprehensive insurance", documents.insuranceExpiresAt, nowMs, timeZoneId),
+        expiryStatus(DocType.LICENCIA, "Driving licence", documents.licenseExpiresAt, nowMs, timeZoneId),
     )
 
     /** True cuando la ciudad del perfil no tiene reglas curadas vigentes — momento de preguntar a la IA. */
@@ -88,14 +88,14 @@ object DocumentStatusCalculator {
         val picoYPlacaAplicaHoy = picoYPlaca?.nivel == Nivel.VENCIDO || picoYPlaca?.nivel == Nivel.ATENCION
         if (vencidosNoPico.isEmpty() && !picoYPlacaAplicaHoy) return null
         val partes = buildList {
-            vencidosNoPico.forEach { add("${it.titulo} vencido") }
+            vencidosNoPico.forEach { add("${it.titulo} expired") }
             if (picoYPlacaAplicaHoy) add(picoYPlacaBannerPhrase(picoYPlaca))
         }
         return partes.joinToString(" · ")
     }
 
     private fun picoYPlacaBannerPhrase(status: DocStatus?): String =
-        status?.horaLimite?.let { "Pico y placa hasta las $it:00" } ?: "Pico y placa restringido hoy"
+        status?.horaLimite?.let { "Pico y placa restriction until $it:00" } ?: "Pico y placa restriction in force today"
 
     private fun expiryStatus(
         tipo: DocType,
@@ -104,20 +104,20 @@ object DocumentStatusCalculator {
         nowMs: Long,
         timeZoneId: String,
     ): DocStatus {
-        if (expiresAt == null) return DocStatus(tipo, Nivel.SIN_CONFIGURAR, titulo, "Por configurar")
+        if (expiresAt == null) return DocStatus(tipo, Nivel.SIN_CONFIGURAR, titulo, "Not set up")
         val daysUntil = daysBetween(nowMs, expiresAt, timeZoneId)
         return when {
             daysUntil < 0 -> DocStatus(tipo, Nivel.VENCIDO, titulo, vencidoHaceDiasTexto(daysUntil), diasRestantes = daysUntil)
-            daysUntil == 0L -> DocStatus(tipo, Nivel.ATENCION, titulo, "Vence hoy", diasRestantes = daysUntil)
+            daysUntil == 0L -> DocStatus(tipo, Nivel.ATENCION, titulo, "Expires today", diasRestantes = daysUntil)
             daysUntil <= WARNING_THRESHOLD_DAYS ->
-                DocStatus(tipo, Nivel.ATENCION, titulo, "Vence en $daysUntil días", diasRestantes = daysUntil)
-            else -> DocStatus(tipo, Nivel.OK, titulo, "Vence en $daysUntil días", diasRestantes = daysUntil)
+                DocStatus(tipo, Nivel.ATENCION, titulo, "Expires in $daysUntil days", diasRestantes = daysUntil)
+            else -> DocStatus(tipo, Nivel.OK, titulo, "Expires in $daysUntil days", diasRestantes = daysUntil)
         }
     }
 
     private fun vencidoHaceDiasTexto(daysUntil: Long): String {
         val diasVencido = -daysUntil
-        return if (diasVencido == 1L) "Venció hace 1 día" else "Venció hace $diasVencido días"
+        return if (diasVencido == 1L) "Expired 1 day ago" else "Expired $diasVencido days ago"
     }
 
     private fun daysBetween(nowMs: Long, expiresAtMs: Long, timeZoneId: String): Long {
@@ -136,7 +136,7 @@ object DocumentStatusCalculator {
         val plate = documents.plate?.trim()
         val cityId = documents.picoPlacaCity
         if (cityId == null || plate.isNullOrEmpty()) {
-            return DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, "Por configurar")
+            return DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, "Not set up")
         }
         val rules = pickActiveRules(cityId, overrideRules, aiFallbackRules, nowMs)
             ?: return DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, rulesPendientesDetalle(cityId))
@@ -145,13 +145,13 @@ object DocumentStatusCalculator {
             PicoYPlacaEngine.Status.SIN_RESTRICCION ->
                 DocStatus(DocType.PICO_Y_PLACA, Nivel.OK, titulo, sinRestriccionDetalle(documents, rules))
             PicoYPlacaEngine.Status.RESTRINGIDO_HOY_FUERA_DE_HORARIO ->
-                DocStatus(DocType.PICO_Y_PLACA, Nivel.ATENCION, titulo, "No salgas hasta las ${result.endHour}:00", result.endHour)
+                DocStatus(DocType.PICO_Y_PLACA, Nivel.ATENCION, titulo, "Do not drive until ${result.endHour}:00", result.endHour)
             PicoYPlacaEngine.Status.RESTRINGIDO_AHORA ->
-                DocStatus(DocType.PICO_Y_PLACA, Nivel.VENCIDO, titulo, "Hoy tienes restricción hasta las ${result.endHour}:00", result.endHour)
+                DocStatus(DocType.PICO_Y_PLACA, Nivel.VENCIDO, titulo, "Restriction in force until ${result.endHour}:00 today", result.endHour)
             PicoYPlacaEngine.Status.REGLAS_VENCIDAS ->
-                DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, "Actualiza las reglas del semestre")
+                DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, "Update the rules for this period")
             PicoYPlacaEngine.Status.SIN_DATOS ->
-                DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, "Por configurar")
+                DocStatus(DocType.PICO_Y_PLACA, Nivel.SIN_CONFIGURAR, titulo, "Not set up")
         }
     }
 
@@ -171,10 +171,10 @@ object DocumentStatusCalculator {
     }
 
     private fun sinRestriccionDetalle(documents: VehicleDocuments, rules: PicoYPlacaEngine.CityRules): String =
-        if (documents.isMotorcycle && rules.motosExentas) "Motos exentas en ${rules.displayName}" else "Puedes salir"
+        if (documents.isMotorcycle && rules.motosExentas) "Motorbikes exempt in ${rules.displayName}" else "No restriction today"
 
     private fun rulesPendientesDetalle(cityId: String): String {
         val nombre = CityRegistry.CITIES.firstOrNull { it.id == cityId }?.nombre ?: cityId
-        return "Configura la rotación vigente de $nombre en Ajustes (JSON)"
+        return "Set up the current rotation for $nombre in Settings (JSON)"
     }
 }

@@ -73,11 +73,11 @@ class SesionTallerViewModel @Inject constructor(
 
     fun confirmarCierre() = accion {
         val cerrada = registro.cerrarSesion(sesionId)
-        avisar(if (cerrada) "Sesión cerrada: las lecturas nuevas ya no se anotan en ella" else "La sesión ya estaba cerrada")
+        avisar(if (cerrada) "Session closed: new readings will no longer be added" else "The session was already closed")
     }
 
     fun confirmarEliminacion() = accion {
-        if (registro.eliminarSesion(sesionId)) salidas.send(Unit) else avisar("No se pudo eliminar la sesión")
+        if (registro.eliminarSesion(sesionId)) salidas.send(Unit) else avisar("Could not delete the session")
     }
 
     fun guardarNota() = accion {
@@ -85,13 +85,13 @@ class SesionTallerViewModel @Inject constructor(
         if (!sePuedeAgregar() || texto.isBlank()) return@accion
         val guardada = registro.anotarNota(texto) != null
         if (guardada) ui.update { it.copy(nota = "") }
-        avisar(if (guardada) "Nota agregada a la sesión" else "No se pudo guardar la nota")
+        avisar(if (guardada) "Note added to the session" else "Could not save the note")
     }
 
     fun tomarInstantanea() = accion {
         if (!sePuedeAgregar()) return@accion
         val guardada = registro.anotarInstantanea(entorno.lecturas()) != null
-        avisar(if (guardada) "Instantánea de sensores agregada" else "No se pudo guardar la instantánea")
+        avisar(if (guardada) "Sensor snapshot added" else "Could not save the sensor snapshot")
     }
 
     private fun abrirDialogo(dialogo: DialogoSesion) = ui.update { it.copy(dialogo = dialogo, menu = false, hojaAgregar = false) }

@@ -31,7 +31,7 @@ object EvaluadorCelda {
             is Esperado.Banda -> contraBanda(lectura, bandas[esperado.clave])
             is Esperado.EntreCondiciones -> entre(lectura.valor, limitesEntre(cable, esperado, fila, bandas), plantilla, esperado)
             is Esperado.SinValor -> EstadoCelda.SIN_REFERENCIA to esperado.motivo
-            null -> EstadoCelda.SIN_REFERENCIA to "Sin valor esperado en esta condición"
+            null -> EstadoCelda.SIN_REFERENCIA to "No expected value for this condition"
         }
         return EvaluacionCelda(lectura.funcion, lectura.condicion, lectura.valor, lectura.unidad, resultado.first, resultado.second)
     }
@@ -43,8 +43,8 @@ object EvaluadorCelda {
         lecturas.filter { it.funcion == funcion }.associate { it.condicion to it.valor }
 
     private fun contraBanda(lectura: LecturaMultimetro, banda: BandaReferencia?): Pair<EstadoCelda, String> {
-        if (banda == null) return EstadoCelda.SIN_REFERENCIA to "Sin banda de referencia"
-        if (banda.unidad != lectura.unidad) return EstadoCelda.SIN_REFERENCIA to "La banda está en ${banda.unidad}"
+        if (banda == null) return EstadoCelda.SIN_REFERENCIA to "No reference range"
+        if (banda.unidad != lectura.unidad) return EstadoCelda.SIN_REFERENCIA to "The range is in ${banda.unidad}"
         return estadoDe(banda.clasificar(lectura.valor)) to "${TextoBanda.rango(banda, decimales(banda.unidad))} · ${banda.etiquetaOrigen}"
     }
 
@@ -57,8 +57,8 @@ object EvaluadorCelda {
         )
 
     private fun entre(valor: Double, l: Limites, plantilla: PlantillaCableado, e: Esperado.EntreCondiciones): Pair<EstadoCelda, String> {
-        val texto = "Sin banda fija: entre ${etiqueta(plantilla, e.desde)} y ${etiqueta(plantilla, e.hasta)} " +
-            "(la posición no es exacta)"
+        val texto = "No fixed range: between ${etiqueta(plantilla, e.desde)} and ${etiqueta(plantilla, e.hasta)} " +
+            "(position is approximate)"
         val estado = when {
             l.inferior == null && l.superior == null -> EstadoCelda.SIN_REFERENCIA
             l.inferior != null && valor < l.inferior -> EstadoCelda.BAJO

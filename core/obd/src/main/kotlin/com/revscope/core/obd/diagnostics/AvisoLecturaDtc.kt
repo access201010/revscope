@@ -5,9 +5,9 @@ import com.revscope.core.obd.protocol.DtcServicio
 object AvisoLecturaDtc {
 
     const val ACTIVOS_SIN_RESPUESTA =
-        "La ECU no respondió a la lectura de códigos activos (03): esto no confirma que no haya fallas. " +
-            "Vuelve a leer los códigos."
-    const val ENLACE_PERDIDO_AL_FINAL = "Se perdió el enlace al final de la lectura: el freeze frame puede estar incompleto."
+        "The ECU did not respond to the active fault-code request (03): this does not confirm that there are no faults. " +
+            "Read the codes again."
+    const val ENLACE_PERDIDO_AL_FINAL = "Connection was lost at the end of the read: freeze-frame data may be incomplete."
 
     fun de(scan: DtcScan): String? = when {
         !scan.activosConfirmados -> ACTIVOS_SIN_RESPUESTA
@@ -19,19 +19,19 @@ object AvisoLecturaDtc {
     fun sinCodigos(scan: DtcScan): String? {
         if (scan.todos.isNotEmpty() || !scan.activosConfirmados) return null
         val leidos = DtcServicio.entries.filterNot { it in scan.serviciosFallidos }
-        return "Sin códigos ${enumerar(leidos.map(::etiqueta), "ni")}"
+        return "No fault codes ${enumerar(leidos.map(::etiqueta), "or")}"
     }
 
     fun etiqueta(servicio: DtcServicio): String = when (servicio) {
-        DtcServicio.ACTIVOS -> "activos"
-        DtcServicio.PENDIENTES -> "pendientes"
-        DtcServicio.PERMANENTES -> "permanentes"
+        DtcServicio.ACTIVOS -> "active"
+        DtcServicio.PENDIENTES -> "pending"
+        DtcServicio.PERMANENTES -> "permanent"
     }
 
     private fun serviciosSinRespuesta(servicios: Set<DtcServicio>): String {
         val lista = servicios.sortedBy { it.ordinal }.map { "${etiqueta(it)} (${it.comando})" }
-        return "La ECU no respondió a los códigos ${enumerar(lista, "y")}. Algunas ECU no admiten esas lecturas; " +
-            "los activos sí se leyeron."
+        return "The ECU did not respond to ${enumerar(lista, "and")} fault codes. Some ECUs do not support these requests; " +
+            "active codes were read."
     }
 
     private fun enumerar(partes: List<String>, conector: String): String =

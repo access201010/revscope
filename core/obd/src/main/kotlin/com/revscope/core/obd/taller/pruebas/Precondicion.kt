@@ -31,41 +31,41 @@ sealed interface Precondicion {
 
     data object AdaptadorConectado : Precondicion {
         override fun evaluar(ctx: ContextoPrueba) = if (ctx.conectado) {
-            ResultadoPrecondicion("Adaptador conectado", cumple = true)
+            ResultadoPrecondicion("Adapter connected", cumple = true)
         } else {
-            ResultadoPrecondicion("Sin adaptador conectado", cumple = false, "Conecta el adaptador y pon el contacto")
+            ResultadoPrecondicion("No adapter connected", cumple = false, "Connect the adapter and switch on the ignition")
         }
     }
 
     data class MotorApagado(val queHacer: String) : Precondicion {
         override fun evaluar(ctx: ContextoPrueba): ResultadoPrecondicion {
             val rpm = ctx.reciente(ContextoPrueba.PID_RPM)?.value
-                ?: return ResultadoPrecondicion("Motor apagado (sin lectura de RPM)", cumple = true)
-            if (rpm < 1.0) return ResultadoPrecondicion("Motor apagado (RPM = 0)", cumple = true)
-            return ResultadoPrecondicion("Motor encendido (${FormatoTaller.numero(rpm, 0)} rpm)", cumple = false, queHacer)
+                ?: return ResultadoPrecondicion("Engine off (RPM reading unavailable)", cumple = true)
+            if (rpm < 1.0) return ResultadoPrecondicion("Engine off (RPM = 0)", cumple = true)
+            return ResultadoPrecondicion("Engine running (${FormatoTaller.numero(rpm, 0)} rpm)", cumple = false, queHacer)
         }
     }
 
     data class MotorEncendido(val minRpm: Double = MIN_RPM_ENCENDIDO) : Precondicion {
         override fun evaluar(ctx: ContextoPrueba): ResultadoPrecondicion {
             val rpm = ctx.reciente(ContextoPrueba.PID_RPM)?.value
-                ?: return ResultadoPrecondicion("Sin lectura de RPM", cumple = false, ENCENDER)
-            if (rpm > minRpm) return ResultadoPrecondicion("Motor encendido (${FormatoTaller.numero(rpm, 0)} rpm)", cumple = true)
-            return ResultadoPrecondicion("Motor apagado o a punto de apagarse (${FormatoTaller.numero(rpm, 0)} rpm)", cumple = false, ENCENDER)
+                ?: return ResultadoPrecondicion("No RPM reading", cumple = false, ENCENDER)
+            if (rpm > minRpm) return ResultadoPrecondicion("Engine running (${FormatoTaller.numero(rpm, 0)} rpm)", cumple = true)
+            return ResultadoPrecondicion("Engine off or about to stall (${FormatoTaller.numero(rpm, 0)} rpm)", cumple = false, ENCENDER)
         }
 
         private companion object {
             const val MIN_RPM_ENCENDIDO = 400.0
-            const val ENCENDER = "Enciende el motor y déjalo en mínimo sin tocar el acelerador"
+            const val ENCENDER = "Start the engine and let it idle without touching the throttle"
         }
     }
 
     // La ECU no informa la marcha por OBD: lo confirma el técnico.
     data object EnNeutro : Precondicion {
         override fun evaluar(ctx: ContextoPrueba) = ResultadoPrecondicion(
-            "Caja en neutro: confírmalo tú (la ECU no lo informa)",
+            "Gearbox in neutral: please confirm (the ECU does not report this)",
             cumple = true,
-            "Vas a acelerar hasta unas 3 000 rpm: pon la caja en neutro antes de empezar",
+            "You will rev the engine to about 3,000 rpm: put the gearbox in neutral before starting",
             aviso = true,
         )
     }
@@ -79,20 +79,20 @@ sealed interface Precondicion {
             val ect = ctx.reciente(PID_ECT)?.value
             val iat = ctx.reciente(PID_IAT)?.value
             if (ect == null || iat == null) return sinTemperaturas()
-            val medidas = "motor ${grados(ect)}, aire ${grados(iat)}"
-            if (ect - iat < DIFERENCIA_MAX_C) return ResultadoPrecondicion("Motor frío ($medidas)", cumple = true)
+            val medidas = "engine ${grados(ect)}, air ${grados(iat)}"
+            if (ect - iat < DIFERENCIA_MAX_C) return ResultadoPrecondicion("Cold engine ($medidas)", cumple = true)
             return ResultadoPrecondicion(
-                "Motor tibio ($medidas): la prueba seguirá como «arranque tibio»",
+                "Warm engine ($medidas): this will be treated as a warm start",
                 cumple = true,
-                "Para un arranque en frío de verdad, repítela tras el reposo de la noche (≥ 6 h, típico)",
+                "For a true cold start, repeat after leaving the engine overnight (typically at least 6 hours)",
                 aviso = true,
             )
         }
 
         private fun sinTemperaturas() = ResultadoPrecondicion(
-            "Sin lectura de la temperatura del motor o del aire",
+            "No engine or intake-air temperature reading",
             cumple = true,
-            "Se decidirá con el paso de contacto; si la ECU no las reporta, el resultado no dirá si estaba frío",
+            "The ignition-on step will determine this; if the ECU does not report them, the result cannot confirm whether the engine was cold",
             aviso = true,
         )
 
@@ -105,9 +105,9 @@ sealed interface Precondicion {
     // No se puede leer si la farola está prendida: se avisa para que el voltaje en reposo se lea con esa carga.
     data object LucesConContacto : Precondicion {
         override fun evaluar(ctx: ContextoPrueba) = ResultadoPrecondicion(
-            "Farola y luces: en muchas motos la farola queda encendida con el contacto (AHO)",
+            "Headlamp and lights: on many motorbikes the headlamp stays on with the ignition (AHO)",
             cumple = true,
-            "El voltaje en reposo baja por eso y la banda lo tiene en cuenta; en un carro, apaga las luces antes de empezar",
+            "This lowers the resting voltage and is accounted for in the range; switch the lights off before starting on a car",
             aviso = true,
         )
     }
@@ -115,12 +115,12 @@ sealed interface Precondicion {
     // Sin PID 33 la prueba sigue con el barómetro del teléfono o la altitud GPS, que es una estimación.
     data object BarometricaDisponible : Precondicion {
         override fun evaluar(ctx: ContextoPrueba) = if (ctx.soportado(PID_BARO)) {
-            ResultadoPrecondicion("Presión barométrica de la ECU disponible (PID $PID_BARO)", cumple = true)
+            ResultadoPrecondicion("ECU barometric pressure available (PID $PID_BARO)", cumple = true)
         } else {
             ResultadoPrecondicion(
-                "La ECU no informa la presión barométrica (PID $PID_BARO)",
+                "The ECU does not report barometric pressure (PID $PID_BARO)",
                 cumple = true,
-                "Se usará el barómetro del teléfono o, si no tiene, la altitud GPS (estimada, ±3 kPa): activa la ubicación",
+                "The phone's barometer will be used, or GPS altitude if it has none (estimated, ±3 kPa): enable location",
                 aviso = true,
             )
         }
@@ -131,21 +131,21 @@ sealed interface Precondicion {
     data object MotoDetenida : Precondicion {
         override fun evaluar(ctx: ContextoPrueba): ResultadoPrecondicion {
             val kmh = ctx.velocidadKmh()
-                ?: return ResultadoPrecondicion("Moto detenida (sin dato de velocidad: confírmalo tú)", cumple = true)
-            if (kmh <= 0.0) return ResultadoPrecondicion("Moto detenida (0 km/h)", cumple = true)
+                ?: return ResultadoPrecondicion("Motorbike stationary (no speed reading: please confirm)", cumple = true)
+            if (kmh <= 0.0) return ResultadoPrecondicion("Motorbike stationary (0 km/h)", cumple = true)
             return ResultadoPrecondicion(
-                "Moto en movimiento (${FormatoTaller.numero(kmh, 0)} km/h)",
+                "Motorbike moving (${FormatoTaller.numero(kmh, 0)} km/h)",
                 cumple = false,
-                "Detén la moto: la prueba se hace con la moto quieta",
+                "Stop the motorbike: this test must be carried out while stationary",
             )
         }
     }
 
     data class PidDisponible(val pid: String, val nombre: String, val alternativa: String) : Precondicion {
         override fun evaluar(ctx: ContextoPrueba) = if (ctx.soportado(pid)) {
-            ResultadoPrecondicion("$nombre disponible en esta ECU (PID $pid)", cumple = true)
+            ResultadoPrecondicion("$nombre available on this ECU (PID $pid)", cumple = true)
         } else {
-            ResultadoPrecondicion("$nombre no disponible en esta ECU (PID $pid)", cumple = false, alternativa)
+            ResultadoPrecondicion("$nombre unavailable on this ECU (PID $pid)", cumple = false, alternativa)
         }
     }
 }

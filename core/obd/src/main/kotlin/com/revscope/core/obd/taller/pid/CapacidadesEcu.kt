@@ -55,12 +55,12 @@ data class CapacidadesEcu(
         }
 
         private fun nombreProtocolo(codigo: Char?): String = when (codigo) {
-            '0' -> "Automático (sin protocolo detectado)"
+            '0' -> "Automatic (protocol not detected)"
             '1' -> "SAE J1850 PWM"
             '2' -> "SAE J1850 VPW"
             '3' -> "ISO 9141-2 (K-line)"
-            '4' -> "ISO 14230-4 (K-line, inicio a 5 baudios)"
-            '5' -> "ISO 14230-4 (K-line, inicio rápido)"
+            '4' -> "ISO 14230-4 (K-line, 5-baud initialisation)"
+            '5' -> "ISO 14230-4 (K-line, fast initialisation)"
             '6' -> "ISO 15765-4 CAN (11 bits, 500 kbit/s)"
             '7' -> "ISO 15765-4 CAN (29 bits, 500 kbit/s)"
             '8' -> "ISO 15765-4 CAN (11 bits, 250 kbit/s)"
@@ -68,7 +68,7 @@ data class CapacidadesEcu(
             'A' -> "SAE J1939 CAN (29 bits, 250 kbit/s)"
             'B' -> "USER1 CAN (11 bits, 125 kbit/s)"
             'C' -> "USER2 CAN (11 bits, 50 kbit/s)"
-            else -> "Protocolo no identificado"
+            else -> "Unidentified protocol"
         }
 
         private fun normalizarPids(pids: Collection<String>): List<String> = pids
@@ -85,17 +85,17 @@ data class CapacidadesEcu(
         }
 
         private fun tasaEsperada(codigo: Char?): String = when (codigo) {
-            in CODIGOS_K_LINE -> "Baja: una petición por vez; mídela en la captura"
-            in CODIGOS_CAN -> "Alta; depende de la ECU y de los PIDs solicitados"
-            '1', '2' -> "Moderada; depende del adaptador y de la ECU"
-            else -> "No estimada; mídela en la captura"
+            in CODIGOS_K_LINE -> "Low: one request at a time; measure it during capture"
+            in CODIGOS_CAN -> "High; depends on the ECU and requested PIDs"
+            '1', '2' -> "Moderate; depends on the adapter and ECU"
+            else -> "Not estimated; measure it during capture"
         }
 
         private fun explicacion(codigo: Char?): String = if (codigo in CODIGOS_K_LINE) {
-            "Las ECUs de moto por K-line (p. ej. Delphi MT05) exponen pocos PIDs; " +
-                "RevScope muestra solo los que la ECU anuncia."
+            "K-line motorbike ECUs (for example, Delphi MT05) expose few PIDs; " +
+                "RevScope shows only those advertised by the ECU."
         } else {
-            "RevScope muestra solo los PIDs que la ECU anuncia."
+            "RevScope shows only the PIDs advertised by the ECU."
         }
     }
 }

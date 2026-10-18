@@ -29,24 +29,24 @@ object CatalogoPruebas {
         precondiciones = listOf(
             Precondicion.AdaptadorConectado,
             Precondicion.MotorApagado(
-                "Apaga el motor y deja el contacto puesto: a fondo con el motor encendido no es un barrido seguro",
+                "Switch off the engine but leave the ignition on: opening the throttle fully with the engine running is not safe",
             ),
             Precondicion.MotoDetenida,
             Precondicion.PidDisponible(
                 AnalizadorBarridoTps.PID_TPS,
                 "TPS",
-                "Mide la señal del TPS con el multímetro (plantilla TPS)",
+                "Measure the TPS signal with the multimeter (TPS template)",
             ),
         ),
         pasos = listOf(
-            sostener(Pasos.CERRADO_1, "Suelta el acelerador por completo y no lo toques"),
-            sostener(Pasos.MEDIO, "Lleva el acelerador a la mitad del recorrido y sostenlo quieto"),
-            sostener(Pasos.A_FONDO, "Abre el acelerador hasta el tope y sostenlo"),
-            sostener(Pasos.CERRADO_2, "Suelta el acelerador por completo otra vez"),
+            sostener(Pasos.CERRADO_1, "Release the throttle completely and do not touch it"),
+            sostener(Pasos.MEDIO, "Move the throttle halfway and hold it steady"),
+            sostener(Pasos.A_FONDO, "Open the throttle fully and hold it there"),
+            sostener(Pasos.CERRADO_2, "Release the throttle completely again"),
             PasoPrueba(
                 clave = Pasos.BARRIDO_LENTO,
                 titulo = TextosBarridoTps.TITULOS_PASO.getValue(Pasos.BARRIDO_LENTO),
-                instruccion = "De cerrado a fondo y de vuelta, despacio y parejo",
+                instruccion = "Move slowly and steadily from fully closed to fully open, then back again",
                 modo = ModoPaso.Grabar(BARRIDO_LENTO_MS),
                 descartarInicioMs = 0,
             ),
@@ -62,13 +62,13 @@ object CatalogoPruebas {
             Precondicion.MotorEncendido(),
             Precondicion.MotoDetenida,
             Precondicion.EnNeutro,
-            Precondicion.PidDisponible(AnalizadorMinimo.PID_RPM, "RPM", "Sin RPM no se puede medir el mínimo: revisa el enlace con la ECU"),
+                Precondicion.PidDisponible(AnalizadorMinimo.PID_RPM, "RPM", "Idle speed cannot be measured without RPM: check the connection to the ECU"),
         ),
         pasos = listOf(
             PasoPrueba(
                 clave = PasosMinimo.MINIMO,
                 titulo = TextosMinimo.TITULOS_PASO.getValue(PasosMinimo.MINIMO),
-                instruccion = "No toques el acelerador: deja el motor en mínimo",
+                instruccion = "Do not touch the throttle: let the engine idle",
                 modo = ModoPaso.Grabar(MINIMO_MS),
             ),
         ) + PasosMinimo.RETORNOS.map(::retorno),
@@ -81,27 +81,27 @@ object CatalogoPruebas {
         pidsOpcionales = listOf(AnalizadorArranqueFrio.PID_TPS, AnalizadorArranqueFrio.PID_AMBIENTE),
         precondiciones = listOf(
             Precondicion.AdaptadorConectado,
-            Precondicion.MotorApagado("Apaga el motor y deja el contacto puesto: la prueba empieza antes de arrancar"),
+            Precondicion.MotorApagado("Switch off the engine but leave the ignition on: the test starts before you start the engine"),
             Precondicion.MotoDetenida,
             Precondicion.MotorFrio,
             Precondicion.PidDisponible(
                 AnalizadorArranqueFrio.PID_ECT,
-                "Temperatura del motor",
-                "Sin ella no se puede seguir el calentamiento: mide el sensor con el multímetro (plantilla ECT)",
+                "Engine temperature",
+                "Warm-up cannot be tracked without it: measure the sensor with the multimeter (ECT template)",
             ),
         ),
         pasos = listOf(
             PasoPrueba(
                 clave = PasosArranque.CONTACTO,
                 titulo = TextosArranqueFrio.TITULOS_PASO.getValue(PasosArranque.CONTACTO),
-                instruccion = "Contacto puesto y motor apagado: no arranques todavía",
+                instruccion = "Ignition on, engine off: do not start it yet",
                 modo = ModoPaso.Grabar(CONTACTO_MS),
                 pidPrincipal = AnalizadorArranqueFrio.PID_ECT,
             ),
             PasoPrueba(
                 clave = PasosArranque.ARRANQUE,
                 titulo = TextosArranqueFrio.TITULOS_PASO.getValue(PasosArranque.ARRANQUE),
-                instruccion = "Arranca ahora, como lo haces siempre",
+                instruccion = "Start the engine as you normally would",
                 modo = ModoPaso.Accion(ARRANQUE_MAX_MS),
                 descartarInicioMs = 0,
                 terminarCuando = CriterioFin(AnalizadorArranqueFrio::arrancoSostenido),
@@ -110,7 +110,7 @@ object CatalogoPruebas {
             PasoPrueba(
                 clave = PasosArranque.CALENTAMIENTO,
                 titulo = TextosArranqueFrio.TITULOS_PASO.getValue(PasosArranque.CALENTAMIENTO),
-                instruccion = "Déjalo en mínimo sin acelerar; puedes terminar antes de llegar a 60 °C",
+                instruccion = "Let it idle without revving; you can finish before it reaches 60 °C",
                 modo = ModoPaso.GrabarHasta(CALENTAMIENTO_MAX_MS),
                 descartarInicioMs = 0,
                 terminarCuando = CriterioFin(::calentado),
@@ -125,7 +125,7 @@ object CatalogoPruebas {
         pids = listOf(AnalizadorBateria.PID_VOLTAJE),
         precondiciones = listOf(
             Precondicion.AdaptadorConectado,
-            Precondicion.MotorApagado("Apaga el motor y deja el contacto puesto: la prueba mide el reposo antes de arrancar"),
+            Precondicion.MotorApagado("Switch off the engine but leave the ignition on: the test measures the battery at rest before starting"),
             Precondicion.MotoDetenida,
             Precondicion.LucesConContacto,
         ),
@@ -133,26 +133,26 @@ object CatalogoPruebas {
             PasoPrueba(
                 clave = PasosBateria.CONTACTO,
                 titulo = TextosBateria.TITULOS_PASO.getValue(PasosBateria.CONTACTO),
-                instruccion = "Contacto puesto y motor apagado: no arranques todavía",
+                instruccion = "Ignition on, engine off: do not start it yet",
                 modo = ModoPaso.Grabar(CONTACTO_MS),
             ),
             PasoPrueba(
                 clave = PasosBateria.ARRANQUE,
                 titulo = TextosBateria.TITULOS_PASO.getValue(PasosBateria.ARRANQUE),
-                instruccion = "Arranca ahora, como lo haces siempre",
+                instruccion = "Start the engine as you normally would",
                 modo = ModoPaso.Grabar(RAFAGA_ARRANQUE_MS),
                 descartarInicioMs = 0,
             ),
             PasoPrueba(
                 clave = PasosBateria.MINIMO,
                 titulo = TextosBateria.TITULOS_PASO.getValue(PasosBateria.MINIMO),
-                instruccion = "Déjalo en mínimo sin acelerar",
+                instruccion = "Let the engine idle without revving",
                 modo = ModoPaso.Grabar(CARGA_MINIMO_MS),
             ),
             PasoPrueba(
                 clave = PasosBateria.RPM_ALTAS,
                 titulo = TextosBateria.TITULOS_PASO.getValue(PasosBateria.RPM_ALTAS),
-                instruccion = "Acelera en neutro hasta unas 3 000-4 000 rpm y sostenlas",
+                instruccion = "In neutral, raise the revs to about 3,000–4,000 rpm and hold them there",
                 modo = ModoPaso.Sostener(RPM_ALTAS_MS),
             ),
         ),
@@ -167,12 +167,12 @@ object CatalogoPruebas {
         pidsOpcionales = listOf(AnalizadorMapBaro.PID_BARO),
         precondiciones = listOf(
             Precondicion.AdaptadorConectado,
-            Precondicion.MotorApagado("Apaga el motor y deja el contacto puesto: con el motor girando hay vacío y el MAP baja"),
+            Precondicion.MotorApagado("Switch off the engine but leave the ignition on: a running engine creates vacuum and lowers the MAP reading"),
             Precondicion.MotoDetenida,
             Precondicion.PidDisponible(
                 AnalizadorMapBaro.PID_MAP,
                 "MAP",
-                "Mide la señal del MAP con el multímetro (plantilla MAP)",
+                "Measure the MAP signal with the multimeter (MAP template)",
             ),
             Precondicion.BarometricaDisponible,
         ),
@@ -180,7 +180,7 @@ object CatalogoPruebas {
             PasoPrueba(
                 clave = PasosMap.CONTACTO,
                 titulo = TextosMapBaro.TITULOS_PASO.getValue(PasosMap.CONTACTO),
-                instruccion = "Contacto puesto y motor apagado: no toques el acelerador",
+                instruccion = "Ignition on, engine off: do not touch the throttle",
                 modo = ModoPaso.Grabar(CONTACTO_MS),
             ),
         ),
@@ -197,7 +197,7 @@ object CatalogoPruebas {
     private fun retorno(clave: String) = PasoPrueba(
         clave = clave,
         titulo = TextosMinimo.TITULOS_PASO.getValue(clave),
-        instruccion = "Acelera hasta unas 3 000 rpm y suelta de golpe",
+        instruccion = "Raise the revs to about 3,000 rpm, then release the throttle sharply",
         modo = ModoPaso.Grabar(RETORNO_MS),
         descartarInicioMs = 0,
     )

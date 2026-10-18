@@ -8,7 +8,7 @@ import java.util.Locale
 // Meses propios: el nombre corto del mes no depende de los datos de locale del teléfono ni del JDK de los tests.
 internal object FechasTaller {
 
-    private val MESES = listOf("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic")
+    private val MESES = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
     fun hora(instante: Long, zona: ZoneId): String =
         en(instante, zona).let { String.format(Locale.ROOT, "%02d:%02d", it.hour, it.minute) }

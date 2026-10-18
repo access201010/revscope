@@ -127,7 +127,7 @@ private fun accionesDe(
 @Composable
 internal fun DtcCenterContent(pantalla: DtcPantallaUi, acciones: AccionesDtc) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver(titulo = "Códigos de falla", subtitulo = pantalla.vehiculo, onVolver = acciones.onVolver)
+        BarraConVolver(titulo = "Fault codes", subtitulo = pantalla.vehiculo, onVolver = acciones.onVolver)
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -151,14 +151,14 @@ private fun AccionesLectura(pantalla: DtcPantallaUi, acciones: AccionesDtc) {
                     contentColor = RevScopeColors.Background,
                 ),
                 modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-            ) { Text("Leer códigos", style = RevScopeType.label, textAlign = TextAlign.Center) }
+            ) { Text("Read codes", style = RevScopeType.label, textAlign = TextAlign.Center) }
             OutlinedButton(
                 onClick = acciones.onBorrar,
                 enabled = pantalla.puedeBorrar && !pantalla.ocupado,
                 modifier = Modifier.weight(1f).heightIn(min = 48.dp),
             ) {
                 val color = if (pantalla.puedeBorrar) RevScopeColors.Danger else RevScopeColors.TextMuted
-                Text("Borrar códigos", color = color, style = RevScopeType.label, textAlign = TextAlign.Center)
+                Text("Clear codes", color = color, style = RevScopeType.label, textAlign = TextAlign.Center)
             }
         }
         if (pantalla.hayCodigos) pantalla.detalle.bloqueoBorrado?.let { MotivoBorradoDeshabilitado(it) }
@@ -168,8 +168,8 @@ private fun AccionesLectura(pantalla: DtcPantallaUi, acciones: AccionesDtc) {
 private fun LazyListScope.contenidoSegunEstado(pantalla: DtcPantallaUi, acciones: AccionesDtc) {
     when (val s = pantalla.estado) {
         DtcUiState.Idle -> item(key = "vacio") { SinLectura() }
-        DtcUiState.Reading -> item(key = "cargando") { LoadingContent("Leyendo códigos de falla…") }
-        DtcUiState.Clearing -> item(key = "cargando") { LoadingContent("Borrando códigos y releyendo la ECU…") }
+        DtcUiState.Reading -> item(key = "cargando") { LoadingContent("Reading fault codes…") }
+        DtcUiState.Clearing -> item(key = "cargando") { LoadingContent("Clearing codes and rereading the ECU…") }
         is DtcUiState.Borrado -> item(key = "borrado") { ResultadoBorrado(s.resultado) }
         is DtcUiState.Error -> item(key = "error") { ErrorState(s.message, onReintentar = acciones.onLeer) }
         is DtcUiState.HasCodes -> lecturaConCodigos(s.codes, pantalla, acciones)
@@ -203,8 +203,7 @@ private fun LazyListScope.lecturaConCodigos(codes: List<DtcCodeUi>, pantalla: Dt
 @Composable
 private fun SinLectura() {
     EmptyState(
-        mensaje = "Todavía no se han leído los códigos. Con el contacto puesto y el adaptador conectado, " +
-            "toca «Leer códigos».",
+        mensaje = "No codes have been read yet. Switch on the ignition, connect the adapter and tap Read codes.",
         icono = Icons.AutoMirrored.Filled.ManageSearch,
     )
 }

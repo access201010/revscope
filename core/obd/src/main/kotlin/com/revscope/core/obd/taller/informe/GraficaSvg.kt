@@ -42,7 +42,7 @@ object GraficaSvg {
     ): String {
         val reducidas = series.map { it.copy(puntos = reducir(it.puntos.sortedBy(PuntoGrafica::x))) }
         val puntos = reducidas.flatMap(SerieGrafica::puntos)
-        if (puntos.isEmpty()) return vacia(ancho, alto, "Sin datos para graficar")
+        if (puntos.isEmpty()) return vacia(ancho, alto, "No data to plot")
         val limites = Limites(
             minX = puntos.minOf(PuntoGrafica::x),
             maxX = puntos.maxOf(PuntoGrafica::x),
@@ -50,7 +50,7 @@ object GraficaSvg {
             maxY = puntos.maxOf(PuntoGrafica::y),
         ).conMargen()
         return buildString {
-            append(cabecera(ancho, alto, "Gráfica de las lecturas registradas"))
+            append(cabecera(ancho, alto, "Graph of recorded readings"))
             append(ejes(ancho, alto, limites))
             tramos.forEachIndexed { indice, tramo -> append(tramo(tramo, indice, limites, ancho, alto)) }
             reducidas.forEachIndexed { indice, serie ->
@@ -72,10 +72,10 @@ object GraficaSvg {
     }
 
     fun pesas(pesas: List<PesaGrafica>, ancho: Int = 900): String {
-        if (pesas.isEmpty()) return vacia(ancho, 120, "Sin mediciones con multímetro")
+        if (pesas.isEmpty()) return vacia(ancho, 120, "No multimeter readings")
         val alto = 48 + pesas.size * 72
         return buildString {
-            append(cabecera(ancho, alto, "Medido frente a la banda de referencia"))
+            append(cabecera(ancho, alto, "Measured against the reference range"))
             pesas.forEachIndexed { indice, pesa -> append(pesa(pesa, indice, ancho)) }
             append("</svg>")
         }
@@ -125,9 +125,9 @@ object GraficaSvg {
                 "${FormatoTaller.numero(pesa.minimo, 2)}–${FormatoTaller.numero(pesa.maximo, 2)} ${pesa.unidad}"
             pesa.minimo != null -> "≥ ${FormatoTaller.numero(pesa.minimo, 2)} ${pesa.unidad}"
             pesa.maximo != null -> "≤ ${FormatoTaller.numero(pesa.maximo, 2)} ${pesa.unidad}"
-            else -> "sin banda"
+            else -> "no range"
         }
-        return "Medido ${FormatoTaller.numero(pesa.medido, 2)} ${pesa.unidad} · $banda · ${pesa.origen}"
+        return "Measured ${FormatoTaller.numero(pesa.medido, 2)} ${pesa.unidad} · $banda · ${pesa.origen}"
     }
 
     private fun cabecera(ancho: Int, alto: Int, descripcion: String): String =

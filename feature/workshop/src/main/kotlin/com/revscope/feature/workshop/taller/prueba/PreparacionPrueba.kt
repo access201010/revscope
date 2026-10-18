@@ -45,10 +45,10 @@ import com.revscope.core.obd.taller.pruebas.ReferenciaVoltaje
 
 @Composable
 internal fun ColumnScope.ElegirPrueba(fase: FasePantalla.Elegir, acciones: AccionesPrueba) {
-    BarraConVolver(titulo = "Pruebas guiadas", onVolver = acciones.onVolver)
+    BarraConVolver(titulo = "Guided tests", onVolver = acciones.onVolver)
     CuerpoDesplazable {
         Text(
-            "Paso a paso, leyendo a la tasa máxima y con veredicto. Si hay una sesión abierta, el resultado queda en ella.",
+            "Step-by-step tests that read at the maximum rate and provide a verdict. Results are added to any open session.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
@@ -73,7 +73,7 @@ private fun TarjetaOpcion(opcion: OpcionPrueba, onClick: () -> Unit) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(opcion.tipo.titulo, color = RevScopeColors.TextPrimary, style = RevScopeType.label)
                 Text(opcion.descripcion, color = RevScopeColors.TextSecondary, style = RevScopeType.body)
-                if (!opcion.disponible) Text("Llega en una próxima versión", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+                if (!opcion.disponible) Text("Coming in a future release", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
             }
         }
     }
@@ -86,25 +86,25 @@ internal fun ColumnScope.PreparacionPrueba(fase: FasePantalla.Preparacion, estad
     BarraConVolver(titulo = fase.tipo.titulo, subtitulo = estado.vehiculo, onVolver = acciones.onVolver)
     CuerpoDesplazable {
         Text(fase.descripcion, color = RevScopeColors.TextPrimary, style = RevScopeType.body)
-        Seccion("Antes de empezar")
+        Seccion("Before you start")
         if (fase.precondiciones.isEmpty()) {
-            Text("Comprobando el adaptador y la moto…", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+            Text("Checking the adapter and motorbike…", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
         }
         fase.precondiciones.forEach { FilaPrecondicion(it) }
-        Seccion("Pasos")
+        Seccion("Steps")
         fase.pasos.forEachIndexed { i, paso ->
             Text("${i + 1}. $paso", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
         }
-        Seccion("Ajustes")
+        Seccion("Settings")
         if (fase.usaVref) FilaVref(estado.vref, acciones.onPedirVref)
         if (fase.usaDesfase) FilaDesfase(estado.desfase, acciones.onPedirDesfase)
         FilaVoz(estado.voz, acciones.onVoz)
     }
     PieConAccion(
-        texto = "Empezar prueba",
+        texto = "Start test",
         onClick = acciones.onEmpezar,
         habilitado = fase.listas && !estado.ocupado,
-        aviso = if (fase.listas || fase.precondiciones.isEmpty()) null else "Resuelve lo marcado para empezar.",
+        aviso = if (fase.listas || fase.precondiciones.isEmpty()) null else "Resolve the flagged items before starting.",
     )
 }
 
@@ -127,14 +127,14 @@ private fun FilaPrecondicion(item: ItemPrecondicion) {
 private fun marcaPrecondicion(item: ItemPrecondicion): Triple<ImageVector, Color, String> = when {
     !item.cumple -> Triple(Icons.Filled.Cancel, RevScopeColors.Danger, "No cumple")
     item.aviso -> Triple(Icons.Filled.Warning, RevScopeColors.Warning, "Aviso")
-    else -> Triple(Icons.Filled.CheckCircle, RevScopeColors.Success, "Cumple")
+    else -> Triple(Icons.Filled.CheckCircle, RevScopeColors.Success, "Pass")
 }
 
 @Composable
 private fun FilaVref(vref: ReferenciaVoltaje, onCambiar: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Column(Modifier.weight(1f)) {
-            Text("Referencia para pasar % a V", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
+            Text("Reference voltage for converting % to V", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
             Text(
                 "${FormatoPosicion.voltios(vref.voltios)} · ${vref.origen}",
                 color = RevScopeColors.TextSecondary,
@@ -155,8 +155,8 @@ internal fun FilaVoz(voz: Boolean, onVoz: (Boolean) -> Unit) {
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp).toggleable(value = voz, role = Role.Switch, onValueChange = onVoz),
     ) {
         Column(Modifier.weight(1f)) {
-            Text("Guía por voz", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
-            Text("Dice cada paso y la cuenta: las manos van en el acelerador", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+            Text("Voice guidance", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
+            Text("Reads out each step and countdown so your hands can stay on the throttle", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
         }
         Switch(
             checked = voz,

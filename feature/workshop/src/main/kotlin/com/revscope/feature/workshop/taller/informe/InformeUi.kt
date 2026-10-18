@@ -2,7 +2,7 @@ package com.revscope.feature.workshop.taller.informe
 
 data class InformeUi(
     val cargando: Boolean = true,
-    val titulo: String = "Informe de taller",
+    val titulo: String = "Workshop report",
     val html: String = "",
     val interpretacion: String = "",
     val editorVisible: Boolean = false,

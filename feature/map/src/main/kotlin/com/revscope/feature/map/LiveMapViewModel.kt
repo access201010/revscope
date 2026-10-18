@@ -335,7 +335,7 @@ class LiveMapViewModel @Inject constructor(
     /** Propone mi destino fijado a toda la sala — botón "Compartir con la sala" del chip de ruta. */
     fun shareCurrentDestination() {
         val dest = _destination.value ?: return
-        roomClient.shareDestination(dest.lat, dest.lon, _destinationName.value ?: "Destino")
+        roomClient.shareDestination(dest.lat, dest.lon, _destinationName.value ?: "Destination")
     }
 
     /** Radar hacia el que se dirige el vehículo (cono ±60°, <1 km) — null si ninguno aplica. */

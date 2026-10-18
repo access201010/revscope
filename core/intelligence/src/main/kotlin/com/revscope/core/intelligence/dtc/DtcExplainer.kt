@@ -8,7 +8,7 @@ import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
 private const val MAX_TOKENS = 350
-private const val SYSTEM_PROMPT = "Eres un mecánico experto que explica fallas de motor de forma clara y concisa."
+private const val SYSTEM_PROMPT = "You are an expert mechanic. Explain vehicle faults clearly and concisely in British English."
 
 /**
  * Explains DTC fault codes in plain language using the user's configured AI provider
@@ -82,24 +82,24 @@ class DtcExplainer(private val providerProvider: suspend () -> AiProvider?) {
             .joinToString("\n") { "  PID ${it.pid}: ${it.value} ${it.unit}" }
 
         return buildString {
-            appendLine("Código de falla OBD-II: $dtcCode")
+            appendLine("OBD-II fault code: $dtcCode")
             if (contextText.isNotBlank()) {
-                appendLine("Lecturas actuales del sensor:")
+                appendLine("Current sensor readings:")
                 appendLine(contextText)
             }
             if (freezeFrame.isNotEmpty()) {
                 // El freeze frame es la "caja negra": condiciones exactas al saltar la falla —
                 // distingue falla en frío vs caliente, ralentí vs bajo demanda.
-                appendLine("Condiciones capturadas AL MOMENTO de la falla (freeze frame):")
+                appendLine("Conditions captured when the fault occurred (freeze frame):")
                 freezeFrame.forEach { (label, value) -> appendLine("  $label: $value") }
             }
             appendLine()
             append(
-                "Explica este código en 2-3 oraciones para un conductor no técnico. " +
-                    "Incluye: (1) qué significa en lenguaje simple, " +
-                    "(2) causas probables según los sensores actuales" +
-                    (if (freezeFrame.isNotEmpty()) " y las condiciones del freeze frame (¿frío o caliente? ¿ralentí o bajo carga?)" else "") +
-                    ", (3) urgencia: seguro de conducir / revisar pronto / detener inmediatamente.",
+                "Explain this code in 2–3 sentences for a non-technical driver. " +
+                    "Include: (1) what it means in plain English, " +
+                    "(2) likely causes based on the current sensor readings" +
+                    (if (freezeFrame.isNotEmpty()) " and freeze-frame conditions (cold or warm? idling or under load?)" else "") +
+                    ", and (3) urgency: safe to drive / check soon / stop immediately.",
             )
         }
     }

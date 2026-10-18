@@ -19,11 +19,11 @@ object LectorDecimal {
 
 internal object MapeoMultimetro {
 
-    const val COLORES_EDITADOS = "Colores editados por ti, sin guardar en el modelo"
+    const val COLORES_EDITADOS = "Colours edited by you; not saved to the model"
     // En los bornes de la batería y entre los terminales del inyector no hay un cable que identificar por color.
     private val SIN_CABLES_DE_COLOR = setOf(SensorMultimetro.BATERIA, SensorMultimetro.INYECTOR)
 
-    const val SIN_COLORES = "Plantilla genérica típica, sin colores: los colores cambian con cada modelo"
+    const val SIN_COLORES = "Typical generic template, no wire colours: colours vary by model"
 
     fun ui(l: LocalMultimetro): MultimetroUi {
         val ctx = l.contexto ?: return MultimetroUi(cargando = l.cargando, error = l.error, sensor = l.sensor, mensaje = l.mensaje)
@@ -71,7 +71,7 @@ internal object MapeoMultimetro {
         origenColores = when {
             p.sensor in SIN_CABLES_DE_COLOR -> origenSinCables(p.sensor)
             editados -> COLORES_EDITADOS
-            p.fuenteColores != null -> "Colores: ${p.fuenteColores}"
+            p.fuenteColores != null -> "Colours: ${p.fuenteColores}"
             else -> SIN_COLORES
         },
         unidad = p.unidad,
@@ -80,8 +80,8 @@ internal object MapeoMultimetro {
     )
 
     private fun origenSinCables(sensor: SensorMultimetro): String =
-        if (sensor == SensorMultimetro.BATERIA) "Bandas típicas de una batería de 12 V de plomo-ácido: compáralas con el manual"
-        else "Banda típica de un inyector de alta impedancia: compárala con el manual"
+        if (sensor == SensorMultimetro.BATERIA) "Typical ranges for a 12 V lead-acid battery: compare them with the manual"
+        else "Typical range for a high-impedance injector: compare it with the manual"
 
     private fun fila(
         p: PlantillaCableado,
@@ -135,15 +135,15 @@ internal object MapeoMultimetro {
 
     private fun guardarUi(ctx: ContextoMultimetro, hayLecturas: Boolean, ocupado: Boolean): GuardarUi {
         val sesion = ctx.sesion
-        val vehiculo = ctx.vehiculo ?: return GuardarUi(false, "Guardar en la sesión", "Elige el vehículo activo para guardar la medición.")
+        val vehiculo = ctx.vehiculo ?: return GuardarUi(false, "Save to session", "Select the active vehicle to save this reading.")
         val puede = hayLecturas && !ocupado
-        val pista = if (hayLecturas) null else "Escribe al menos una medida para guardarla."
+        val pista = if (hayLecturas) null else "Enter at least one reading to save it."
         return when {
-            sesion != null -> GuardarUi(puede, "Guardar en la sesión", listOfNotNull("Sesión abierta: ${sesion.titulo}.", pista).joinToString(" "))
+            sesion != null -> GuardarUi(puede, "Save to session", listOfNotNull("Open session: ${sesion.titulo}.", pista).joinToString(" "))
             else -> GuardarUi(
                 puede,
-                "Guardar en una sesión nueva",
-                listOfNotNull("No hay una sesión abierta: se abre una para ${vehiculo.nombre}.", pista).joinToString(" "),
+                "Save to a new session",
+                listOfNotNull("No session is open: one will be started for ${vehiculo.nombre}.", pista).joinToString(" "),
             )
         }
     }

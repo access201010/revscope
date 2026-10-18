@@ -10,7 +10,7 @@ import java.util.Locale
 object InformeTallerHtml {
 
     fun render(informe: InformeTaller): String = buildString {
-        append("<!doctype html><html lang=\"es\"><head><meta charset=\"utf-8\">")
+        append("<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\">")
         append("<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">")
         append("<title>").append(escapar(informe.titulo)).append(" · RevScope</title><style>")
         append(CSS)
@@ -28,31 +28,31 @@ object InformeTallerHtml {
         append("</main></body></html>")
     }
 
-    private fun encabezado(i: InformeTaller): String = seccion("informe", "Informe de taller") {
+    private fun encabezado(i: InformeTaller): String = seccion("informe", "Workshop report") {
         "<p class=\"fecha\">${e(fecha(i.generadoEn))}</p>" +
             "<h2>${e(i.titulo)}</h2>" +
             "<div class=\"ficha\">" +
-            celda("Vehículo", i.vehiculo) + celda("Código leído", i.codigo) +
-            celda("Síntomas", i.sintomas) + celda("Cómo se midió", i.comoSeMidio) +
+            celda("Vehicle", i.vehiculo) + celda("Fault code read", i.codigo) +
+            celda("Symptoms", i.sintomas) + celda("Measurement method", i.comoSeMidio) +
             "</div>"
     }
 
-    private fun conclusion(i: InformeTaller): String = seccion("conclusion", "Conclusión") {
+    private fun conclusion(i: InformeTaller): String = seccion("conclusion", "Conclusion") {
         insignia(i.conclusion.veredicto) + "<p class=\"principal\">${e(i.conclusion.frase)}</p>" +
-            ifVacio(i.conclusion.cables, "Sin mediciones de cable registradas.") { cables ->
+            ifVacio(i.conclusion.cables, "No wire measurements recorded.") { cables ->
                 "<div class=\"mosaico\">" + cables.joinToString("") { cable ->
                     "<article class=\"cable\"><strong>${e(cable.etiqueta)}</strong><span>${e(cable.valor)}</span>${insignia(cable.veredicto)}</article>"
                 } + "</div>"
             }
     }
 
-    private fun multimetro(i: InformeTaller): String = seccion("multimetro", "Medición con multímetro") {
-        ifVacio(i.mediciones, "No se registraron mediciones con multímetro.") { mediciones ->
+    private fun multimetro(i: InformeTaller): String = seccion("multimetro", "Multimeter readings") {
+        ifVacio(i.mediciones, "No multimeter readings recorded.") { mediciones ->
             val pesas = mediciones.map { m ->
                 PesaGrafica(m.cable, m.valor, m.bandaMin, m.bandaMax, m.unidad, origen(m.referencia))
             }
             GraficaSvg.pesas(pesas) + tabla(
-                encabezados = listOf("Sensor", "Cable", "Condición", "Medido", "Estado", "Referencia y origen"),
+                encabezados = listOf("Sensor", "Wire", "Condition", "Measured", "Status", "Reference and source"),
                 filas = mediciones.map { m ->
                     listOf(m.sensor, m.cable, m.condicion, valor(m.valor, m.unidad), estadoMedicion(m.estado), m.referencia)
                 },
@@ -60,20 +60,20 @@ object InformeTallerHtml {
         }
     }
 
-    private fun ecu(i: InformeTaller): String = seccion("ecu", "Lo que registró la ECU") {
-        val pruebas = ifVacio(i.pruebas, "No se registraron pruebas guiadas.") { lista ->
+    private fun ecu(i: InformeTaller): String = seccion("ecu", "ECU readings") {
+        val pruebas = ifVacio(i.pruebas, "No guided tests recorded.") { lista ->
             lista.joinToString("") { prueba ->
                 "<article class=\"prueba\"><h3>${e(prueba.titulo)}</h3>${insignia(prueba.veredicto)}" +
                     "<p>${e(prueba.resumen)}</p>" + pasos(prueba) +
                     prueba.series.takeIf(List<*>::isNotEmpty)?.let { GraficaSvg.lineas(it, prueba.tramos) }.orEmpty() + "</article>"
             }
         }
-        pruebas + "<h3>Línea de tiempo</h3>" + lineaTiempo(i)
+        pruebas + "<h3>Timeline</h3>" + lineaTiempo(i)
     }
 
-    private fun pasos(prueba: PruebaInforme): String = ifVacio(prueba.pasos, "Sin tabla por paso.") { pasos ->
+    private fun pasos(prueba: PruebaInforme): String = ifVacio(prueba.pasos, "No step-by-step table available.") { pasos ->
         tabla(
-            encabezados = listOf("Paso", "Posición", "Voltaje aproximado"),
+            encabezados = listOf("Step", "Position", "Approximate voltage"),
             filas = pasos.map { paso ->
                 listOf(
                     paso.nombre,
@@ -84,55 +84,55 @@ object InformeTallerHtml {
         )
     }
 
-    private fun lineaTiempo(i: InformeTaller): String = ifVacio(i.lineaTiempo, "La sesión no tiene eventos.") { eventos ->
+    private fun lineaTiempo(i: InformeTaller): String = ifVacio(i.lineaTiempo, "The session has no events.") { eventos ->
         "<ol class=\"linea-tiempo\">" + eventos.joinToString("") { evento ->
             "<li><time>${e(hora(evento.instante))}</time><div><strong>${icono(evento.veredicto)} ${e(evento.titulo)}</strong>" +
                 "<span>${e(evento.tipo)} · ${e(textoVeredicto(evento.veredicto))}</span><p>${e(evento.resumen)}</p></div></li>"
         } + "</ol>"
     }
 
-    private fun comparacion(i: InformeTaller): String = seccion("comparacion", "Comparación con el chequeo anterior") {
-        ifVacio(i.comparacion, "No hay un chequeo anterior comparable.") { filas ->
+    private fun comparacion(i: InformeTaller): String = seccion("comparacion", "Comparison with the previous check") {
+        ifVacio(i.comparacion, "No previous check is available for comparison.") { filas ->
             tabla(
-                encabezados = listOf("Métrica", "Anterior", "Ahora", "Cambio", "Referencia"),
+                encabezados = listOf("Metric", "Previous", "Current", "Change", "Reference"),
                 filas = filas.map { listOf(it.metrica.etiqueta, it.base, it.ahora, it.cambio, it.referencia ?: "—") },
             )
         }
     }
 
-    private fun interpretacion(i: InformeTaller): String = seccion("interpretacion", "Interpretación") {
-        val automatica = ifVacio(i.interpretacionAutomatica, "Sin interpretación automática adicional.") { puntos ->
+    private fun interpretacion(i: InformeTaller): String = seccion("interpretacion", "Interpretation") {
+        val automatica = ifVacio(i.interpretacionAutomatica, "No additional automated interpretation.") { puntos ->
             "<ul>" + puntos.joinToString("") { "<li>${e(it)}</li>" } + "</ul>"
         }
-        automatica + "<h3>Interpretación del técnico</h3><p class=\"texto-libre\">${e(i.interpretacionTecnico.ifBlank { "Sin anotación del técnico." })}</p>"
+        automatica + "<h3>Technician's interpretation</h3><p class=\"texto-libre\">${e(i.interpretacionTecnico.ifBlank { "No technician's notes." })}</p>"
     }
 
-    private fun repuestos(i: InformeTaller): String = seccion("repuestos", "¿Es el repuesto correcto?") {
-        ifVacio(i.repuestos, "No hay repuestos documentados para este modelo.") { repuestos ->
+    private fun repuestos(i: InformeTaller): String = seccion("repuestos", "Is this the correct part?") {
+        ifVacio(i.repuestos, "No parts information is available for this model.") { repuestos ->
             tabla(
-                encabezados = listOf("Rol", "Referencia", "Descripción", "Tipo", "Aviso", "Fuente"),
+                encabezados = listOf("Role", "Part number", "Description", "Type", "Note", "Source"),
                 filas = repuestos.map { listOf(it.rol, it.referencia, it.descripcion, it.tipo, it.nota, it.fuente) },
-            ) + "<p class=\"aviso\">Confirma la referencia y el número de chasis antes de comprar; un genérico puede no ser equivalente.</p>"
+            ) + "<p class=\"aviso\">Confirm the part number and VIN before buying; an aftermarket part may not be equivalent.</p>"
         }
     }
 
-    private fun guia(i: InformeTaller): String = seccion("guia", "Qué revisar, en orden") {
-        ifVacio(i.pasosGuia, "No quedan pasos de la guía por marcar.") { pasos ->
+    private fun guia(i: InformeTaller): String = seccion("guia", "What to check, in order") {
+        ifVacio(i.pasosGuia, "No guide steps remain to be checked off.") { pasos ->
             "<ol>" + pasos.joinToString("") { "<li><strong>${e(it.titulo)}</strong><p>${e(it.detalle)}</p></li>" } + "</ol>"
         }
     }
 
-    private fun pendientes(i: InformeTaller): String = seccion("pendientes", "Pendiente por confirmar") {
-        ifVacio(i.pendientes, "No hay pendientes registrados.") { pendientes ->
+    private fun pendientes(i: InformeTaller): String = seccion("pendientes", "To confirm") {
+        ifVacio(i.pendientes, "No outstanding items recorded.") { pendientes ->
             "<ul>" + pendientes.joinToString("") { "<li>${e(it)}</li>" } + "</ul>"
         }
     }
 
-    private fun fuentes(i: InformeTaller): String = seccion("fuentes", "Fuentes") {
-        val lista = ifVacio(i.fuentes, "No se adjuntaron fuentes externas.") { fuentes ->
+    private fun fuentes(i: InformeTaller): String = seccion("fuentes", "Sources") {
+        val lista = ifVacio(i.fuentes, "No external sources attached.") { fuentes ->
             "<ul>" + fuentes.joinToString("") { fuente -> "<li>${fuente(fuente)}</li>" } + "</ul>"
         }
-        lista + "<p class=\"aviso\"><strong>Valores típicos salvo que se indique fuente.</strong> Generado con RevScope v${e(i.versionApp)}.</p>"
+        lista + "<p class=\"aviso\"><strong>Typical values unless a source is shown.</strong> Generated with RevScope v${e(i.versionApp)}.</p>"
     }
 
     private fun fuente(fuente: FuenteInforme): String {
@@ -161,22 +161,22 @@ object InformeTallerHtml {
 
     private fun textoVeredicto(veredicto: Veredicto) = when (veredicto) {
         Veredicto.OK -> "Dentro de referencia"
-        Veredicto.ATENCION -> "Atención"
-        Veredicto.FALLA -> "Fuera de referencia"
-        Veredicto.INFO -> "Información"
+        Veredicto.ATENCION -> "Attention"
+        Veredicto.FALLA -> "Out of range"
+        Veredicto.INFO -> "Information"
     }
 
     private fun estadoMedicion(estado: String) = when (estado) {
-        "DENTRO" -> "✓ Dentro"
-        "BAJO" -> "✕ Bajo"
-        "ALTO" -> "✕ Alto"
-        else -> "ⓘ Sin referencia"
+        "DENTRO" -> "✓ Within range"
+        "BAJO" -> "✕ Low"
+        "ALTO" -> "✕ High"
+        else -> "ⓘ No reference"
     }
 
     private fun origen(referencia: String): String = when {
-        referencia.contains("Fuente", ignoreCase = true) -> referencia.substringAfter("Fuente", "Fuente").trim(':', ' ')
-        referencia.contains("Editado por ti", ignoreCase = true) -> "Editado por ti"
-        else -> "Típico"
+        referencia.contains("Source", ignoreCase = true) -> referencia.substringAfter("Source", "Source").trim(':', ' ')
+        referencia.contains("Edited by you", ignoreCase = true) -> "Edited by you"
+        else -> "Typical"
     }
 
     private fun valor(valor: Double, unidad: String) =
@@ -205,7 +205,7 @@ object InformeTallerHtml {
         .replace("\"", "&quot;")
         .replace("'", "&#39;")
 
-    private val FORMATO_FECHA = DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy, HH:mm", Locale.forLanguageTag("es-CO"))
+    private val FORMATO_FECHA = DateTimeFormatter.ofPattern("d MMMM yyyy, HH:mm", Locale.UK)
     private val FORMATO_HORA = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ROOT)
 
     private const val CSS = """

@@ -36,42 +36,41 @@ fun permiteBorrarDesdeUi(rechazo: RechazoBorradoDtc?, declaraDetenido: Boolean):
 }
 
 fun textoRechazoUi(rechazo: RechazoBorradoDtc): String = when (rechazo) {
-    RechazoBorradoDtc.SinConfirmar -> "Falta confirmar el borrado."
+    RechazoBorradoDtc.SinConfirmar -> "Code clearing has not been confirmed."
     RechazoBorradoDtc.SinVelocidadReciente ->
-        "No hay una lectura reciente de velocidad para comprobar que el vehículo está detenido."
+        "There is no recent speed reading to confirm that the vehicle is stationary."
     is RechazoBorradoDtc.EnMovimiento ->
-        "El vehículo va a ${rechazo.kmh} km/h. Detente antes de borrar los códigos."
+        "The vehicle is travelling at ${rechazo.kmh} km/h. Stop before clearing the codes."
 }
 
 const val AVISO_READINESS_DTC =
-    "Los monitores de preparación (readiness) quedan incompletos: la revisión técnico-mecánica puede " +
-        "rechazar el vehículo hasta completar ciclos de manejo."
-const val AVISO_REAPARICION_DTC = "Borrar no repara nada: si la falla sigue, el código vuelve."
+    "Readiness monitors will be incomplete. In Colombia, tecnomecánica inspection may fail the vehicle until it completes drive cycles."
+const val AVISO_REAPARICION_DTC = "Clearing a code does not repair the fault: if it is still present, the code will return."
 
 fun avisosBorradoDtc(freezeFrameEnSesion: Boolean): List<String> =
     listOf(AVISO_READINESS_DTC, avisoFreezeFrame(freezeFrameEnSesion), AVISO_REAPARICION_DTC)
 
 private fun avisoFreezeFrame(enSesion: Boolean): String =
     if (enSesion) {
-        "El freeze frame (el estado del motor cuando se guardó la falla) se borra de la ECU; ya quedó guardado en la sesión."
+        "The freeze frame (engine data when the fault was recorded) will be cleared from the ECU; it has been saved to the session."
     } else {
-        "El freeze frame (el estado del motor cuando se guardó la falla) se pierde. Guarda antes la lectura en una sesión."
+        "The freeze frame (engine data when the fault was recorded) will be lost. Save the reading to a session first."
     }
 
 fun textoResultadoBorrado(resultado: ResultadoBorradoUi): String = when {
     resultado.rechazadoPorEcu ->
-        "La ECU rechazó el borrado (7F 04 22: condiciones no correctas). Muchas ECU solo borran con el motor " +
-            "apagado: apaga el motor, deja el contacto puesto y vuelve a intentarlo. Los códigos siguen guardados."
+        "The ECU rejected the clear request (7F 04 22: conditions not correct). Many ECUs only clear codes with the engine " +
+            "off: switch off the engine, leave the ignition on and try again. The codes are still stored."
     !resultado.enviado ->
-        "No se pudo enviar el borrado: el adaptador no respondió. Vuelve a leer los códigos antes de intentarlo otra vez."
+        "Could not send the clear request: the adapter did not respond. Read the codes again before trying once more."
     resultado.despues.isNotEmpty() ->
-        "Se envió el borrado, pero la ECU sigue reportando ${resultado.despues.joinToString()}: la falla sigue presente."
+        "The clear request was sent, but the ECU still reports ${resultado.despues.joinToString()}: the fault is still present."
     !resultado.despuesLeido ->
-        "Se envió el borrado, pero no se pudo releer la ECU para confirmarlo. Vuelve a leer los códigos."
-    else -> "Códigos borrados. Antes: ${textoAntes(resultado)}. Después: sin códigos activos."
+        "The clear request was sent, but the ECU could not be reread to confirm it. Read the codes again."
+    else -> "Codes cleared. Before: ${textoAntes(resultado)}. After: no active codes."
 }
 
 private fun textoAntes(resultado: ResultadoBorradoUi): String =
-    if (resultado.antesLeido) codigosOSinCodigos(resultado.antes) else "no se pudieron leer"
+    if (resultado.antesLeido) codigosOSinCodigos(resultado.antes) else "could not read codes"
 
-private fun codigosOSinCodigos(codigos: List<String>): String = codigos.joinToString().ifEmpty { "sin códigos activos" }
+private fun codigosOSinCodigos(codigos: List<String>): String = codigos.joinToString().ifEmpty { "no active codes" }

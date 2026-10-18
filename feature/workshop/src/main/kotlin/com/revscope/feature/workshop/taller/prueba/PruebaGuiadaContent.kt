@@ -69,7 +69,7 @@ fun PruebaGuiadaContent(estado: PruebaGuiadaUi, acciones: AccionesPrueba) {
             is FasePantalla.Paso -> PasoPrueba(fase.paso, estado, acciones)
             is FasePantalla.Analizando -> Analizando(estado, acciones)
             is FasePantalla.Resultado -> ResultadoPrueba(fase.resultado, estado, acciones)
-            is FasePantalla.Cancelada -> Interrumpida(estado, "Prueba cancelada", fase.motivo, acciones)
+            is FasePantalla.Cancelada -> Interrumpida(estado, "Test cancelled", fase.motivo, acciones)
             is FasePantalla.Fallida -> Fallida(fase, estado, acciones)
         }
     }
@@ -142,7 +142,7 @@ private fun ColumnScope.Analizando(estado: PruebaGuiadaUi, acciones: AccionesPru
     ) {
         CircularProgressIndicator(color = RevScopeColors.Accent)
         Text(
-            "Analizando la prueba…",
+            "Analysing the test…",
             color = RevScopeColors.TextPrimary,
             style = RevScopeType.body,
             textAlign = TextAlign.Center,
@@ -157,15 +157,15 @@ private fun ColumnScope.Interrumpida(estado: PruebaGuiadaUi, titulo: String, mot
     CuerpoDesplazable {
         Text(titulo, color = RevScopeColors.TextPrimary, style = RevScopeType.title)
         Text(motivo, color = RevScopeColors.TextSecondary, style = RevScopeType.body)
-        Text("No se guardó nada en la sesión.", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+        Text("Nothing was saved to the session.", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
     }
-    PieConAccion("Empezar de nuevo", acciones.onReintentar)
+    PieConAccion("Start again", acciones.onReintentar)
 }
 
 @Composable
 private fun ColumnScope.Fallida(fase: FasePantalla.Fallida, estado: PruebaGuiadaUi, acciones: AccionesPrueba) {
     BarraConVolver(titulo = estado.titulo, subtitulo = estado.vehiculo, onVolver = acciones.onTerminar)
-    val mensaje = "La prueba no terminó: ${fase.motivo}. Lo grabado quedó en la sesión, si había una abierta."
+    val mensaje = "The test did not finish: ${fase.motivo}. Any recorded data was saved to the session, if one was open."
     Box(Modifier.weight(1f).fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
         if (fase.reintentable) {
             ErrorState(mensaje, acciones.onReintentar)
@@ -173,7 +173,7 @@ private fun ColumnScope.Fallida(fase: FasePantalla.Fallida, estado: PruebaGuiada
             Text(mensaje, color = RevScopeColors.TextPrimary, style = RevScopeType.body, textAlign = TextAlign.Center)
         }
     }
-    if (!fase.reintentable) PieConAccion("Volver", acciones.onTerminar)
+    if (!fase.reintentable) PieConAccion("Back", acciones.onTerminar)
 }
 
 // ── Diálogos ────────────────────────────────────────────────────────────────
@@ -192,18 +192,18 @@ private fun DialogosPrueba(estado: PruebaGuiadaUi, acciones: AccionesPrueba) {
 private fun ConfirmarCancelar(estado: PruebaGuiadaUi, acciones: AccionesPrueba) {
     val paso = (estado.fase as? FasePantalla.Paso)?.paso
     ConfirmarDestructivoDialog(
-        titulo = "¿Descartar la prueba?",
-        textoConfirmar = "Descartar",
-        textoCancelar = "Seguir con la prueba",
+        titulo = "Discard this test?",
+        textoConfirmar = "Discard",
+        textoCancelar = "Continue test",
         onConfirmar = acciones.onConfirmarCancelar,
         onCancelar = acciones.onCerrarDialogo,
-        avisos = listOfNotNull("Se detiene la captura y la prueba no se analiza.", paso?.let(::loQueSePierde)),
+        avisos = listOfNotNull("Capture will stop and the test will not be analysed.", paso?.let(::loQueSePierde)),
     )
 }
 
 private fun loQueSePierde(paso: PasoUi): String =
     if (paso.grabados > 0) {
-        "${paso.grabados} de ${paso.total} pasos ya hechos no se guardan en la sesión."
+        "${paso.grabados} of ${paso.total} completed steps will not be saved to the session."
     } else {
-        "Lo grabado del paso en curso no se guarda en la sesión."
+        "The current step's recording will not be saved to the session."
     }

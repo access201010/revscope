@@ -59,11 +59,11 @@ data class AccionesReferencias(
 @Composable
 fun ReferenciasContent(estado: ReferenciasUi, acciones: AccionesReferencias = AccionesReferencias()) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver("Referencias", acciones.onVolver, subtitulo = estado.modelo ?: estado.vehiculo)
+        BarraConVolver("Reference values", acciones.onVolver, subtitulo = estado.modelo ?: estado.vehiculo)
         when {
             estado.cargando -> CargandoReferencias()
             estado.error != null -> ErrorReferencias(estado.error, acciones.onReintentar)
-            estado.bandas.isEmpty() -> EmptyState("No hay referencias para este tipo de vehículo.", Modifier.padding(16.dp))
+            estado.bandas.isEmpty() -> EmptyState("No reference values are available for this vehicle type.", Modifier.padding(16.dp))
             else -> ListaReferencias(estado, acciones)
         }
     }
@@ -90,16 +90,16 @@ private fun ListaReferencias(estado: ReferenciasUi, acciones: AccionesReferencia
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
     ) {
-        Text("Bandas de diagnóstico", color = RevScopeColors.TextPrimary, style = RevScopeType.title, modifier = Modifier.semantics { heading() })
+        Text("Diagnostic ranges", color = RevScopeColors.TextPrimary, style = RevScopeType.title, modifier = Modifier.semantics { heading() })
         Text(
-            "Los valores Típico son referencias generales de la industria, no especificaciones del fabricante. " +
-                "Una banda con Fuente indica de dónde salió; tus cambios siempre aparecen como Editado por ti.",
+            "Typical values are general industry references, not manufacturer specifications. A range with a source " +
+                "shows where it came from; your changes are labelled Edited by you.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
         if (estado.modelo == null) {
             Text(
-                "Elige un modelo de referencia en Perfiles para guardar cambios propios.",
+                "Select a reference model in Profiles to save your own changes.",
                 color = RevScopeColors.Warning,
                 style = RevScopeType.body,
             )
@@ -121,20 +121,20 @@ private fun TarjetaBanda(banda: BandaReferencia, acciones: AccionesReferencias) 
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             TextButton(
                 onClick = { acciones.onEditar(banda.clave) },
-                modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Editar ${nombreBanda(banda.clave)}" },
+                modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Edit ${nombreBanda(banda.clave)}" },
             ) {
                 Icon(Icons.Filled.Edit, contentDescription = null, tint = RevScopeColors.Accent, modifier = Modifier.size(18.dp))
-                Text("Editar", color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
+                Text("Edit", color = RevScopeColors.Accent, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
             }
             if (banda.origen != OrigenBanda.TIPICO) {
                 TextButton(
                     onClick = { acciones.onRestablecer(banda.clave) },
                     modifier = Modifier.heightIn(min = 48.dp).semantics {
-                        contentDescription = "Restablecer ${nombreBanda(banda.clave)} a Típico"
+                        contentDescription = "Reset ${nombreBanda(banda.clave)} to typical"
                     },
                 ) {
                     Icon(Icons.Filled.Restore, contentDescription = null, tint = RevScopeColors.TextSecondary, modifier = Modifier.size(18.dp))
-                    Text("Restablecer a Típico", color = RevScopeColors.TextSecondary, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
+                    Text("Reset to typical", color = RevScopeColors.TextSecondary, style = RevScopeType.label, modifier = Modifier.padding(start = 6.dp))
                 }
             }
         }
@@ -146,26 +146,26 @@ private fun DialogoBanda(dialogo: EdicionBandaUi, acciones: AccionesReferencias)
     AlertDialog(
         onDismissRequest = acciones.onCerrarDialogo,
         containerColor = RevScopeColors.SurfaceHigh,
-        title = { Text("Editar ${nombreBanda(dialogo.banda.clave)}", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("Edit ${nombreBanda(dialogo.banda.clave)}", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                CampoLimite("Mínimo", dialogo.minimo, acciones.onCambiarMinimo)
-                CampoLimite("Máximo", dialogo.maximo, acciones.onCambiarMaximo)
-                Text("Unidad: ${dialogo.banda.unidad}", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+                CampoLimite("Minimum", dialogo.minimo, acciones.onCambiarMinimo)
+                CampoLimite("Maximum", dialogo.maximo, acciones.onCambiarMaximo)
+                Text("Unit: ${dialogo.banda.unidad}", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
                 dialogo.error?.let {
                     Text(it, color = RevScopeColors.Danger, style = RevScopeType.body, modifier = Modifier.semantics { contentDescription = "Error: $it" })
                 }
-                Text("Al guardar, el origen cambiará a «Editado por ti».", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+                Text("Saving will change the source to “Edited by you”.", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
             }
         },
         confirmButton = {
             TextButton(onClick = acciones.onGuardar, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Guardar", color = RevScopeColors.Accent, style = RevScopeType.label)
+                Text("Save", color = RevScopeColors.Accent, style = RevScopeType.label)
             }
         },
         dismissButton = {
             TextButton(onClick = acciones.onCerrarDialogo, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Cancelar", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+                Text("Cancel", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
             }
         },
     )
@@ -206,12 +206,12 @@ internal fun valorBanda(banda: BandaReferencia): String {
 }
 
 private fun numero(valor: Double): String =
-    if (valor % 1.0 == 0.0) valor.toInt().toString() else valor.toString().replace('.', ',')
+    if (valor % 1.0 == 0.0) valor.toInt().toString() else valor.toString()
 
 private fun origen(banda: BandaReferencia): String = when (banda.origen) {
-    OrigenBanda.TIPICO -> "Típico"
-    OrigenBanda.FUENTE -> "Fuente: ${banda.fuente}"
-    OrigenBanda.USUARIO -> "Editado por ti"
+    OrigenBanda.TIPICO -> "Typical"
+    OrigenBanda.FUENTE -> "Source: ${banda.fuente}"
+    OrigenBanda.USUARIO -> "Edited by you"
 }
 
 private fun colorOrigen(origen: OrigenBanda) = when (origen) {
@@ -221,26 +221,26 @@ private fun colorOrigen(origen: OrigenBanda) = when (origen) {
 }
 
 private val NOMBRES_BANDAS = mapOf(
-    ClavesBanda.TPS_CERRADO_V to "TPS cerrado",
-    ClavesBanda.TPS_FONDO_V to "TPS a fondo",
-    ClavesBanda.TPS_RECORRIDO_MIN_V to "Recorrido mínimo del TPS",
-    ClavesBanda.TPS_RUIDO_MAX_V to "Ruido máximo del TPS",
-    ClavesBanda.TPS_REPETIBILIDAD_V to "Repetibilidad del TPS",
-    ClavesBanda.TPS_LINEALIDAD to "Linealidad del TPS",
-    ClavesBanda.REF_5V_V to "Referencia de 5 V",
-    ClavesBanda.MASA_V to "Caída de masa",
-    ClavesBanda.INYECTOR_OHM to "Resistencia del inyector",
-    ClavesBanda.MINIMO_RPM to "Régimen mínimo",
-    ClavesBanda.MINIMO_DERIVA_MAX to "Deriva máxima del mínimo",
-    ClavesBanda.MINIMO_DESVIACION_MAX to "Variación máxima del mínimo",
-    ClavesBanda.RETORNO_VALLE_MIN to "Valle mínimo al retornar",
-    ClavesBanda.MOTOR_FRIO_ECT_IAT_DELTA_C to "Diferencia ECT–IAT en frío",
-    ClavesBanda.BATERIA_CONTACTO_V to "Batería con contacto",
-    ClavesBanda.BATERIA_CONTACTO_CON_LUCES_V to "Batería con contacto y luces",
-    ClavesBanda.ARRANQUE_MIN_V to "Voltaje mínimo al arrancar",
-    ClavesBanda.CARGA_V to "Voltaje de carga",
-    ClavesBanda.SOBRECARGA_MAX_V to "Límite de sobrecarga",
-    ClavesBanda.MAP_KOEO_VS_BARO_KPA to "MAP contra barométrica",
-    ClavesBanda.CHEQUEO_AJUSTE_DELTA_PP to "Cambio de fuel trim",
-    ClavesBanda.CHEQUEO_VOLTAJE_DELTA_V to "Cambio de voltaje",
+    ClavesBanda.TPS_CERRADO_V to "TPS, throttle closed",
+    ClavesBanda.TPS_FONDO_V to "TPS, full throttle",
+    ClavesBanda.TPS_RECORRIDO_MIN_V to "Minimum TPS range",
+    ClavesBanda.TPS_RUIDO_MAX_V to "Maximum TPS noise",
+    ClavesBanda.TPS_REPETIBILIDAD_V to "TPS repeatability",
+    ClavesBanda.TPS_LINEALIDAD to "TPS linearity",
+    ClavesBanda.REF_5V_V to "5 V reference",
+    ClavesBanda.MASA_V to "Earth voltage drop",
+    ClavesBanda.INYECTOR_OHM to "Injector resistance",
+    ClavesBanda.MINIMO_RPM to "Idle speed",
+    ClavesBanda.MINIMO_DERIVA_MAX to "Maximum idle drift",
+    ClavesBanda.MINIMO_DESVIACION_MAX to "Maximum idle variation",
+    ClavesBanda.RETORNO_VALLE_MIN to "Minimum return dip",
+    ClavesBanda.MOTOR_FRIO_ECT_IAT_DELTA_C to "Cold ECT–IAT difference",
+    ClavesBanda.BATERIA_CONTACTO_V to "Battery, ignition on",
+    ClavesBanda.BATERIA_CONTACTO_CON_LUCES_V to "Battery, ignition and lights on",
+    ClavesBanda.ARRANQUE_MIN_V to "Minimum cranking voltage",
+    ClavesBanda.CARGA_V to "Charging voltage",
+    ClavesBanda.SOBRECARGA_MAX_V to "Maximum overcharge voltage",
+    ClavesBanda.MAP_KOEO_VS_BARO_KPA to "MAP vs barometric pressure, engine off",
+    ClavesBanda.CHEQUEO_AJUSTE_DELTA_PP to "Fuel-trim change",
+    ClavesBanda.CHEQUEO_VOLTAJE_DELTA_V to "Voltage change",
 )

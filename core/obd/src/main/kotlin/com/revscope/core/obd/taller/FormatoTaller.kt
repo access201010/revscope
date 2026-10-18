@@ -8,7 +8,7 @@ import kotlin.math.roundToLong
 object FormatoTaller {
 
     fun numero(valor: Double, decimales: Int): String =
-        String.format(Locale.ROOT, "%.${decimales}f", redondear(valor, decimales)).replace('.', ',')
+        String.format(Locale.ROOT, "%." + decimales + "f", redondear(valor, decimales))
 
     fun conSigno(valor: Double, decimales: Int): String {
         val texto = numero(abs(valor), decimales)

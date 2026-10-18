@@ -77,14 +77,14 @@ internal fun FranjaSesion(detalle: DetalleDtc, onGuardar: () -> Unit) {
 }
 
 private fun textoSesionAbierta(titulo: String, lecturaEnSesion: Boolean): String =
-    if (lecturaEnSesion) "Lectura anotada en la sesión «$titulo», con el freeze frame y las casillas de la guía."
-    else "Sesión abierta «$titulo»: las casillas de la guía se guardan en ella."
+    if (lecturaEnSesion) "Reading logged in session “$titulo”, including the freeze frame and guide checkboxes."
+    else "Session “$titulo” is open: guide checkboxes will be saved to it."
 
 @Composable
 private fun SinSesion(guardando: Boolean, onGuardar: () -> Unit) {
     LineaIcono(
         Icons.Outlined.Info,
-        "Sin sesión de diagnóstico abierta: esta lectura y las casillas no quedan guardadas.",
+        "No diagnostic session is open: this reading and its checkboxes will not be saved.",
     )
     OutlinedButton(
         onClick = onGuardar,
@@ -92,7 +92,7 @@ private fun SinSesion(guardando: Boolean, onGuardar: () -> Unit) {
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
     ) {
         Text(
-            if (guardando) "Guardando…" else "Guardar esta lectura en una sesión nueva",
+            if (guardando) "Saving…" else "Save this reading to a new session",
             color = RevScopeColors.TextPrimary,
             style = RevScopeType.label,
             textAlign = TextAlign.Center,
@@ -127,14 +127,14 @@ internal fun FreezeFrameCard(freezeFrame: FreezeFrameUi, enSesion: Boolean) {
             )
         }
         Text(
-            "El estado del motor en el momento en que la ECU guardó la falla.",
+            "Engine data from when the ECU stored the fault.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.bodySmall,
         )
         freezeFrame.items.forEach { FilaEtiquetaValor(it.label, it.value) }
         Text(
-            if (enSesion) "Guardado en la sesión: se conserva aunque borres los códigos."
-            else "Se pierde al borrar los códigos si no lo guardas en una sesión.",
+            if (enSesion) "Saved to the session: it will be kept if you clear the codes."
+            else "This will be lost when codes are cleared unless you save it to a session.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.bodySmall,
         )
@@ -142,14 +142,14 @@ internal fun FreezeFrameCard(freezeFrame: FreezeFrameUi, enSesion: Boolean) {
 }
 
 fun tituloFreezeFrame(causante: String?): String =
-    causante?.let { "Freeze frame · guardado por $it" } ?: "Freeze frame"
+    causante?.let { "Freeze frame · triggered by $it" } ?: "Freeze frame"
 
 @Composable
 internal fun MotivoBorradoDeshabilitado(motivo: String) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.Top) {
         Icon(Icons.Filled.Warning, contentDescription = null, tint = RevScopeColors.Warning, modifier = Modifier.size(18.dp))
         Text(
-            "Borrar deshabilitado: $motivo",
+            "Code clearing disabled: $motivo",
             color = RevScopeColors.TextPrimary,
             style = RevScopeType.bodySmall,
             modifier = Modifier.weight(1f).semantics { liveRegion = LiveRegionMode.Polite },

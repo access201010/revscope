@@ -96,7 +96,7 @@ fun NavigationProgressBar(state: NavigationState, speedKmh: Int? = null, modifie
             speedKmh?.let { ProgressField("$it km/h", "speed", Modifier.weight(1f, fill = false)) }
             ProgressField(formatDistance(state.distanceRemainingM), "restante", Modifier.weight(1f, fill = false))
             ProgressField(formatDuration(state.durationRemainingS), "remaining", Modifier.weight(1f, fill = false))
-            ProgressField(arrivalClock(state.durationRemainingS), "llegada", Modifier.weight(1f, fill = false))
+            ProgressField(arrivalClock(state.durationRemainingS), "arrival", Modifier.weight(1f, fill = false))
         }
     }
 }

@@ -64,7 +64,7 @@ class AsistenteMultimetro @Inject constructor(
         val acumulado = VeredictoMultimetro.combinar(ctx.plantilla, todas, ctx.bandas, ctx.ecu)
         val celda = EvaluadorCelda.evaluar(ctx.plantilla, lectura, EvaluadorCelda.filaDe(todas, lectura.funcion), ctx.bandas)
         val eventoId = registro.anotar(EventoMedicion.celda(ctx.plantilla, celda, acumulado, origen))
-            ?: return Result.failure(IllegalStateException("No se pudo guardar la medición en la sesión"))
+            ?: return Result.failure(IllegalStateException("Could not save the reading to the session"))
         return Result.success(CeldaRegistrada(sesion.id, eventoId, ctx.plantilla, celda, acumulado, pendientes(ctx.plantilla, todas)))
     }
 
@@ -77,18 +77,18 @@ class AsistenteMultimetro @Inject constructor(
     }
 
     companion object {
-        const val SIN_SESION = "No hay sesión de taller abierta: ábrela con iniciar_sesion_taller"
+        const val SIN_SESION = "No Workshop session is open: start one with iniciar_sesion_taller"
 
         fun validar(plantilla: PlantillaCableado, lectura: LecturaMultimetro): String? {
             val cable = plantilla.cable(lectura.funcion)
-                ?: return "La plantilla ${plantilla.sensor.name} no tiene el cable ${lectura.funcion.name}: usa " +
+                ?: return "The ${plantilla.sensor.name} template does not have a ${lectura.funcion.name} wire: use " +
                     plantilla.cables.joinToString { it.funcion.name }
             if (cable.esperado(lectura.condicion) == null) {
-                return "La condición ${lectura.condicion} no existe para ${lectura.funcion.name}: usa " +
+                return "Condition ${lectura.condicion} is not available for ${lectura.funcion.name}: use " +
                     plantilla.condiciones.filter { cable.esperado(it.clave) != null }.joinToString { it.clave }
             }
-            if (lectura.unidad != plantilla.unidad) return "La plantilla ${plantilla.sensor.name} se mide en ${plantilla.unidad}"
-            if (!lectura.valor.isFinite()) return "El valor no es un número"
+            if (lectura.unidad != plantilla.unidad) return "The ${plantilla.sensor.name} template uses ${plantilla.unidad}"
+            if (!lectura.valor.isFinite()) return "Value must be a number"
             return null
         }
 

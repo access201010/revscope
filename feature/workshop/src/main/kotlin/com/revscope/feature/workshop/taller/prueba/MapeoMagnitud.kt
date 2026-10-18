@@ -43,19 +43,19 @@ internal object MapeoMagnitud {
     private data class Nombre(val nombre: String, val tipico: String)
 
     private val NOMBRES = mapOf(
-        ClavesBanda.MINIMO_RPM to Nombre("Mínimo", "Mínimo típico"),
-        ClavesBanda.ARRANQUE_MIN_V to Nombre("Valle al arrancar", "Valle típico"),
-        ClavesBanda.CARGA_V to Nombre("Carga", "Carga típica"),
+        ClavesBanda.MINIMO_RPM to Nombre("Idle", "Typical idle"),
+        ClavesBanda.ARRANQUE_MIN_V to Nombre("Cranking dip", "Typical dip"),
+        ClavesBanda.CARGA_V to Nombre("Charging", "Typical charging"),
     )
 
     fun de(pid: String): Magnitud = when (pid.uppercase()) {
         PID_RPM -> Magnitud("RPM", "rpm", 0, 50.0, 500.0)
-        "05" -> Magnitud("Temperatura del motor", "°C", 0, 1.0, 10.0)
-        "0F" -> Magnitud("Aire de admisión", "°C", 0, 1.0, 10.0)
-        "46" -> Magnitud("Temperatura ambiente", "°C", 0, 1.0, 10.0)
+        "05" -> Magnitud("Engine temperature", "°C", 0, 1.0, 10.0)
+        "0F" -> Magnitud("Intake-air temperature", "°C", 0, 1.0, 10.0)
+        "46" -> Magnitud("Ambient temperature", "°C", 0, 1.0, 10.0)
         "0B" -> Magnitud("MAP", "kPa", 0, 1.0, 10.0)
-        "33" -> Magnitud("Presión barométrica", "kPa", 0, 1.0, 10.0)
-        PID_VOLTAJE -> Magnitud("Voltaje de la batería", "V", 1, 0.1, 2.0, fuente = "AT RV en el conector")
+        "33" -> Magnitud("Barometric pressure", "kPa", 0, 1.0, 10.0)
+        PID_VOLTAJE -> Magnitud("Battery voltage", "V", 1, 0.1, 2.0, fuente = "AT RV at the connector")
         else -> Magnitud("PID $pid", "", 1, 0.0, 0.0)
     }
 
@@ -106,10 +106,10 @@ internal object MapeoMagnitud {
     private fun decimales(b: BandaReferencia): Int = if (b.unidad == "V") 1 else 0
 
     private fun descripcion(pid: String, m: Magnitud, valores: List<Double>, banda: BandaReferencia?): String {
-        val objetivo = banda?.let { ". Banda: ${leyenda(it)}" }.orEmpty()
+        val objetivo = banda?.let { ". Range: ${leyenda(it)}" }.orEmpty()
         val origen = m.fuente ?: "PID $pid"
-        if (valores.isEmpty()) return "${m.nombre} ($origen) en los últimos 10 s: esperando muestras$objetivo"
-        return "${m.nombre} ($origen) en los últimos 10 s: de ${m.texto(valores.min())} a ${m.texto(valores.max())}, " +
+        if (valores.isEmpty()) return "${m.nombre} ($origen), last 10 s: waiting for readings$objetivo"
+        return "${m.nombre} ($origen), last 10 s: ${m.texto(valores.min())} to ${m.texto(valores.max())}, " +
             "${Tendencia.de(valores, m.estableHasta)}$objetivo"
     }
 }

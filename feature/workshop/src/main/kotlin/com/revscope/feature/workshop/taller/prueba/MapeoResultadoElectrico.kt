@@ -40,12 +40,12 @@ internal object MapeoResultadoElectrico {
     fun bandaBaro(a: AnalisisMapBaro): BandaGrafica? {
         val ref = a.referencia ?: return null
         val tolerancia = a.toleranciaKpa ?: return null
-        return BandaGrafica("Barométrica ±${kpa(tolerancia)}", ref.kPa - tolerancia, ref.kPa + tolerancia)
+        return BandaGrafica("Barometric pressure ±${kpa(tolerancia)}", ref.kPa - tolerancia, ref.kPa + tolerancia)
     }
 
     private fun leyendaBaro(a: AnalisisMapBaro): String? {
         val ref = a.referencia ?: return null
-        return "Barométrica ${kpa(ref.kPa)} ±${kpa(a.toleranciaKpa ?: 0.0)} · ${ref.etiqueta}"
+        return "Barometric pressure ${kpa(ref.kPa)} ±${kpa(a.toleranciaKpa ?: 0.0)} · ${ref.etiqueta}"
     }
 
     private fun codigoBateria(p: PatronBateria): String? = when (p) {

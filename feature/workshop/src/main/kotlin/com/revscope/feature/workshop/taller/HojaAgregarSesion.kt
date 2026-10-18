@@ -52,46 +52,46 @@ internal object OpcionesAgregar {
     fun de(a: AccionesSesion): List<OpcionAgregar> = listOfNotNull(
         OpcionAgregar(
             Icons.Filled.BugReport,
-            "Leer códigos",
-            "Activos, pendientes, permanentes y freeze frame",
+            "Read fault codes",
+            "Active, pending, permanent and freeze-frame codes",
             true,
             a.onLeerCodigos,
         ),
-        a.onPruebaGuiada?.let { OpcionAgregar(Icons.Filled.Science, "Prueba guiada", "Paso a paso, con veredicto", true, it) },
+        a.onPruebaGuiada?.let { OpcionAgregar(Icons.Filled.Science, "Guided test", "Step by step, with a verdict", true, it) },
         a.onMultimetro?.let {
             OpcionAgregar(
                 Icons.Filled.ElectricalServices,
-                "Medición con multímetro",
-                "Lo que mides en cada cable",
+                "Multimeter readings",
+                "What you measure on each wire",
                 false,
                 it,
             )
         },
         OpcionAgregar(
             Icons.AutoMirrored.Filled.ShowChart,
-            "Captura rápida",
-            "Hasta 6 PIDs a la tasa máxima, con CSV",
+            "Quick capture",
+            "Up to 6 PIDs at the maximum rate, saved as CSV",
             true,
             a.onCaptura,
         ),
         OpcionAgregar(
             Icons.Filled.MonitorHeart,
-            "Chequeo de salud",
-            "Para comparar con el chequeo base",
+            "Health check",
+            "Compare with the baseline check",
             true,
             a.onChequeo,
         ),
         OpcionAgregar(
             Icons.Filled.Sensors,
-            "Instantánea de sensores",
-            "Una foto de los valores actuales",
+            "Sensor snapshot",
+            "A snapshot of the current readings",
             true,
             a.onInstantanea,
         ),
         OpcionAgregar(
             Icons.AutoMirrored.Filled.Notes,
             "Nota",
-            "Lo que viste, mediste o cambiaste",
+            "What you saw, measured or changed",
             false,
             a.onPedirNota,
         ),
@@ -117,7 +117,7 @@ fun HojaAgregarContent(opciones: List<OpcionAgregar>, conectado: Boolean) {
         modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).navigationBarsPadding().padding(bottom = 16.dp),
     ) {
         Text(
-            "Agregar a la sesión",
+            "Add to session",
             color = RevScopeColors.TextPrimary,
             style = RevScopeType.title,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
@@ -164,7 +164,7 @@ private fun RequiereAdaptador() {
             tint = RevScopeColors.Warning,
             modifier = Modifier.size(with(LocalDensity.current) { 14.sp.toDp() }),
         )
-        Text("Requiere adaptador", color = RevScopeColors.Warning, style = RevScopeType.bodySmall)
+        Text("Requires adapter", color = RevScopeColors.Warning, style = RevScopeType.bodySmall)
     }
 }
 
@@ -183,44 +183,43 @@ private fun DialogoCerrar(acciones: AccionesSesion) {
     AlertDialog(
         onDismissRequest = acciones.onCancelarDialogo,
         containerColor = RevScopeColors.SurfaceHigh,
-        title = { Text("¿Cerrar la sesión?", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("Close this session?", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             Text(
-                "Las lecturas nuevas ya no se anotarán en ella. La línea de tiempo se conserva y puedes seguir " +
-                    "consultándola.",
+                "New readings will no longer be added. The timeline will be kept and you can still view it.",
                 color = RevScopeColors.TextPrimary,
                 style = RevScopeType.body,
             )
         },
-        confirmButton = { BotonDialogo("Cerrar sesión", acciones.onConfirmarCierre, principal = true) },
-        dismissButton = { BotonDialogo("Cancelar", acciones.onCancelarDialogo) },
+        confirmButton = { BotonDialogo("Close session", acciones.onConfirmarCierre, principal = true) },
+        dismissButton = { BotonDialogo("Cancel", acciones.onCancelarDialogo) },
     )
 }
 
 @Composable
 private fun DialogoEliminar(estado: SesionTallerEstado, acciones: AccionesSesion) {
     ConfirmarDestructivoDialog(
-        titulo = "¿Eliminar la sesión?",
-        textoConfirmar = "Eliminar sesión",
+        titulo = "Delete this session?",
+        textoConfirmar = "Delete session",
         onConfirmar = acciones.onConfirmarEliminacion,
         onCancelar = acciones.onCancelarDialogo,
-        mensaje = "«${estado.titulo}» se borra del teléfono y no se puede recuperar.",
+        mensaje = "“${estado.titulo}” will be deleted from this phone and cannot be recovered.",
         avisos = AvisosEliminacion.de(estado.loQueSeBorra),
     )
 }
 
 internal object AvisosEliminacion {
     fun de(borra: LoQueSeBorra): List<String> = listOfNotNull(
-        "Se pierden los síntomas, las notas, la comparación y ${eventos(borra.eventos)} de la línea de tiempo.",
+        "Symptoms, notes, the comparison and ${eventos(borra.eventos)} from the timeline will be deleted.",
         borra.adjuntos.takeIf { it > 0 }?.let(::adjuntos),
-        "Se conservan los chequeos de salud y los viajes guardados, y los códigos de la ECU siguen como están.",
+        "Health checks and saved trips will be kept; ECU fault codes will be unaffected.",
     )
 
-    private fun eventos(n: Int) = if (n == 1) "el evento" else "los $n eventos"
+    private fun eventos(n: Int) = if (n == 1) "the event" else "$n events"
 
     private fun adjuntos(n: Int) =
-        if (n == 1) "Se borra 1 archivo CSV de capturas guardado en la sesión."
-        else "Se borran $n archivos CSV de capturas guardados en la sesión."
+        if (n == 1) "1 CSV capture file saved in the session will be deleted."
+        else "$n CSV capture files saved in the session will be deleted."
 }
 
 @Composable
@@ -228,13 +227,13 @@ private fun DialogoNota(nota: String, acciones: AccionesSesion) {
     AlertDialog(
         onDismissRequest = acciones.onCancelarDialogo,
         containerColor = RevScopeColors.SurfaceHigh,
-        title = { Text("Agregar una nota", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("Add a note", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             OutlinedTextField(
                 value = nota,
                 onValueChange = acciones.onCambiarNota,
                 label = { Text("Nota", style = RevScopeType.body) },
-                supportingText = { Text("Qué viste, mediste o cambiaste.", style = RevScopeType.bodySmall) },
+                supportingText = { Text("What you saw, measured or changed.", style = RevScopeType.bodySmall) },
                 minLines = 3,
                 textStyle = RevScopeType.body,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -249,8 +248,8 @@ private fun DialogoNota(nota: String, acciones: AccionesSesion) {
                 modifier = Modifier.fillMaxWidth(),
             )
         },
-        confirmButton = { BotonDialogo("Guardar nota", acciones.onGuardarNota, principal = true, habilitado = nota.isNotBlank()) },
-        dismissButton = { BotonDialogo("Cancelar", acciones.onCancelarDialogo) },
+        confirmButton = { BotonDialogo("Save note", acciones.onGuardarNota, principal = true, habilitado = nota.isNotBlank()) },
+        dismissButton = { BotonDialogo("Cancel", acciones.onCancelarDialogo) },
     )
 }
 

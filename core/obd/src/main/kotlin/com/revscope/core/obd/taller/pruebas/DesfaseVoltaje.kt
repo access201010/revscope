@@ -15,7 +15,7 @@ data class DesfaseVoltaje(val voltios: Double, val origen: String) {
 
     companion object {
         const val MAX_V = 1.0
-        const val ORIGEN_MULTIMETRO = "Calibrado con el multímetro"
+        const val ORIGEN_MULTIMETRO = "Calibrated with a multimeter"
         const val ORIGEN_EDITADO = "Editado por ti"
         val SIN_CALIBRAR = DesfaseVoltaje(0.0, "Sin calibrar")
 

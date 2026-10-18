@@ -32,7 +32,7 @@ import com.revscope.core.designsystem.RevScopeType
 import com.revscope.core.designsystem.TextoAjustable
 import com.revscope.feature.workshop.taller.TarjetaTaller
 
-internal const val TEXTO_REPETIR_PASO = "Repetir paso"
+internal const val TEXTO_REPETIR_PASO = "Repeat step"
 
 @Composable
 internal fun ColumnScope.PasoPrueba(paso: PasoUi, estado: PruebaGuiadaUi, acciones: AccionesPrueba) {
@@ -101,9 +101,9 @@ private fun MiniGrafica(paso: PasoUi) {
         if (paso.grafica.tieneDatos) {
             GraficaSerie(paso.grafica, alto = 160.dp)
         } else {
-            Text("Esperando muestras del adaptador…", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+            Text("Waiting for adapter readings…", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
         }
-        paso.leyendaGrafica.forEach { Text("Banda $it", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall) }
+        paso.leyendaGrafica.forEach { Text("Range $it", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall) }
     }
 }
 

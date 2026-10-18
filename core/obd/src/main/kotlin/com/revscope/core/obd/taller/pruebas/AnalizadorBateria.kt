@@ -80,10 +80,10 @@ object AnalizadorBateria {
     private fun comprobaciones(a: AnalisisBateria, bandas: Map<String, BandaReferencia>): List<Comprobacion> = listOfNotNull(
         a.contacto?.let { Comprobacion.contra(claveContacto(a.conFarola), etiquetaContacto(a.conFarola), it.mediaV, "V", bandas) },
         a.arranque?.valleV?.let { Comprobacion.contra(ClavesBanda.ARRANQUE_MIN_V, "Valle al arrancar", it, "V", bandas) },
-        a.arranque?.let { Comprobacion.siNo(CLAVE_ADAPTADOR_AGUANTO, "El adaptador siguió respondiendo al arrancar", !it.adaptadorReiniciado) },
-        cargaEnMinimo(a)?.let { Comprobacion.siNo(CLAVE_CARGA_EN_MINIMO, "Carga en mínimo (sube sobre el reposo)", it) },
-        a.rpmAltas?.let { Comprobacion.contra(ClavesBanda.CARGA_V, "Carga a rpm altas", it.mediaV, "V", bandas) },
-        a.cargaMaxV?.let { Comprobacion.contra(ClavesBanda.SOBRECARGA_MAX_V, "Máximo con el motor en marcha", it, "V", bandas) },
+        a.arranque?.let { Comprobacion.siNo(CLAVE_ADAPTADOR_AGUANTO, "Adapter kept responding while starting", !it.adaptadorReiniciado) },
+        cargaEnMinimo(a)?.let { Comprobacion.siNo(CLAVE_CARGA_EN_MINIMO, "Charging at idle (above resting voltage)", it) },
+        a.rpmAltas?.let { Comprobacion.contra(ClavesBanda.CARGA_V, "Charging at higher revs", it.mediaV, "V", bandas) },
+        a.cargaMaxV?.let { Comprobacion.contra(ClavesBanda.SOBRECARGA_MAX_V, "Maximum with engine running", it, "V", bandas) },
     )
 
     fun cargaEnMinimo(a: AnalisisBateria): Boolean? {
@@ -93,7 +93,7 @@ object AnalizadorBateria {
     }
 
     private fun etiquetaContacto(conFarola: Boolean) =
-        if (conFarola) "Batería en contacto (con la farola encendida)" else "Batería en contacto (sin cargas)"
+        if (conFarola) "Battery, ignition on (headlamp on)" else "Battery, ignition on (no electrical loads)"
 
     private fun patron(a: AnalisisBateria): PatronBateria = when {
         a.contacto == null && a.arranque?.valleV == null && a.cargaMaxV == null -> PatronBateria.SIN_DATOS

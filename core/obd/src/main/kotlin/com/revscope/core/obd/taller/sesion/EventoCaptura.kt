@@ -15,8 +15,8 @@ object EventoCaptura {
 
     fun de(resumen: ResumenCaptura, muestras: List<MuestraCaptura>, definicion: (String) -> PidDefinition?) = NuevoEvento(
         tipo = TipoEvento.CAPTURA,
-        titulo = "Captura rápida · ${textoPids(resumen.porPid.size)} · ${textoDuracion(resumen.duracionMs)}",
-        resumen = resumen.porPid.joinToString(" · ") { textoPid(it, definicion(it.pid)) }.ifEmpty { "Sin muestras" },
+        titulo = "Quick capture · ${textoPids(resumen.porPid.size)} · ${textoDuracion(resumen.duracionMs)}",
+        resumen = resumen.porPid.joinToString(" · ") { textoPid(it, definicion(it.pid)) }.ifEmpty { "No samples" },
         payload = CapturaJson.resumen(resumen)
             .put("pids", pidsJson(resumen, definicion))
             .put("serie", SerieReducidaJson.porPid(muestras))
@@ -31,14 +31,14 @@ object EventoCaptura {
     private fun textoPid(p: ResumenPid, def: PidDefinition?): String {
         val unidad = def?.unit.orEmpty()
         val rango = "${FormatoTaller.numero(p.min, 1)}–${FormatoTaller.numero(p.max, 1)} $unidad".trim()
-        return "${def?.nameEs ?: p.pid} $rango (${FormatoTaller.numero(p.hz, 1)} Hz)"
+        return "${def?.name ?: p.pid} $rango (${FormatoTaller.numero(p.hz, 1)} Hz)"
     }
 
     private fun pidsJson(resumen: ResumenCaptura, definicion: (String) -> PidDefinition?): JSONObject =
         JSONObject().apply {
             resumen.porPid.forEach { p ->
                 val def = definicion(p.pid)
-                put(p.pid, JSONObject().put("nombre", def?.nameEs ?: JSONObject.NULL).put("unidad", def?.unit ?: JSONObject.NULL))
+                put(p.pid, JSONObject().put("nombre", def?.name ?: JSONObject.NULL).put("unidad", def?.unit ?: JSONObject.NULL))
             }
         }
 }

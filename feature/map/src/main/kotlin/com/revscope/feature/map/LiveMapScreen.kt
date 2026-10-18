@@ -1102,7 +1102,7 @@ internal fun SharedDestBanner(
             modifier = Modifier.padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
         ) {
             Text(
-                "🎯 ${dest.rider} propone destino: ${dest.name}",
+                "🎯 ${dest.rider} suggests a destination: ${dest.name}",
                 color = Color(0xFFF0F0F8),
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
@@ -1302,7 +1302,7 @@ private fun MapDownloadConfirmDialog(
             Column {
                 Text(
                     if (isOnWifi) {
-                        "Se descargará el mapa offline de Colombia (~913 MB)."
+                           "The offline map of Colombia (~913 MB) will be downloaded."
                     } else {
                         "No Wi-Fi — use mobile data? (~913 MB)"
                     },

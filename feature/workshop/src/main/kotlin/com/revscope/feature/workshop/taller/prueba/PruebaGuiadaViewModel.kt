@@ -176,7 +176,7 @@ class PruebaGuiadaViewModel @Inject constructor(
             registro.abrirSesion(SolicitudSesion(titulo = tipo.titulo)).onFailure { return@accion avisar(it.message) }
         }
         val id = controlador.guardarResultadoEnSesion()
-        avisar(if (id != null) "Resultado guardado en una sesión nueva" else "No se pudo guardar el resultado")
+        avisar(if (id != null) "Result saved to a new session" else "Could not save the result")
     }
 
     fun mensajeMostrado() = local.update { it.copy(mensaje = null) }
@@ -246,11 +246,11 @@ class PruebaGuiadaViewModel @Inject constructor(
         }
     }
 
-    private fun avisar(mensaje: String?) = local.update { it.copy(mensaje = mensaje ?: "Algo salió mal") }
+    private fun avisar(mensaje: String?) = local.update { it.copy(mensaje = mensaje ?: "Something went wrong") }
 
     companion object {
         const val ARG_TIPO = "tipo"
-        private const val NO_CALIBRA = "Sin lectura del adaptador o con más de 1 V de diferencia: no se calibró"
+        private const val NO_CALIBRA = "No adapter reading or a difference greater than 1 V: calibration was not saved"
         private const val DETENER_TRAS_MS = 5_000L
         private const val REFRESCO_SERIE_MS = 150L
         private const val REFRESCO_PRECONDICIONES_MS = 1_000L

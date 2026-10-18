@@ -63,7 +63,7 @@ import kotlin.math.cos
 private val RunAColor = Color(0xFFE8FF00)
 private val RunBColor = Color(0xFF3D8BFF)
 
-private val dateFormat = SimpleDateFormat("dd MMM HH:mm", Locale("es"))
+private val dateFormat = SimpleDateFormat("dd MMM HH:mm", Locale.UK)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,10 +76,10 @@ fun SessionCompareScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Comparar viajes", color = RevScopeColors.TextPrimary, fontWeight = FontWeight.SemiBold) },
+                title = { Text("Compare trips", color = RevScopeColors.TextPrimary, fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = RevScopeColors.TextPrimary)
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = RevScopeColors.TextPrimary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = RevScopeColors.Surface),
@@ -90,7 +90,7 @@ fun SessionCompareScreen(
         when (val s = state) {
             SessionCompareViewModel.UiState.Loading -> Box(
                 Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center,
-            ) { Text("Cargando…", color = RevScopeColors.TextSecondary) }
+            ) { Text("Loading…", color = RevScopeColors.TextSecondary) }
 
             is SessionCompareViewModel.UiState.Error -> Box(
                 Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center,
@@ -142,22 +142,22 @@ private fun CompareContent(
             )
         }
 
-        CompareRow("Duración", runA.durationLabel(), runB.durationLabel())
+        CompareRow("Duration", runA.durationLabel(), runB.durationLabel())
         CompareRow(
-            "Distancia",
-            "%.1f km".format(runA.session.distanceKm), "%.1f km".format(runB.session.distanceKm),
+            "Distance",
+            "%.1f km".format(Locale.UK, runA.session.distanceKm), "%.1f km".format(Locale.UK, runB.session.distanceKm),
             highlightMax = runA.session.distanceKm.compareTo(runB.session.distanceKm),
         )
         CompareRow(
-            "Vel. máx", "${runA.session.maxSpeed}", "${runB.session.maxSpeed}",
+            "Max speed", "${runA.session.maxSpeed} km/h", "${runB.session.maxSpeed} km/h",
             highlightMax = runA.session.maxSpeed.compareTo(runB.session.maxSpeed),
         )
         CompareRow(
-            "Vel. prom", "${runA.avgSpeedKmh}", "${runB.avgSpeedKmh}",
+            "Average speed", "${runA.avgSpeedKmh} km/h", "${runB.avgSpeedKmh} km/h",
             highlightMax = runA.avgSpeedKmh.compareTo(runB.avgSpeedKmh),
         )
         CompareRow(
-            "RPM máx", "${runA.session.maxRpm}", "${runB.session.maxRpm}",
+            "Max RPM", "${runA.session.maxRpm}", "${runB.session.maxRpm}",
             highlightMax = runA.session.maxRpm.compareTo(runB.session.maxRpm),
         )
         CompareRow(
@@ -169,14 +169,14 @@ private fun CompareContent(
                 .compareTo(runB.session.best0to60Ms ?: Long.MAX_VALUE),
         )
         CompareRow(
-            "G lat máx",
+            "Max lateral G",
             runA.maxAbsG?.let { "%.2f".format(it) } ?: "—",
             runB.maxAbsG?.let { "%.2f".format(it) } ?: "—",
             highlightMax = (runA.maxAbsG ?: 0f).compareTo(runB.maxAbsG ?: 0f),
         )
         if (showLean) {
             CompareRow(
-                "Lean máx",
+                "Max lean",
                 runA.maxLean?.let { "%.0f°".format(it) } ?: "—",
                 runB.maxLean?.let { "%.0f°".format(it) } ?: "—",
                 highlightMax = (runA.maxLean ?: 0f).compareTo(runB.maxLean ?: 0f),
@@ -185,7 +185,7 @@ private fun CompareContent(
 
         if (runA.speedSeries.size >= 2 && runB.speedSeries.size >= 2) {
             Text(
-                "Velocidad: A en línea continua amarilla, B en línea discontinua azul",
+                "Speed: A is the solid yellow line; B is the dashed blue line",
                 color = RevScopeColors.TextSecondary,
                 style = RevScopeType.bodySmall,
             )
@@ -206,7 +206,7 @@ private fun CompareContent(
                     startAxis = VerticalAxis.rememberStart(title = "km/h"),
                     bottomAxis = HorizontalAxis.rememberBottom(
                         valueFormatter = elapsedFractionFormatter(sampleCount, referenceDurationMs),
-                        title = "tiempo (mm:ss)",
+                        title = "Time (mm:ss)",
                     ),
                 ),
                 modelProducer = producer,
@@ -215,7 +215,7 @@ private fun CompareContent(
         }
 
         if (runA.track.size >= 2 && runB.track.size >= 2) {
-            Text("Trazados superpuestos", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
+            Text("Overlaid routes", color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
             OverlayTrackMap(
                 trackA = runA.track,
                 trackB = runB.track,

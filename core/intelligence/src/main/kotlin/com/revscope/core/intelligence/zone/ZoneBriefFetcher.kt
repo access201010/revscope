@@ -68,18 +68,18 @@ class ZoneBriefFetcher(private val providerProvider: suspend () -> AiProvider?) 
             "Acabo de llegar conduciendo a $lugar."
         }
         return buildString {
-            append("Hoy es ${today()}. $header ")
-            appendLine("Dame un brief CORTO y práctico de conducción para esta zona, en español, en viñetas de una línea, cubriendo SOLO lo que aplique y encuentres actual:")
-            appendLine("- ⛽ Precio actual del combustible aquí (con la moneda local).")
-            appendLine("- 🛣️ Peajes en las vías principales de la zona (valor aproximado si lo sabes).")
-            appendLine("- 🚦 Restricción de circulación vigente hoy (pico y placa, zona de bajas emisiones, etc.).")
+            append("Today is ${today()}. $header ")
+            appendLine("Give me a SHORT, practical driving brief for this area in British English, as one-line bullets. Include ONLY current, relevant information you can find:")
+            appendLine("- Current local fuel prices, with the local currency.")
+            appendLine("- Tolls on the area's main roads, with approximate prices if available.")
+            appendLine("- Driving restrictions in force today (including pico y placa in Colombia, low-emission zones, and similar local schemes).")
             appendLine(docLine)
-            append("Máximo 5 viñetas, cada una ≤15 palabras, sin introducción. Si no encuentras nada útil y actual, responde exactamente: $NO_INFO_MARKER")
+            append("Maximum 5 bullets, each no longer than 15 words, with no introduction. If you find nothing useful and current, reply exactly: $NO_INFO_MARKER")
         }
     }
 
     private fun today(): String =
-        LocalDate.now().format(DateTimeFormatter.ofPattern("d 'de' MMMM 'de' yyyy", Locale("es")))
+        LocalDate.now().format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.UK))
 
     private fun parseBrief(rawText: String): String? {
         val text = rawText.trim()

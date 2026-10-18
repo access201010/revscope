@@ -231,7 +231,7 @@ private fun ResultRow(place: PlaceResult, onSelect: (PlaceResult) -> Unit, onSav
             }
         }
         IconButton(onClick = { onSaveFavorite(place) }) {
-            Icon(Icons.Default.Star, contentDescription = "Guardar favorito", tint = TextMuted)
+            Icon(Icons.Default.Star, contentDescription = "Save favourite", tint = TextMuted)
         }
     }
 }

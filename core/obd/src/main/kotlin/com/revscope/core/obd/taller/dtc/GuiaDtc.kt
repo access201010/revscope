@@ -24,9 +24,9 @@ data class GuiaDtc(
 data class VerificacionDtc(val paso: String, val detalle: String, val accion: AccionGuia?)
 
 enum class UrgenciaDtc(val etiqueta: String) {
-    DETENERSE("Detente y revisa antes de seguir rodando"),
-    REVISAR_PRONTO("Revisa pronto"),
-    PUEDE_ESPERAR("Puede esperar al próximo mantenimiento"),
+    DETENERSE("Stop and check before riding or driving further"),
+    REVISAR_PRONTO("Check soon"),
+    PUEDE_ESPERAR("Can wait until the next service"),
 }
 
 sealed interface AccionGuia {
@@ -35,17 +35,17 @@ sealed interface AccionGuia {
 
     data class Prueba(val tipo: TipoPrueba) : AccionGuia {
         override val clave get() = "$PREFIJO_PRUEBA${tipo.name}"
-        override val etiqueta get() = "Prueba guiada: ${tipo.titulo}"
+        override val etiqueta get() = "Guided test: ${tipo.titulo}"
     }
 
     data class Multimetro(val sensor: SensorMultimetro) : AccionGuia {
         override val clave get() = "$PREFIJO_MULTIMETRO${sensor.name}"
-        override val etiqueta get() = "Medir con multímetro: ${sensor.titulo}"
+        override val etiqueta get() = "Measure with multimeter: ${sensor.titulo}"
     }
 
     data object BorrarCodigos : AccionGuia {
         override val clave = "DTC:BORRAR"
-        override val etiqueta = "Borrar códigos"
+        override val etiqueta = "Clear codes"
     }
 
     companion object {

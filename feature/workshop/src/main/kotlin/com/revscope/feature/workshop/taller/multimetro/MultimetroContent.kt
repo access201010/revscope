@@ -70,7 +70,7 @@ data class AccionesMultimetro(
 @Composable
 fun MultimetroContent(estado: MultimetroUi, acciones: AccionesMultimetro) {
     Column(Modifier.fillMaxSize().background(RevScopeColors.Background)) {
-        BarraConVolver(titulo = "Multímetro", subtitulo = estado.vehiculo, onVolver = acciones.onVolver)
+        BarraConVolver(titulo = "Multimeter", subtitulo = estado.vehiculo, onVolver = acciones.onVolver)
         val plantilla = estado.plantilla
         when {
             estado.error != null -> Box(Modifier.weight(1f).padding(16.dp), contentAlignment = Alignment.Center) {
@@ -91,7 +91,7 @@ private fun ColumnScope.Cargando() {
         modifier = Modifier.weight(1f).fillMaxWidth().padding(16.dp),
     ) {
         CircularProgressIndicator(color = RevScopeColors.Accent)
-        Text("Cargando la plantilla…", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
+        Text("Loading template…", color = RevScopeColors.TextPrimary, style = RevScopeType.body)
     }
 }
 
@@ -100,9 +100,9 @@ private fun ColumnScope.Cuerpo(estado: MultimetroUi, plantilla: PlantillaUi, acc
     CuerpoDesplazable {
         SelectorSensor(estado.sensor, estado.sensores, acciones.onSensor)
         TarjetaDondeMedir(plantilla)
-        Seccion("Medidas en ${plantilla.unidad}")
+        Seccion("Readings in ${plantilla.unidad}")
         MedicionesPlantilla(plantilla, acciones.onValor)
-        Seccion("Veredicto")
+        Seccion("Verdict")
         estado.veredicto?.let { TarjetaVeredicto(it) } ?: SinMedidas()
         SeccionColores(estado.colores, acciones)
     }
@@ -127,10 +127,10 @@ private fun SelectorSensor(actual: SensorMultimetro, sensores: List<SensorMultim
 internal fun nombreCorto(s: SensorMultimetro): String = when (s) {
     SensorMultimetro.TPS -> "TPS"
     SensorMultimetro.MAP -> "MAP"
-    SensorMultimetro.ECT -> "Temp. motor"
-    SensorMultimetro.IAT -> "Temp. aire"
-    SensorMultimetro.INYECTOR -> "Inyector"
-    SensorMultimetro.BATERIA -> "Batería"
+    SensorMultimetro.ECT -> "Engine temp."
+    SensorMultimetro.IAT -> "Air temp."
+    SensorMultimetro.INYECTOR -> "Injector"
+    SensorMultimetro.BATERIA -> "Battery"
 }
 
 @Composable
@@ -146,8 +146,7 @@ private fun TarjetaDondeMedir(plantilla: PlantillaUi) {
 private fun SinMedidas() {
     TarjetaTaller {
         Text(
-            "Escribe lo que marca el multímetro en cada cable: el veredicto de cada celda y el de todo el circuito " +
-                "aparecen al escribir.",
+            "Enter the multimeter reading for each wire. The verdict for each cell and the whole circuit will appear as you type.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
@@ -168,7 +167,7 @@ private fun TarjetaVeredicto(v: VeredictoUi) {
 private fun ComparacionConEcu(c: ComparacionEcuUi) {
     val color = if (c.resultado == ResultadoEcu.COINCIDE) RevScopeColors.Success else RevScopeColors.Warning
     Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(top = 4.dp)) {
-        Text("Contra lo que recibe la ECU", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+        Text("Compared with the ECU reading", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
         FilaIcono(Icons.AutoMirrored.Filled.CompareArrows, color, c.texto)
         Text(c.origen, color = RevScopeColors.TextSecondary, style = RevScopeType.bodySmall)
     }
@@ -177,7 +176,7 @@ private fun ComparacionConEcu(c: ComparacionEcuUi) {
 @Composable
 private fun SeccionColores(colores: ColoresUi, acciones: AccionesMultimetro) {
     if (colores.cables.isEmpty()) return
-    Seccion("Colores de los cables")
+    Seccion("Wire colours")
     TarjetaTaller {
         colores.cables.forEach { FilaColor(it, acciones.onPedirColor) }
         if (colores.editados) PieColores(colores, acciones.onGuardarColores)
@@ -189,13 +188,13 @@ private fun FilaColor(c: ColorCableUi, onEditar: (FuncionCable) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Column(Modifier.weight(1f)) {
             Text(c.etiqueta, color = RevScopeColors.TextPrimary, style = RevScopeType.label)
-            Text(c.color ?: "Sin color", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
+            Text(c.color ?: "No colour recorded", color = RevScopeColors.TextSecondary, style = RevScopeType.body)
         }
         TextButton(
             onClick = { onEditar(c.funcion) },
-            modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Editar el color de ${c.etiqueta}" },
+            modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "Edit the colour of ${c.etiqueta}" },
         ) {
-            Text("Editar", color = RevScopeColors.Accent, style = RevScopeType.label)
+            Text("Edit", color = RevScopeColors.Accent, style = RevScopeType.label)
         }
     }
 }
@@ -204,8 +203,8 @@ private fun FilaColor(c: ColorCableUi, onEditar: (FuncionCable) -> Unit) {
 private fun PieColores(colores: ColoresUi, onGuardar: () -> Unit) {
     if (colores.modelo == null) {
         Text(
-            "Para guardar estos colores como plantilla, elige el modelo de referencia del vehículo en Perfiles. Mientras " +
-                "tanto se usan en esta medición.",
+            "To save these colours as a template, select the vehicle's reference model in Profiles. Until then, they " +
+                "will only be used for this reading.",
             color = RevScopeColors.TextSecondary,
             style = RevScopeType.body,
         )
@@ -213,7 +212,7 @@ private fun PieColores(colores: ColoresUi, onGuardar: () -> Unit) {
     }
     OutlinedButton(onClick = onGuardar, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
         Text(
-            "Guardar colores como plantilla de ${colores.modelo}",
+            "Save colours as a template for ${colores.modelo}",
             color = RevScopeColors.Accent,
             style = RevScopeType.label,
             textAlign = TextAlign.Center,
@@ -226,13 +225,13 @@ private fun DialogoColor(d: DialogoColorUi, acciones: AccionesMultimetro) {
     AlertDialog(
         onDismissRequest = acciones.onCerrarDialogo,
         containerColor = RevScopeColors.SurfaceHigh,
-        title = { Text("Color de ${d.etiqueta}", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
+        title = { Text("Colour of ${d.etiqueta}", color = RevScopeColors.TextPrimary, style = RevScopeType.title) },
         text = {
             OutlinedTextField(
                 value = d.texto,
                 onValueChange = acciones.onCambiarColor,
-                label = { Text("Color", style = RevScopeType.body) },
-                supportingText = { Text("Por ejemplo «Verde-amarillo». Vacío = sin color.", style = RevScopeType.bodySmall) },
+                label = { Text("Colour", style = RevScopeType.body) },
+                supportingText = { Text("For example, 'Green-yellow'. Leave blank if unknown.", style = RevScopeType.bodySmall) },
                 singleLine = true,
                 textStyle = RevScopeType.body,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -249,12 +248,12 @@ private fun DialogoColor(d: DialogoColorUi, acciones: AccionesMultimetro) {
         },
         confirmButton = {
             TextButton(onClick = acciones.onAceptarColor, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Aceptar", color = RevScopeColors.Accent, style = RevScopeType.label)
+                Text("OK", color = RevScopeColors.Accent, style = RevScopeType.label)
             }
         },
         dismissButton = {
             TextButton(onClick = acciones.onCerrarDialogo, modifier = Modifier.heightIn(min = 48.dp)) {
-                Text("Cancelar", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
+                Text("Cancel", color = RevScopeColors.TextPrimary, style = RevScopeType.label)
             }
         },
     )

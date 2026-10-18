@@ -70,7 +70,7 @@ internal object MapeoResultado {
         pesas = pesas(a),
         comprobaciones = a.comprobaciones.map(::comprobacion),
         graficas = listOfNotNull(
-            datos?.let { GraficaResultadoUi("Toda la prueba, en voltios", serie(it, a), leyendaTramos(it) + leyendaBandas(a)) },
+            datos?.let { GraficaResultadoUi("Full test, in volts", serie(it, a), leyendaTramos(it) + leyendaBandas(a)) },
         ),
         referencia = referencia(a.vref),
         codigoGuia = TextosPrueba.codigoGuia(a.patron),
@@ -130,7 +130,7 @@ internal object MapeoResultado {
         val bandas = BandasPosicion.tps(bandasDe(a), UnidadPosicion.VOLTIOS, datos.vref)
         return ModeloGrafica(
             series = listOf(SerieGrafica("TPS", puntos)),
-            descripcion = "TPS en toda la prueba: de ${FormatoPosicion.voltios(puntos.minOf { it.y })} a " +
+            descripcion = "TPS throughout the test: ${FormatoPosicion.voltios(puntos.minOf { it.y })} to " +
                 "${FormatoPosicion.voltios(puntos.maxOf { it.y })}, ${datos.segmentos.size} pasos sombreados. " +
                 bandas.joinToString("; ") { it.descripcion },
             bandas = bandas.map { BandaGrafica(it.etiquetaCorta, it.min, it.max) },
@@ -139,7 +139,7 @@ internal object MapeoResultado {
         )
     }
 
-    private fun sinSerie() = ModeloGrafica(emptyList(), "Sin muestras del TPS para dibujar")
+    private fun sinSerie() = ModeloGrafica(emptyList(), "No TPS readings to plot")
 
     private fun bandasDe(a: AnalisisBarridoTps): Map<String, BandaReferencia> =
         a.comprobaciones.mapNotNull { it.banda }.associateBy { it.clave }

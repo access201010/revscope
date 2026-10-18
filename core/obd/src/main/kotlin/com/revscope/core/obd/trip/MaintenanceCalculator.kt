@@ -38,7 +38,7 @@ object MaintenanceCalculator {
     fun detalleTexto(estados: List<ItemStatus>): String {
         val proximoItem = proximo(estados) ?: return "Por configurar"
         val km = proximoItem.kmRestantes.roundToLong()
-        return if (km <= 0) "${proximoItem.item.nombre} vencido" else "${proximoItem.item.nombre} en $km km"
+        return if (km <= 0) "${proximoItem.item.nombre} overdue" else "${proximoItem.item.nombre} in $km km"
     }
 
     private fun itemStatus(odometroActual: Double, item: MaintenanceItemEntity): ItemStatus {

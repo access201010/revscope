@@ -1,15 +1,15 @@
 package com.revscope.core.obd.taller.dtc
 
 enum class SistemaDtc(val letra: Char, val nombre: String) {
-    TREN_MOTRIZ('P', "Tren motriz (motor y transmisión)"),
-    CHASIS('C', "Chasis"),
-    CARROCERIA('B', "Carrocería"),
-    RED('U', "Red de comunicación entre módulos"),
+    TREN_MOTRIZ('P', "Powertrain (engine and transmission)"),
+    CHASIS('C', "Chassis"),
+    CARROCERIA('B', "Body"),
+    RED('U', "Network communication between modules"),
 }
 
 enum class AmbitoDtc(val etiqueta: String) {
-    GENERICO("Genérico, definido por SAE"),
-    FABRICANTE("Del fabricante"),
+    GENERICO("Generic, SAE-defined"),
+    FABRICANTE("Manufacturer-specific"),
 }
 
 data class EstructuraDtc(
@@ -22,9 +22,9 @@ data class EstructuraDtc(
         get() = when (ambito) {
             AmbitoDtc.FABRICANTE -> DecodificadorDtc.MENSAJE_FABRICANTE
             AmbitoDtc.GENERICO -> listOfNotNull(
-                "Código genérico definido por SAE",
+                "Generic SAE-defined fault code",
                 sistema.nombre.enMinuscula(),
-                subsistema?.let { "subsistema: ${it.enMinuscula()}" },
+                subsistema?.let { "subsystem: ${it.enMinuscula()}" },
             ).joinToString(" · ")
         }
 
@@ -34,36 +34,36 @@ data class EstructuraDtc(
 // Estructura de SAE J2012: letra = sistema, 2.º carácter = genérico o del fabricante, 3.º = subsistema (P genéricos).
 object DecodificadorDtc {
 
-    const val MENSAJE_FABRICANTE = "Código del fabricante: consulta el manual del modelo"
-    const val EJEMPLO_FORMATO = "una letra P, C, B o U seguida de cuatro caracteres, p. ej. P0122"
+    const val MENSAJE_FABRICANTE = "Manufacturer-specific code: check the vehicle's service manual"
+    const val EJEMPLO_FORMATO = "a P, C, B or U followed by four characters, for example P0122"
 
     private val FORMATO = Regex("^[PCBU][0-3][0-9A-F]{3}$")
 
     private val SUBSISTEMAS_P0 = mapOf(
-        '0' to "Medición de aire y combustible y control auxiliar de emisiones",
-        '1' to "Medición de aire y combustible",
-        '2' to "Medición de aire y combustible (circuito de inyectores)",
-        '3' to "Sistema de encendido o fallas de encendido",
-        '4' to "Controles auxiliares de emisiones",
-        '5' to "Velocidad del vehículo, control del ralentí y entradas auxiliares",
-        '6' to "Computadora (ECU) y circuitos de salida",
-        '7' to "Transmisión",
-        '8' to "Transmisión",
-        '9' to "Transmisión",
-        'A' to "Propulsión híbrida",
-        'B' to "Propulsión híbrida",
-        'C' to "Propulsión híbrida",
+        '0' to "Fuel and air metering and auxiliary emissions controls",
+        '1' to "Fuel and air metering",
+        '2' to "Fuel and air metering (injector circuit)",
+        '3' to "Ignition system or misfire",
+        '4' to "Auxiliary emissions controls",
+        '5' to "Vehicle speed, idle control and auxiliary inputs",
+        '6' to "ECU and output circuits",
+        '7' to "Transmission",
+        '8' to "Transmission",
+        '9' to "Transmission",
+        'A' to "Hybrid propulsion",
+        'B' to "Hybrid propulsion",
+        'C' to "Hybrid propulsion",
     )
 
     private val SUBSISTEMAS_P2 = mapOf(
-        '0' to "Medición de aire y combustible y control auxiliar de emisiones",
-        '1' to "Medición de aire y combustible",
-        '2' to "Medición de aire y combustible",
-        '3' to "Sistema de encendido o fallas de encendido",
-        '4' to "Controles auxiliares de emisiones",
-        '5' to "Entradas auxiliares",
-        '6' to "Computadora (ECU) y salidas auxiliares",
-        '7' to "Transmisión",
+        '0' to "Fuel and air metering and auxiliary emissions controls",
+        '1' to "Fuel and air metering",
+        '2' to "Fuel and air metering",
+        '3' to "Ignition system or misfire",
+        '4' to "Auxiliary emissions controls",
+        '5' to "Auxiliary inputs",
+        '6' to "ECU and auxiliary outputs",
+        '7' to "Transmission",
     )
 
     fun normalizar(texto: String): String? = texto.trim().uppercase().takeIf(FORMATO::matches)
@@ -76,10 +76,9 @@ object DecodificadorDtc {
     }
 
     fun mensajeSinGuia(estructura: EstructuraDtc): String = when (estructura.ambito) {
-        AmbitoDtc.FABRICANTE -> "$MENSAJE_FABRICANTE. RevScope no inventa su descripción."
+        AmbitoDtc.FABRICANTE -> "$MENSAJE_FABRICANTE. RevScope does not make up its description."
         AmbitoDtc.GENERICO ->
-            "No está en la guía local de RevScope: busca la descripción exacta en SAE J2012 " +
-                "o en el manual de servicio del modelo."
+            "Not in RevScope's local guide: check SAE J2012 or the vehicle's service manual for the exact description."
     }
 
     private fun ambitoDe(codigo: String): AmbitoDtc =
